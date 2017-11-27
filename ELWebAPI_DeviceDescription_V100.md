@@ -2042,7 +2042,7 @@ __Example__
 | normDirIntegralEnergyEvery30Min | GET | object | 0xEA | 定時積算電力量計測値（正方向計測値）<br>Cumulative amounts of electric energy measured at fixed time (normal direction) |
 | revDirIntegralEnergyEvery30Min | GET | object | 0xEB | 定時積算電力量計測値（逆方向計測値）<br>Cumulative amounts of electric energy measured at fixed time (reverse direction) |
 
-\*1) 積算履歴収集日１を指定するqueryあり。{value:{integer}}  
+\*1) 積算履歴収集日１を指定するqueryあり。  
 \*2) 瞬時電流計測値は、ECHONET LiteでGETした値に0.1を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
 
 ### Device Description
@@ -2261,7 +2261,7 @@ __Example__
 | integralActiveEnergyEffectiveDigits | GET | integer | 0xE5 | 積算有効電力量有効桁数<br>Number of effective digits for cumulative amount of active electric energy |
 | activeEnergyLog | GET | object | 0xE7 | 積算有効電力量計測値履歴<br>Historical data of measured cumulative amount of active electric energy |query<br>\*1|
 
-*1) 積算履歴収集日を指定するqueryあり。{value:{integer}}
+*1) 積算履歴収集日を指定するqueryあり。
 
 ### Device Description
 
