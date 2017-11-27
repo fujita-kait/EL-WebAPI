@@ -1,7 +1,7 @@
 # ECHONET Lite WebAPI (EL-WebAPI) Specification
 
 
-###2017.12.01 version 1.0.0
+2017.12.01 version 1.0.0
 
 
 ## 1. Abstract

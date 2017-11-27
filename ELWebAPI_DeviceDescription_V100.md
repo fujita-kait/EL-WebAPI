@@ -1,7 +1,7 @@
 # ECHONET Lite WebAPI (EL-WebAPI) Device Description
 
 
-###2017.12.01 version 1.0.0
+2017.12.01 version 1.0.0
 
 ## 1. Abstract
 　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。
