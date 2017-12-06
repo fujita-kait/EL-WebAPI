@@ -1,7 +1,7 @@
 # ECHONET Lite WebAPI (EL-WebAPI) Specification
 
 
-2017.12.01 version 1.0.0
+2017.12.06 version 1.0.0
 
 
 ## 1. Abstract
@@ -228,17 +228,10 @@ property objectは機器のpropertyを記述する。property object は基本�
 | description | object |Propertyのdescription | { "ja":"ON/OFF状態", "ON/OFF Status" } |
 | writable | boolean | 書き込み可能か？ | true:可能, false:不可能 |
 | observable | boolean | 通知可能か？ | true:可能, false:不可能 |
-| query | object | GETで引数がある場合の引数の情報<br>引数がない場合は不要 |  |
-| query.name | string | queryのname | "day" |
-| query.type | string | queryのtype | "number", "integer", "level", "percentage", "raw"|
-| query.minimum | number | query.type がintegerまたはnumberの場合の最小値 | 0 |
-| query.maximum | number | query.type がintegerまたはnumberの場合の最大値 | 255 |
-| data.type | string |data objectのtype | "boolean", "key", "number", "integer",<br>"level", "date", "percentage", "raw", "object" |
-| data.value | string | data.type がbooleanまたはstringの場合の<br>dataのvalueのdescription | "true": {"ja":"異常あり", "en":"Fault"} |
-| data.unit | string | data.type がintegerまたはnumberの場合の<br>dataの単位 | "℃", "%" |
-| data.minimum | number | data.type がintegerまたはnumberの場合の最小値 | 0 |
-| data.maximum | number | data.type がintegerまたはnumberの場合の最大値 | 255 |
-| data.field | string | data.type がobjectの場合にobjectの中身を記述する |  |
+| query | object | GETでqueryが必要な場合、その情報をdata type object(\*1)で記述<br>引数がない場合は不要 |  |
+| data | object | property dataの情報をdata type object(\*1)で記述 |  |
+
+(\*1) 6. Data Type参照
 
 ### 4.7 Action object
 
@@ -323,7 +316,7 @@ ECHONET Lite WebAPI を説明する。
 
 	| Field | Data Type of<br>JSON | Description | Example |
 	|:-----------|:-----|:-----|:-----|
-	| id | String |機器を指定するためのDevice Id<br>プロトコルブリッジが決めるユニークな値 | "generalLighting_01"(*) |
+	| id | String |機器を指定するためのDevice Id<br>プロトコルブリッジが決めるユニークな値 | "generalLighting_01"(*1) |
 	| type | String |Device Type | "generalLighting" |
 	| ip | String | DeviceのIP Address |  "192.168.128.11" |
 	| protocol.type | String | 機器制御Protocolの種類 | "ECHONET\_Lite" |
@@ -331,7 +324,7 @@ ECHONET Lite WebAPI を説明する。
 	| manufacturer.code | String | メーカーコード<br>ECHONET Liteの場合はEPC=0x8Aの値| "0x000077" |
 	| manufacturer.description | String | メーカー名| {<br>"ja": "神奈川工科大学",<br>"en": "Kanagawa Institute of<br> Technology"<br>} |	
 
-	(*) 以下の例では\<deviceName>_\<index>を利用しているが、UUIDなどユニークな値であれば構わない。
+	(\*1) 以下の例では\<deviceName>_\<index>を利用しているが、UUIDなどユニークな値であれば構わない。
 
 
 - Example  
@@ -637,6 +630,7 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 | date | Date&Timeを表すデータ型　ISO8601準拠<br>"yyyy-MM-ddThh:mm:ss"のformat | | string |
 | percentage | 割合を百分率（パーセンテージ）で表すデータ型<br>unit: %, data type: integer, range: 0 ~ 100  | | number |
 | raw | rawデータ<br>1byteデータの配列 | | [number] |
+| array | 配列 | | [ ] |
 | object | 複数の要素のデータから構成されるデータをJSONのobject型式で表現する | field | |
 (\*1) optional  
 (\*2) optional。ただしpropertyの "writable" が true の場合はrequired。
@@ -758,6 +752,23 @@ Example of Device Description
 	{ "raw" : [23, 12, 0,...] }
 	```
 
+- array  
+	Example of Device Description  
+
+	```
+	"type": "array",
+	"element": {
+		"type": "number",
+		"unit": "kWh"
+	}
+	```
+
+	Example of JSON data  
+
+	```
+	{ "powerConsumption" : [23, 12, 0,...] }
+	```
+
 - object  
 	Example of Device Description (1)  
 
@@ -815,7 +826,7 @@ Example of Device Description
 				"type": "integer"
 			}
 		},
-
+	]
 	```
 
 	Example of JSON data (1)  
