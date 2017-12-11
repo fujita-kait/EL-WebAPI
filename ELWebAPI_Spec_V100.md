@@ -676,12 +676,46 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 | field | オブジェクトの要素をdata type objectで表現 | object |
 
 ###6.1 Simple Data
-data type objectのformatを以下に示す。
+boolean data type objectのformatを以下に示す。
 
 ```
 {
-	"type":<data type>,
+	"type":"boolean",
+    "value": {
+        "true":  {"ja":<description in Japanese>, "en":<description in English>},
+        "false": {"ja":<description in Japanese>, "en":<description in English>}
+    }
 	"value":<value and description>,
+}
+```
+
+key data type objectのformatを以下に示す。
+
+```
+{
+	"type":"key",
+	"value":<value and description>,
+	"value":<value and description>,
+	...
+}
+```
+
+number data type objectのformatを以下に示す。
+
+```
+{
+	"type":"number",
+	"unit":<unit>,
+	"minimum":<minimum number>,
+	"maximum":<maximum number>
+}
+```
+
+integer data type objectのformatを以下に示す。
+
+```
+{
+	"type":"integer",
 	"unit":<unit>,
 	"minimum":<minimum number>,
 	"maximum":<maximum number>
