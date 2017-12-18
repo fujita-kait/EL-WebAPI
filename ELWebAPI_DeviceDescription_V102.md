@@ -635,7 +635,7 @@ __Example__
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
 | blindMotion<br>開閉動作設定 | GET, PUT | key | 0xE0 | 開閉（張出し／収納）動作設定<br>Open/close(extension/retraction) setting | INF |
-| openingDegree<br>開度レベル | GET, PUT | percentage | 0xE1 | 開度レベル設定<br>Degree-of-opening level |
+| openingDegree<br>開度レベル | GET, PUT | integer | 0xE1 | 開度レベル設定<br>Degree-of-opening level |
 
 ### Device Description
 
@@ -687,7 +687,7 @@ __Example__
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
 | blindMotion | GET, PUT | key | 0xE0 | 開閉動作設定<br>Open/Close setting | INF |
-| openingDegree | GET, PUT | percentage | 0xE1 | 開度レベル設定<br>Degree-of-opening level |\*1|
+| openingDegree | GET, PUT | integer | 0xE1 | 開度レベル設定<br>Degree-of-opening level |\*1|
 
 \*1) 必須項目ではない
 
@@ -1568,7 +1568,7 @@ __Example__
 | operatingMode | GET, PUT | key | 0xDA | 運転モード設定<br>Operation mode setting |INF|
 | remainingStoredEnergy1 | GET | integer | 0xE2 | 蓄電残量1<br>Remaining stored electricity 1 | |
 | remainingStoredEnergy2 | GET | integer | 0xE3 | 蓄電残量2<br>Remaining stored electricity 2 |\*2|
-| remainingStoredEnergy3 | GET | percentage | 0xE4 | 蓄電残量3<br>Remaining stored electricity 3 | |
+| remainingStoredEnergy3 | GET | integer | 0xE4 | 蓄電残量3<br>Remaining stored electricity 3 | |
 | batteryType | GET | key | 0xE6 | 蓄電池タイプ<br>Battery type |
 
 \*1) AC積算充電電力量計測値・AC積算放電電力量計測値は、ECHONET LiteでGETした値に0.001を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。  
@@ -1800,7 +1800,7 @@ __Example__
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
 | dischargeableCapacity1 | GET | integer | 0xC0 | 車載電池の放電可能容量値1<br>Dischargeable capacity of vehicle mounted battery 1 |
 | remainingDischargeableCapacity1 | GET | integer | 0xC2 | 車載電池の放電可能残容量1<br>Remaining dischargeable capacity of vehicle mounted battery 1 |
-| remainingDischargeableCapacity3 | GET | percentage | 0xC4 | 車載電池の放電可能残容量3<br>Remaining dischargeable capacity of vehicle mounted battery 3 |
+| remainingDischargeableCapacity3 | GET | integer | 0xC4 | 車載電池の放電可能残容量3<br>Remaining dischargeable capacity of vehicle mounted battery 3 |
 | ratedChargePower | GET | integer| 0xC5 | 定格充電能力<br>Rated charge capacity |
 | ratedDischargePower | GET | integer | 0xC6 | 定格放電能力<br>Rated discharge capacity |
 | chargeDischargeStatus | GET | key | 0xC7 | 車両接続・充放電可否状態<br>Vehicle connection and chargeable/dischargeable status |INF|
@@ -1812,7 +1812,7 @@ __Example__
 | usedCapacity1 | GET | integer | 0xD0 | 車載電池の使用容量値1<br>Used capacity of vehicle mounted battery 1 |
 | operatingMode | GET, PUT | key | 0xDA | 運転モード設定<br>Operation mode setting |
 | remainingStoredEnergy1 | GET | integer | 0xE2 | 車載電池の電池残容量1<br>Remaining stored electricity of vehicle mounted battery1 |
-| remainingStoredEnergy3 | GET | percentage | 0xE4 | 車載電池の電池残容量3<br>Remaining stored electricity of vehicle mounted battery3 |
+| remainingStoredEnergy3 | GET | integer | 0xE4 | 車載電池の電池残容量3<br>Remaining stored electricity of vehicle mounted battery3 |
 
 \*1) 最小最大充電電流値・最小最大放電電流値は、ECHONET LiteでGETした値に0.1を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
 
@@ -2762,7 +2762,7 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| brightness | GET, PUT | percentage | 0xB0 | 照度レベル設定<br>Illuminance level |\*1|
+| brightness | GET, PUT | integer | 0xB0 | 照度レベル設定<br>Illuminance level |\*1|
 
 \*1) 必須項目ではない
 
@@ -2802,7 +2802,7 @@ __Example__
 | usedCapacity1 | GET | integer | 0xD0 | 車載電池の使用容量値1<br>Used capacity of vehicle mounted battery 1 |
 | operatingMode | GET, PUT | key | 0xDA | 運転モード設定<br>Operation mode setting |INF|
 | remainingStoredEnergy1 | GET | integer | 0xE2 | 車載電池の電池残容量1<br>Remaining stored electricity of vehicle mounted battery1 |
-| remainingStoredEnergy3 | GET | percentage | 0xE4 | 車載電池の電池残容量3<br>Remaining stored electricity of vehicle mounted battery3 |
+| remainingStoredEnergy3 | GET | integer | 0xE4 | 車載電池の電池残容量3<br>Remaining stored electricity of vehicle mounted battery3 |
 
 ### Device Description
 
