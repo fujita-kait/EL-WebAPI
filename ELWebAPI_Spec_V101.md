@@ -111,7 +111,7 @@ PUT http://192.168.11.201/el/v1/generalLighting_1/properties/on
 　EL-WebAPIでは機器の仕様をJSON encodingのmachine readable formatの Device Description として定義する。各機器ごとのDevice Descriptionはドキュメント「ECHONET Lite WebAPI Device Description」に記述されている。  
 　EL-WebAPIを使うとプロトコルブリッジに接続されている機器が実装している機能(properties, actions, events)に関するDevice Descriptionを取得することができる。
 
-###4.1 全体構成
+### 4.1 全体構成
 Device Descriptionの全体構成を以下に示す。
 
 ```
@@ -311,7 +311,7 @@ ECHONET Lite WebAPI を説明する。
 - POST /el/\<VersionId>/\<DeviceId>/actions  
 - GET /el/\<VersionId>/\<DeviceId>/events
 
-###5.1 GET /el
+### 5.1 GET /el
 
 - DESCRIPTION  
 プロトコルブリッジがサポートしているEL-WebAPIのバージョンを取得する。 
@@ -340,7 +340,7 @@ ECHONET Lite WebAPI を説明する。
     }
     ```
 
-###5.2 GET /el/\<VersionId>
+### 5.2 GET /el/\<VersionId>
 
 - DESCRIPTION  
 プロトコルブリッジに接続されている機器リスト（DeviceIdと付加情報）を取得する。  
@@ -434,7 +434,7 @@ ECHONET Lite WebAPI を説明する。
     ```
 
 
-###5.3 GET /el/\<VersionId>/\<DeviceId>
+### 5.3 GET /el/\<VersionId>/\<DeviceId>
 - DESCRIPTION  
 DeviceIdで指定した機器の Device Description を取得する。Properties, Actions, Eventsの各項目は機器が実際に実装している項目の情報を取得できる。Device Description に関しては "4 Device Description" を参照のこと。
 
@@ -476,7 +476,7 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
 	        <以下省略>
     ```
     
-###5.4 GET /el/\<VersionId>/\<DeviceId>/properties
+### 5.4 GET /el/\<VersionId>/\<DeviceId>/properties
 - DESCRIPTION  
     DeviceIdで指定した機器の全てのPropertyについて値を取得する。  
     Propertyの値はプロトコルブリッジがキャッシュしている値なので最新の値とは限らない。最新の値はpropertyを個別に指定して取得できる。5.5節参照のこと。  
@@ -518,7 +518,7 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
     }
     ```
 
-###5.5 GET /el/\<VersionId>/\<DeviceId>/properties/\<PropertyName>?\<Query>  
+### 5.5 GET /el/\<VersionId>/\<DeviceId>/properties/\<PropertyName>?\<Query>  
 
 - DESCRIPTION  
 指定したpropertyの値を取得する。  
@@ -586,7 +586,7 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
     }
     ```
 
-###5.6 PUT /el/\<VersionId>/\<DeviceId>/properties/\<PropertyName>  
+### 5.6 PUT /el/\<VersionId>/\<DeviceId>/properties/\<PropertyName>  
 
 - DESCRIPTION  
 指定したpropertyの値を設定する  
@@ -620,7 +620,7 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
     200 OK
     ```
 
-###5.7 POST /el/\<VersionId>/\<DeviceId>/actions
+### 5.7 POST /el/\<VersionId>/\<DeviceId>/actions
 
 - DESCRIPTION  
 actionの実行をリクエストする  
@@ -645,7 +645,7 @@ actionの実行をリクエストする
     200 OK
     ```
 
-###5.8 GET /el/\<VersionId>/\<DeviceId>/events
+### 5.8 GET /el/\<VersionId>/\<DeviceId>/events
 
 - DESCRIPTION  
 指定したdeviceのeventsを取得する  
@@ -691,7 +691,7 @@ actionの実行をリクエストする
 
 
 ## 6. Data Type Object  
-###6.1 Definition of Data Type
+### 6.1 Definition of Data Type
 EL-WebAPIで取得または設定するProperty値の data type を以下のように定義する。  
 
 - Simple Data: boolean, key, number, integer, date
@@ -707,8 +707,8 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 | array |  [ ] |同一data typeの要素の配列 | element |
 | object |  { } |複数の要素から構成されるデータ | field |
 
-###6.2 Description of Data Type Object
-####6.2.1 boolean
+### 6.2 Description of Data Type Object
+#### 6.2.1 boolean
 Format of Device Description
 
 ```
@@ -743,7 +743,7 @@ Example of body data
 { "on":true }, { "on":false }
 ```
 
-####6.2.2 key
+#### 6.2.2 key
 Format of Device Description
 
 ```
@@ -779,7 +779,7 @@ Example of body data
 { "operatingMode":"normal" }, { "operatingMode":"color" }  
 ```
 
-####6.2.3  number
+#### 6.2.3  number
 Format of Device Description
 
 ```
@@ -813,7 +813,7 @@ Example of body data
 { "integralEnergy":15.5 }, 
 ```
 
-####6.2.4 integer
+#### 6.2.4 integer
 Format of Device Description
 
 ```
@@ -847,7 +847,7 @@ Example of body data
 { "temperature":25 }, { "temperature":-10] }
 ```
 
-####6.2.5 date  
+#### 6.2.5 date  
 Format of Device Description
 
 ```
@@ -870,7 +870,7 @@ Example of body data
 { "date" :"2017-01-24T13:15:22+09:00" }
 ```
 
-####6.2.6 array
+#### 6.2.6 array
 Format of Device Description
 
 ```
@@ -904,7 +904,7 @@ Example of body data
 { "powerConsumption":[23, 12, 0,...] }
 ```
 
-####6.2.7 object
+#### 6.2.7 object
 Format of Device Description
 
 ```
