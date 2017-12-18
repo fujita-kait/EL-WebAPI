@@ -1,20 +1,23 @@
 # ECHONET Lite WebAPI (EL-WebAPI) Specification
 
+Revision History  
 
-2017.12.11 version 1.0.0
-2017.12.12 version 1.0.1 Device DescriptionのDataのvalueの表記をobjectからarrayに変更
-
+| Date | Version  | Description |
+|:-----------|:-----|:-----|
+| 2017.12.11 | version 1.0.0 |  |
+| 2017.12.17 | version 1.0.1 | Device DescriptionのDataのvalueの表記をobjectからarrayに変更<br>Data Typeを修正(levelとpercentageを削除） |
 
 ## 1. Abstract
-　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎のPropertyは別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドミュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。
+　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎の仕様は別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドミュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。  
+　このドキュメントではWebAPI(REST)のメソッドとしてのGET, PUT, POSTとECHONET LiteのサービスとしてのGET, GET_RES, SET, INFという用語を使用する。特にGETに関しては文脈で区別がつかない場合はGET(REST), GET(EL)と表記する。また、プロパティ（Property）という用語も区別が必要なので、ECHONET Liteの場合は"エコーネットプロパティ"、WebAPIの場合はPropertyと表記する。
 
 ## 2. Basic Concept
 ### 2.1 システム構成
 WebAPIを設計するにあたり下記(A)のシステム構成を前提とするが、(B)や(C)のシステム構成も考慮する。  
 
-(A)プロトコルブリッジを介してECHONET Lite機器をEL-WebAPI対応する場合  
+(A)プロトコルブリッジがECHONET Lite ProtocolとEL-WebAPIを変換する場合  
 (B)機器がEL-WebAPIを実装する場合    
-(C)プロトコルブリッジを介してその他のAPI対応機器をEL-WebAPI対応する場合  
+(C)プロトコルブリッジがその他のAPIとEL-WebAPIを変換する場合  
 
 
 ![システム構成](_graphics/system.png)  
@@ -23,7 +26,7 @@ WebAPIを設計するにあたり下記(A)のシステム構成を前提とす�
 
 ### 2.2 EL-WebAPIの設計方針
 
-ECHONET Liteの仕様を理解していなくてもEL-WebAPIを利用できることを目指して以下の方針を定めた。
+ECHONET Liteの仕様を理解していなくてもEL-WebAPIを利用して機器を制御できることを目指して以下の方針を定めた。
 
 - RESTful APIとする
 - 転送するデータはJSONとする
@@ -33,9 +36,9 @@ ECHONET Liteの仕様を理解していなくてもEL-WebAPIを利用できる�
     ECHONET LiteのGETコマンドで取得した値は以下のように換算が必要な場合がある。これらの換算はプロトコルブリッジが行う。
     - 例１：蓄電池　EPC=0xE3（蓄電残量２）の値は0.1倍する
     - 例２：低圧スマート電力量メータ　EPC=0xE3（積算電力量計測値）の値はEPC=0xD3（係数）とEPC=0xE1（積算電力量単位）の値を乗算する
-- アトミックオペレーションをプロトコルブリッジがサポート  
-    ECHONET LiteのあるPropertyは、GETコマンドを実行する前にSETコマンドを実行する必要がある
-    - 例：低圧スマート電力量メータの積算電力量計測値履歴１（EPC=0xE2）の値をECHONET Liteで取得(GET)する場合、あらかじめEPC=0xE5（積算履歴収集日１）をECHONET Liteで設定(SET)する必要がある。EL-WebAPIではこのPropertyのGET(REST)に積算履歴収集日１の値をqueryとして付加してrequestを行う。プロトコルブリッジは、ECHONET LiteのSET EPC=0xE5 を実行した後に GET EPC=0xE2 を実行し、その結果をWebAPIのresponseとする。
+- アトミックオペレーションをプロトコルブリッジがサポートする  
+    ECHONET Liteのあるエコーネットプロパティは、GET(EL)コマンドを実行する前にSETコマンドを実行する必要がある
+    - 例：低圧スマート電力量メータの積算電力量計測値履歴１（EPC=0xE2）の値をECHONET Liteで取得する場合、積算履歴収集日１（EPC=0xE5）をSETしたのちに積算電力量計測値履歴１（EPC=0xE2）をGET(EL)する必要がある。EL-WebAPIを使って積算電力量計測値履歴１に対応するPropertyをGET(REST)する場合、積算履歴収集日１の値をGET(REST)のqueryとして指定する。プロトコルブリッジはこのGET(REST)を受信すると、低圧スマートメータにEPC=0xE5のSETを送信した後にEPC=0xE2のGET(EL)を送信する。プロトコルブリッジは低圧スマートメータからGET_RESでエコーネットプロパティの値を受信するとその値をWebAPIのresponseとする。
 -  W3C [Web Thing API](http://iot.mozilla.org/wot/#), [Web of Things (WoT) Thing Description](https://w3c.github.io/wot-thing-description/) を参考にする  
     - コントローラと機器のinteractionをproperty, action, eventで行う
     - 機器の仕様をJSON formatのDevice Descriptionで記述する
@@ -61,7 +64,7 @@ ECHONET Lite protocolはUDPでバイナリデータを送受信する。ECHONET 
 ```
 SEND:
 EHD=0x1081, TID=0x0001, SEOJ=0x05FF01(コントローラ), DEOJ=0x029001(一般照明), ESV=0x62(GET), 
-OPC=0x01, EPC=0x80(Operating Status), PDC=0x00  
+OPC=0x01, EPC=0x80(Operation Status), PDC=0x00  
     1081 0001 05FF01 029001 62 01 80 00
 
 RECEIVE:
@@ -105,31 +108,33 @@ PUT http://192.168.11.201/el/v1/generalLighting_1/properties/on
 
 ## 4. Device Description
 
-EL-WebAPIでは機器の仕様をJSON encodingのmachine readable formatの Device Description として定義する。
+　EL-WebAPIでは機器の仕様をJSON encodingのmachine readable formatの Device Description として定義する。各機器ごとのDevice Descriptionはドキュメント「ECHONET Lite WebAPI Device Description」に記述されている。  
+　EL-WebAPIを使うとプロトコルブリッジに接続されている機器が実装している機能(properties, actions, events)に関するDevice Descriptionを取得することができる。
 
 ###4.1 全体構成
+Device Descriptionの全体構成を以下に示す。
 
 ```
 {
     "type":<device type>,
     "description":<device type description>,
-    "properties":[ { <property> }, { <property> }... ],
-    "actions":[ { <property> }, { <property> }... ],
-    "events":[ { <property> }, { <property> }... ]
+    "properties":[ <property>, <property> ... ],
+    "actions":[ <action>, <action>... ],
+    "events":[ <event>, <event>... ]
 }
 ```
 
 | Member | Data Type<br>of JSON | Description | Example |
 |:-----------|:-----|:-----|:-----|
-| type | string | device の種類を示す。<br>ECHONET Liteで定義された機器オブジェクト名に対応する。<br>値に関しては "8. Device Types" を参照のこと。 | "generalLighting" |
-| description | object |ECHONET Liteで定義された機器オブジェクトの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<device object name of ECHONET Lite in Japanese>,<br>"en":\<device object name of ECHONET Lite in English> <br>} | {<br> "ja":"一般照明",<br> "General Lighting"<br> } |
+| type | string | device の種類を示す。<br>ECHONET Liteで定義された機器オブジェクト名(EOJ)に対応する。<br>値に関しては "8. Device Types" を参照のこと。 | "generalLighting" |
+| description | object |ECHONET Liteで定義された機器オブジェクトの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<device object name of ECHONET Lite in Japanese>,<br>"en":\<device object name of ECHONET Lite in English> <br>} | {<br> "ja":"一般照明",<br> "en":"General Lighting"<br> } |
 | properties | [object] | property object の集合 |  |
 | actions | [object] | action object の集合 |  |
 | events | [object] | event object の集合 |  |
 
-### 4.2 property object
+### 4.2 Property object
 
-property objectは機器のpropertyを記述する。property object は基本的にECHONET Liteの Property に対応する。propertyを取得するにはGET method, 設定するにはPUT methodを使用する。property objectの構成を以下に示す。
+Property objectは機器のPropertyを記述する。ECHONET LiteでGETをサポートするエコーネットプロパティに対応する。EL-WebAPIでpropertyを取得するにはGET method, 設定するにはPUT methodを使用する。property objectの構成を以下に示す。
 
 ```
 {
@@ -145,27 +150,33 @@ property objectは機器のpropertyを記述する。property object は基本�
 | Field | Data Type<br>of JSON | Description | Example |
 |:-----------|:-----|:-----|:-----|
 | name | string | EL-WebAPIで定義するproperty name | "on", "operatingMode" |
-| description | object |Propertyのdescription | { "ja":"ON/OFF状態", "ON/OFF Status" } |
-| writable | boolean | 書き込み可能か？ ECHONET LiteのSETに対応 | true:可能, false:不可能 |
-| observable | boolean | 通知可能か？ ECHONET LiteのINFに対応| true:可能, false:不可能 |
-| query | object | GETでqueryが必要な場合、<br>query dataの情報をdata type object(\*1)で記述 |  |
+| description | object |ECHONET Liteで定義されたエコーネットプロパティの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<property name of ECHONET Lite in Japanese>,<br>"en":\<property name of ECHONET Lite in English> <br>} | {<br> "ja":"動作状態", <br>"en":"Operation Status" <br>} |
+| writable | boolean | 書き込みが可能か不可能かを示す<br>ECHONET LiteのSETに対応 | true, false |
+| observable | boolean | 状態変化のログを参照できるか否かを示す<br>ECHONET LiteのINFに対応| true, false |
+| query | object | GETでqueryが必要な場合、<br>query dataの情報をdata type object(\*1)で記述<br>詳細は5.5節を参照 |  |
 | data | object | property dataの情報をdata type object(\*1)で記述 |  |
 
 (\*1) 6. Data Type参照
 
 ### 4.3 Action object
 
-action object はactionを記述する。actionとはpropertyのSETでは記述が難しい動作で、例えば reboot, alarmの解除, toggleなどである。actionを実行するにはPOST methodを使用する。action objectの構成を以下に示す。
+Action object はpropertyのSETでは記述が難しい動作を記述する。例えば reboot, alarmの解除, toggleなどである。ECHONET LiteでSETのみをサポートするエコーネットプロパティに対応する。EL-WebAPIでactionを実行するにはPOST methodを使用する。action objectの構成を以下に示す。
 
 ```
 {
-    "name":<action name>
+    "name":<action name>,
+    "description":<action description>
 }
 ```
 
+| Field | Data Type<br>of JSON | Description | Example |
+|:-----------|:-----|:-----|:-----|
+| name | string | EL-WebAPIで定義するaction name | "cancelAll" |
+| description | object |ECHONET Liteで定義されたエコーネットプロパティの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<property name of ECHONET Lite in Japanese>,<br>"en":\<property name of ECHONET Lite in English> <br>} | {<br> "ja":"一括停止設定", <br>"en":"All Stop setting" <br>} |
+
 ### 4.4 Event object
 
-event object はeventを記述する。eventとは状態変化やエラーの通知などの機器からの通知である。ECHONET LiteのINFというサービスに対応する。event objectにはINFを受信したtime stampとINFの内容が記述されている。eventを取得するにはGET methodを使用する。event objectの構成を以下に示す。
+Event object は状態変化やエラー通知などの機器からの通知を記述する。ECHONET LiteでINFをサポートするエコーネットプロパティに対応する。event objectにはINFを受信したtime stampとINFの内容が記述されている。EL-WebAPIでeventを取得するにはGET methodを使用する。event objectの構成を以下に示す。
 
 ```
 {
@@ -175,9 +186,7 @@ event object はeventを記述する。eventとは状態変化やエラーの通
 
 ### 4.5 Example
 
-以下に一般照明のDevice Descriptionの一部を例として示す。
-
-__Example__
+以下に一般照明のDevice Descriptionを例として示す。
 
 ```
 {
@@ -186,34 +195,51 @@ __Example__
     "properties":[
         {
             "name":"on",
-            "description":{ "ja":"ON/OFF状態", "en":"ON/OFF Status" },
+            "description":{ "ja":"動作状態", "en":"Operation Status" },
             "writable":true,
             "observable":true,
             "data":{
                 "type":"boolean",
                 "values":[
-                    {"value":"true", "ja":"ON", "en":"ON"}, 
-                    {"value":"false", "ja":"OFF", "en":"OFF"}
+                    {"value":true, "ja":"ON", "en":"ON"}, 
+                    {"value":false, "ja":"OFF", "en":"OFF"}
+                ]
+            }
+        },
+        {
+            "name":"isAtFault",
+            "description":{ "ja":"異常発生状態", "en":"Fault Status" },
+            "writable":false,
+            "observable":true,
+            "data":{
+                "type":"boolean",
+                "value":[
+                    {"value":true, "ja":"異常あり", "en":"Fault"},
+                    {"value":false, "ja":"異常無し", "en":"No Fault"}
                 ]
             }
         },
         {
             "name":"brightness",
-            "description":{ "ja":"輝度", "en":"Brightness" },
+            "description":{ "ja":"照度レベル設定", "en":"Illuminance Level" },
             "writable":true,
             "observable":false,
             "data":{
-                "type":"percentage"
+                "type":"integer",
+                "unit":"%",
+                "minimum":0,
+                "maximum":100
             }
         },
         {
             "name":"operatingMode",
-            "description":{ "ja":"動作モード", "en":"Operating Mode" },
+            "description":{ "ja":"点灯モード設定", "en":"Lighting Mode Setting" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"key",
                 "values":[
+                    {"value":"auto", "ja":"自動灯", "en":"Automatic Lighting"},
                     {"value":"normal", "ja":"通常灯", "en":"Normal Lighting"},
                     {"value":"night", "ja":"常夜灯", "en":"Night Lighting"},
                     {"value":"color", "ja":"カラー灯", "en":"Color Lighting"}
@@ -222,7 +248,7 @@ __Example__
         },
         {
             "name":"rgb",
-            "description":{ "ja":"RGB設定", "en":"RGB Value" },
+            "description":{ "ja":"カラー灯モード時RGB設定", "en":"RGB Setting for Color Lighting" },
             "writable":true,
             "observable":false,
             "data":{
@@ -233,6 +259,7 @@ __Example__
                         "description":{ "ja":"赤", "en":"Red" },
                         "data":{
                             "type":"integer",
+                            "unit":null,
                             "minimum":0,
                             "maximum":255
                         }
@@ -242,6 +269,7 @@ __Example__
                         "description":{ "ja":"緑", "en":"Green" },
                         "data":{
                             "type":"integer",
+                            "unit":null,
                             "minimum":0,
                             "maximum":255
                         }
@@ -251,6 +279,7 @@ __Example__
                         "description":{ "ja":"青", "en":"Blue" },
                         "data":{
                             "type":"integer",
+                            "unit":null,
                             "minimum":0,
                             "maximum":255
                         }
@@ -259,12 +288,10 @@ __Example__
             }
         }
     ],
-    "actions":[
-    ],
+    "actions":[],
     "events":[
-        {
-            "name":"on"
-        }
+        { "name":"on" },
+        { "name":"isAtFault" }
     ]
 }
 ```
@@ -388,9 +415,9 @@ ECHONET Lite WebAPI を説明する。
             "deviceId":"generalLighting_3",
             "type":"generalLighting",
             "ip":"192.168.50.7",
-            "protocol":{ "type":"HUE", "version":""},
+            "protocol":{ "type":"HUE", "version":null},
             "manufacturer" :{
-                "description":{ "ja":"Philips", "en":"Philips"}
+                "description":{ "ja":"フィリップス", "en":"Philips"}
             }
         },
         {
@@ -400,7 +427,7 @@ ECHONET Lite WebAPI を説明する。
             "protocol":{ "type":"ECHONET_Lite", "version":"H"},
             "manufacturer" :{
                 "code":"0x00000B", 
-                "description":{ "ja":"Panasonic", "en":"Panasonic"}
+                "description":{ "ja":"パナソニック", "en":"Panasonic"}
             }
         }
     ]
@@ -409,7 +436,7 @@ ECHONET Lite WebAPI を説明する。
 
 ###5.3 GET /el/\<VersionId>/\<DeviceId>
 - DESCRIPTION  
-    DeviceIdで指定した機器の Device Description を取得する。Properties, Actions, Eventsの各項目は機器が実装している項目の情報を取得できる。device description に関しては "4 Device Description" を参照のこと。
+DeviceIdで指定した機器の Device Description を取得する。Properties, Actions, Eventsの各項目は機器が実際に実装している項目の情報を取得できる。Device Description に関しては "4 Device Description" を参照のこと。
 
     ```
     // REQUEST
@@ -429,13 +456,30 @@ ECHONET Lite WebAPI を説明する。
 
     // RESPONSE
     200 OK
-    <device description>
+	{
+	    "type":"generalLighting",
+	    "description":{"ja":"一般照明", "en":"General Lighting"},
+	    "properties":[
+	        {
+	            "name":"on",
+	            "description":{ "ja":"動作状態", "en":"Operation Status" },
+	            "writable":true,
+	            "observable":true,
+	            "data":{
+	                "type":"boolean",
+	                "values":[
+	                    {"value":true, "ja":"ON", "en":"ON"}, 
+	                    {"value":false, "ja":"OFF", "en":"OFF"}
+	                ]
+	            }
+	        },
+	        <以下省略>
     ```
     
 ###5.4 GET /el/\<VersionId>/\<DeviceId>/properties
 - DESCRIPTION  
-    DeviceIdで指定した機器の全てのPropertyについて現在の値を取得する。
-    Propertyの値はプロトコルブリッジがキャッシュしている値なので、機器の最新の値とは限らない。最新の値はpropertyを個別に指定して取得できる。  
+    DeviceIdで指定した機器の全てのPropertyについて値を取得する。  
+    Propertyの値はプロトコルブリッジがキャッシュしている値なので最新の値とは限らない。最新の値はpropertyを個別に指定して取得できる。5.5節参照のこと。  
     プロトコルブリッジは以下のタイミングでキャッシュを更新する。
     - プロトコルブリッジの起動時
     - プロトコルブリッジが初期化コマンドを受信した場合
@@ -467,6 +511,7 @@ ECHONET Lite WebAPI を説明する。
     200 OK
     {
         "on":true,
+        "isAtFault":false,
         "brightness":50,
         "operatingMode":"color",
         "rgb":{ "r":20, "g":255, "b":0 }
@@ -478,7 +523,7 @@ ECHONET Lite WebAPI を説明する。
 - DESCRIPTION  
 指定したpropertyの値を取得する。  
 - Query  
-通常は不要。スマートメーターなど一部の機器の一部のpropertyで必要となる。keyはproperty毎に定義する。  
+通常は不要。スマートメーターなど一部の機器の特定のpropertyでSET(EL)とGET(EL)のatomic operationが必要な場合にSETのdataを指定するためにQueryを利用する。keyはproperty毎に定義する。  
 
     ```
     // REQUEST
@@ -490,6 +535,7 @@ ECHONET Lite WebAPI を説明する。
 
     or
     
+    // RESPONSEがobjectの場合
     200 OK
     {
         <propertyName>:{
@@ -515,7 +561,7 @@ ECHONET Lite WebAPI を説明する。
     // REQUEST
     GET http://192.168.50.11/el/v1/generalLighting_1/properties/rgb
 
-    // RESPONSE
+    // RESPONSEがobjectの場合
     200 OK
     {
         "rgb":{
@@ -527,7 +573,7 @@ ECHONET Lite WebAPI を説明する。
     ```
 
     ```
-    // REQUEST
+    // REQUESTにqueryがある場合
     http://192.168.50.11/el/v1/lvSmartelectricEnergyMeter_1/properties/normDirIntegralEnergyLog1?day=0
 
     // RESPONSE
@@ -592,8 +638,8 @@ actionの実行をリクエストする
 
     ```
     // REQUEST
-    POST http://192.168.50.11/el/v1/generalLighting_1/actions
-    { "name":"reboot" }
+    POST http://192.168.50.11/el/v1/cookingHeater_1/actions
+    { "name":"cancelAll" }
     
     //RESPONSE
     200 OK
@@ -603,7 +649,6 @@ actionの実行をリクエストする
 
 - DESCRIPTION  
 指定したdeviceのeventsを取得する  
-- Body Data  
 
     ```
     // REQUEST
@@ -613,9 +658,9 @@ actionの実行をリクエストする
     200 OK
     [
         {
+            "time":<time>,
             "name":<propertyName>,
-            "description":<value>,
-            "time":<time>
+            "value":<value>
         },
         ...
     ]
@@ -631,54 +676,40 @@ actionの実行をリクエストする
     200 OK
     [
         {
-            "time":"2017-01-24T13:02:45+00:00"
+            "time":"2017-01-24T13:02:45+09:00"
             "name":"on",
-            "description":true,
+            "value":true,
         },
         {
-            "time":"2017-01-24T13:15:22+00:00"
+            "time":"2017-01-24T13:15:22+09:00"
             "name":"on",
-            "description":false,
+            "value":false,
         },
         ...
     ]
     ```
 
 
-## 6. Data Type  
-EL-WebAPIで取得または設定するProperty値の data type を以下のように定義する。Specific Dataは特定の条件を追加したdata typeである。  
+## 6. Data Type Object  
+###6.1 Definition of Data Type
+EL-WebAPIで取得または設定するProperty値の data type を以下のように定義する。  
 
-- Simple Data:boolean, integer, number, string, null
-- Structured Data:array, object
-- Specific Data:level, date, percentage, raw
+- Simple Data: boolean, key, number, integer, date
+- Structured Data: array, object
 
-| Data Type<br>of WebAPI | Description | Member of<br>Device Description | Data Type<br>of JSON |
+| Data Type<br>of WebAPI | Data Type<br>of JSON |Description | Member of<br>Device Description | 
 |:-----------|:-----|:-----|:-----|
-| boolean | true または false の２値をとるデータ型 | value | boolean |
-| key | 状態を表すkeyword | value | string |
-| number | 固定小数点数値<br>複数の値を扱う場合は配列とする | unit(\*1)<br>minimum(\*2)<br>maximum(\*2) | number |
-| integer | 整数値<br>複数の値を扱う場合は配列とする | unit(\*1)<br>minimum(\*2)<br>maximum(\*2) | number |
-| array | 配列 | element | [ ] |
-| object | 複数の要素のデータから構成されるデータをJSONのobject型式で表現する | field | |
-| level | 強弱のレベルを1（最弱）から10（最強）の整数値で表すデータ型 | | number |
-| date | Date&Timeを表すデータ型　ISO8601準拠<br>"yyyy-MM-ddThh:mm:ss"のformat | | string |
-| percentage | 割合を百分率（パーセンテージ）で表すデータ型<br>unit:%, data type:integer, range:0 ~ 100  | | number |
-| raw | rawデータ<br>1byteデータの配列 | | [number] |
-(\*1) optional  
-(\*2) optional。ただしpropertyの "writable" が true の場合はrequired。
+| boolean | boolean |true または false の２値をとるデータ型 | values | 
+| key | string |状態を表すkeyword | values | 
+| number | number |固定小数点数値 | unit<br>minimum<br>maximum | 
+| integer | number |整数値 | unit<br>minimum<br>maximum | 
+| date | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" || 
+| array |  [ ] |同一data typeの要素の配列 | element |
+| object |  { } |複数の要素から構成されるデータ | field |
 
-| member | Description | Data Type of JSON |
-|:-----------|:-----|:-----|
-| type | data type<br>"boolean", "key", "number", "integer", "array", "object", level", date", percentage", "raw" | string |
-| values | 取りうる値とそのdescription<br>{<br>"value":<value>,<br>"ja":\<description in Japanese>,<br>"en":\<description in English><br>} | [object] |
-| unit | 単位 | string |
-| minimum | 最小値 | number |
-| maximum | 最大値 | number |
-| element | 配列の要素をdata type objectで表現 | object |
-| field | オブジェクトの要素をdata type objectで表現 | object |
-
-###6.1 Simple Data
-boolean data type objectのformatを以下に示す。
+###6.2 Description of Data Type Object
+####6.2.1 boolean
+Format of Device Description
 
 ```
 {
@@ -690,7 +721,30 @@ boolean data type objectのformatを以下に示す。
 }
 ```
 
-key data type objectのformatを以下に示す。
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| values |  [object] |value objectの配列<br>value object: 取りうる値とそのdescription<br>{<br>"value":\<true or false>,<br>"ja":\<description in Japanese>,<br>"en":\<description in English><br>} |
+
+Example of Device Description  
+    
+```
+{
+    "type":"boolean",
+    "values":[
+        {"value":true, "ja":"異常あり", "en":"Fault"},
+        {"value":false, "ja":"異常無し", "en":"No Fault"}
+    ]
+}
+```
+
+Example of body data  
+    
+```
+{ "on":true }, { "on":false }
+```
+
+####6.2.2 key
+Format of Device Description
 
 ```
 {
@@ -703,7 +757,30 @@ key data type objectのformatを以下に示す。
 }
 ```
 
-number data type objectのformatを以下に示す。
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| values |  [object] |value objectの配列<br>value object: 取りうる値とそのdescription<br>{<br>"value":\<value>,<br>"ja":\<description in Japanese>,<br>"en":\<description in English><br>} |
+
+Example of Device Description  
+    
+```
+{
+    "type":"key",
+    "values":[
+        {"value":"normal", "ja":"通常灯", "en":"Normal Lighting"},
+        {"value":"night", "ja":"常夜灯", "en":"Night Lighting"},
+        {"value":"color", "ja":"カラー灯", "en":"Color Lighting"}
+    ]
+}
+```
+Example of body data  
+    
+```
+{ "operatingMode":"normal" }, { "operatingMode":"color" }  
+```
+
+####6.2.3  number
+Format of Device Description
 
 ```
 {
@@ -713,8 +790,31 @@ number data type objectのformatを以下に示す。
     "maximum":<maximum number>
 }
 ```
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| unit | string |単位 | 
+| minimum |  number |最小値 |
+| maximum | number |最大値 | 
+	
+Example of Device Description  
 
-integer data type objectのformatを以下に示す。
+```
+{
+    "type":"number",
+    "unit":"kWh",
+    "minimum":0,
+    "maximum":9999
+}
+```
+
+Example of body data  
+
+```
+{ "integralEnergy":15.5 }, 
+```
+
+####6.2.4 integer
+Format of Device Description
 
 ```
 {
@@ -724,9 +824,54 @@ integer data type objectのformatを以下に示す。
     "maximum":<maximum number>
 }
 ```
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| unit | string |単位 | 
+| minimum |  number |最小値 |
+| maximum | number |最大値 | 
 
-###6.2 Structured Data
-data type objectのformatを以下に示す。
+Example of Device Description  
+
+```
+{
+    "type":"integer",
+    "unit":"℃",
+    "minimum":-20,
+    "maximum":50
+}
+```
+
+Example of body data  
+
+```
+{ "temperature":25 }, { "temperature":-10] }
+```
+
+####6.2.5 date  
+Format of Device Description
+
+```
+{
+    "type":"date"
+}
+```
+
+Example of Device Description  
+
+```
+{
+    "type":"date"
+}
+```
+
+Example of body data  
+
+```
+{ "date" :"2017-01-24T13:15:22+09:00" }
+```
+
+####6.2.6 array
+Format of Device Description
 
 ```
 {
@@ -734,6 +879,34 @@ data type objectのformatを以下に示す。
     "element":<data type object>
 }
 ```
+	
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| element | object | 配列の要素をdata type objectで表現 | 
+
+Example of Device Description  
+
+```
+{
+    "type":"array",
+    "element":{
+        "type":"number",
+        "unit":"kWh"
+        "minimum":0,
+        "maximum":9999
+    }
+}
+```
+
+Example of body data  
+
+```
+{ "powerConsumption":[23, 12, 0,...] }
+```
+
+####6.2.7 object
+Format of Device Description
+
 ```
 {
     "type":"object",
@@ -747,238 +920,19 @@ data type objectのformatを以下に示す。
     ]
 }
 ```
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| field | [object] |data type objectの配列 | 
 
-###6.3 Specific Data
-levelは以下のdata type objectと同等である
-
-```
-{
-    "type":"integer",
-    "minimum":1,
-    "maximum":10
-}
-```
-
-dateはISO8601準拠の "yyyy-MM-ddThh:mm:ss" のformatの "string" dataである  
-
-percentageは以下のdata type objectと同等である
+Example of Device Description (1)  
 
 ```
 {
-    "type":"integer",
-    "unit":"%",
-    "minimum":1,
-    "maximum":100
-}
-```
-
-rawは以下のdata type objectと同等である
-
-```
-{
-    "type":"array",
-    "element":"integer"
-}
-```
-
-###Examples  
-- boolean  
-Example of Device Description  
-    
-    ```
-    {
-        "type":"boolean",
-        "values":[
-            {"value":true, "ja":"異常あり", "en":"Fault"},
-            {"value":false, "ja":"異常無し", "en":"No Fault"}
-        ]
-    }
-    ```
-
-    Example of JSON data  
-    
-    ```
-    { "on" :true }, { "on" :false }
-    ```
-
-- key  
-    Example of Device Description  
-    
-    ```
-    {
-        "type":"key",
-        "values":[
-            {"value":"normal", "ja":"通常灯", "en":"Normal Lighting"},
-            {"value":"night", "ja":"常夜灯", "en":"Night Lighting"},
-            {"value":"color", "ja":"カラー灯", "en":"Color Lighting"}
-        ]
-    }
-    ```
-    Example of JSON data  
-    
-    ```
-    { "operatingMode" :"normal" }, { "operatingMode" :"color" }  
-    ```
-
-- number  
-    Example of Device Description  
-
-    ```
-    {
-        "type":"number",
-        "unit":"kWh"
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "integralEnergy":15.5 }, 
-    ```
-
-- integer  
-    Example of Device Description  
-
-    ```
-    {
-        "type":"integer",
-        "unit":"℃",
-        "minimum":0,
-        "maximum":50
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "temperature":25 }, { "temperature":-100] }, { "energy":[20, 34, 59, 109] }
-    ```
-
-- level: 
-    Example of Device Description  
-
-    ```
-    {
-        "type":"level"
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "airFlow" :4 }
-    ```
-
-- date  
-    Example of Device Description  
-
-    ```
-    {
-        "type":"date"
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "date" :"2017-10-10T13:50:40" }
-    ```
-
-- percentage  
-    Example of Device Description  
-
-    ```
-    {
-        "type":"percentage"
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "humidity" :25 }
-    ```
-
-- raw  
-    Example of Device Description  
-
-    ```
-    {
-    "type":"raw"
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "raw" :[23, 12, 0,...] }
-    ```
-
-- array  
-    Example of Device Description  
-
-    ```
-    {
-        "type":"array",
-        "element":{
-            "type":"number",
-            "unit":"kWh"
-        }
-    }
-    ```
-
-    Example of JSON data  
-
-    ```
-    { "powerConsumption" :[23, 12, 0,...] }
-    ```
-
-- object  
-    Example of Device Description (1)  
-
-    ```
-    {
-        "type":"object",
-        "field":[
-            {
-                "name":"r",
-                "description":{ "ja":"赤", "en":"Red" },
-                "data":{
-                    "type":"integer",
-                    "minimum":0,
-                    "maximum":255
-                }
-            },
-            {
-                "name":"g",
-                "description":{ "ja":"緑", "en":"Green" },
-                "data":{
-                    "type":"integer",
-                    "minimum":0,
-                    "maximum":255
-                }
-            },
-            {
-                "name":"b",
-                "description":{ "ja":"青", "en":"Blue" },
-                "data":{
-                    "type":"integer",
-                    "minimum":0,
-                    "maximum":255
-                }
-            }
-        ]
-    }
-    ```
-
-    Example of Device Description (2)  
-
-    ```
     "type":"object",
     "field":[
         {
-            "name":"day",
-            "description":{ "ja":"日", "en":"day" },
+            "name":"r",
+            "description":{ "ja":"赤", "en":"Red" },
             "data":{
                 "type":"integer",
                 "minimum":0,
@@ -986,39 +940,77 @@ Example of Device Description
             }
         },
         {
-            "name":"energy",
-            "description":{ "ja":"消費電力量", "en":"consumed energy" },
+            "name":"g",
+            "description":{ "ja":"緑", "en":"Green" },
             "data":{
-                "type":"integer"
+                "type":"integer",
+                "minimum":0,
+                "maximum":255
             }
         },
+        {
+            "name":"b",
+            "description":{ "ja":"青", "en":"Blue" },
+            "data":{
+                "type":"integer",
+                "minimum":0,
+                "maximum":255
+            }
+        }
     ]
-    ```
+}
+```
 
-    Example of JSON data (1)  
+Example of body data (1)  
 
-    ```
-    {
-        "rgb":{
-            "r":20 },
-            "g":255},
-            "b":0  }
-        }
+```
+{
+    "rgb":{
+        "r":20 },
+        "g":255},
+        "b":0  }
     }
-    ```
-    Example of JSON data (2)  
+}
+```
 
-    ```
+Example of Device Description (2)  
+
+```
+"type":"object",
+"field":[
     {
-        "normDirIntegralEnergyLog1":{
-            "day":0,
-            "energy":[20, 34, 59, 109] 
+        "name":"day",
+        "description":{ "ja":"日", "en":"day" },
+        "data":{
+            "type":"integer",
+            "minimum":0,
+            "maximum":255
         }
+    },
+    {
+        "name":"energy",
+        "description":{ "ja":"消費電力量", "en":"consumed energy" },
+        "data":{
+            "type":"array"
+            "element":{
+                "type":"integer",
+                "unit":kWh
+            }
+        }
+    },
+]
+```
+
+Example of body data (2)  
+
+```
+{
+    "normDirIntegralEnergyLog1":{
+        "day":0,
+        "energy":[20, 34, 59, 109] 
     }
-    ```
-
-
-
+}
+```
 
 ## 7. ERROR処理
 ERRORが発生した場合は、Status Codeを "400" とする。  
@@ -1027,21 +1019,25 @@ ERROR時のRESPONSEは以下のとおり。
 ```
 // RESPONSE
 400 Error
-{ "type":<ErrorType>, "message":<ErrorMessage> }   
+{
+    "type":<ErrorType>,
+    "message":<ErrorMessage>
+}   
 ```
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| type | string | ErrorのTypeを示す。<br>プロトコルブリッジがErrorと判断する場合（rangeError, referenceError, typeError, timeout）と機器がエラーと判断する場合（deviceError）がある。 | 
+| message | string | ERRORの詳細を記述する任意のString data | 
 
 - ErrorType  
 
     | ErrorType | Description | Example |
     |:------|:------------|:------------|
-    | rangeError | 設定する値が仕様の範囲外の場合 | number, integer:値がminとmaxの間にない場合<br>key:keyが存在しない場合<br>level:値が1...10でない場合 |
+    | rangeError | 設定する値が仕様の範囲外の場合 | number, integer:値がminとmaxの間にない場合<br>key:keyが存在しない場合 |
     | referenceError | 設定するdeviceNameやpropertyNameが存在しない場合 |  |
-    | typeError | 設定する値の型が仕様に反する場合 |  |
-    | timeoutError | 機器から一定時間内に返答がない場合 |  |
+    | typeError | 設定する値の型がDevice Descriptionに記述された型と一致しない場合 |  |
+    | timeout | 機器から一定時間内に返答がない場合 |  |
     | deviceError | 機器から受信したデータがerrorに対応する値の場合<br>機器からSNAを受信した場合 | 0xFFFEがOverflowを意味する場合<br>GET\_SNA, SET\_SNAを受信した場合 |
-
-- ErrorMessage  
-ERRORの詳細を記述する任意のString data。  
 
 ####Examples  
 
