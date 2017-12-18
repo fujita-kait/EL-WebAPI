@@ -122,7 +122,7 @@ __Example__
 
 ## 4. Device Description
 
-###4.1 共通項目  
+### 4.1 共通項目  
 　Propertiesのメンバーの "on", "isAtFault"は全ての機器で共通である。  
 
 ### Properties
