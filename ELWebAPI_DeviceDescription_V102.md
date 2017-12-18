@@ -4,6 +4,8 @@
 |:-----------|:-----|:-----|
 | 2017.12.11 | version 1.0.0 |  |
 | 2017.12.17 | version 1.0.1 | Device DescriptionのDataのvalueの表記をobjectからarrayに変更<br>Data Typeを修正(levelとpercentageを削除） |
+| 2017.12.18 | version 1.0.2 | Property nameに関する軽微な修正（共通項目の"Operating Status" -> "Operation Status" |
+
 ## 1. Abstract
 　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。
 
@@ -129,7 +131,7 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| on | GET, PUT| boolean | 0x80 | 動作状態<br>Operating status |INF|
+| on | GET, PUT| boolean | 0x80 | 動作状態<br>Operation Status |INF|
 | isAtFault |GET| boolean|0x88| 異常発生状態<br>Fault status |INF|
 
 ### Device Description (Common Items)
@@ -139,7 +141,7 @@ __Example__
     "properties":[
         {
             "name":"on",
-            "description":{ "ja":"動作状態状態", "en":"Operating Status" },
+            "description":{ "ja":"動作状態状態", "en":"Operation Status" },
             "writable":true,
             "observable":true,
             "data":{
@@ -1562,7 +1564,7 @@ __Example__
 | integralDischargingEnergy | GET | integer| 0xA9 | AC積算放電電力量計測値<br>AC measured cumulative discharging electric energy |\*1|
 | targetChargingEnergy | GET, PUT | integer| 0xAA | AC充電量設定値<br>AC charge amount setting value |INF|
 | targetDischargingEnergy | GET, PUT | integer| 0xAB | AC放電量設定値<br>AC discharge amount setting value |INF|
-| operatingStatus | GET | key | 0xCF | 運転動作状態<br>Working operation status |INF|
+| OperatingStatus | GET | key | 0xCF | 運転動作状態<br>Working operation status |INF|
 | operatingMode | GET, PUT | key | 0xDA | 運転モード設定<br>Operation mode setting |INF|
 | remainingStoredEnergy1 | GET | integer | 0xE2 | 蓄電残量1<br>Remaining stored electricity 1 | |
 | remainingStoredEnergy2 | GET | integer | 0xE3 | 蓄電残量2<br>Remaining stored electricity 2 |\*2|
