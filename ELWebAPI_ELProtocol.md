@@ -1,126 +1,294 @@
-# ECHONET Lite WebAPI (EL-WebAPI) Device Description
+#Device Description of EL-WebAPI and ECHONET Lite Protocol
+
+Revision History  
 
 | Date | Version  | Description |
 |:-----------|:-----|:-----|
-| 2017.12.11 | version 1.0.0 |  |
-| 2017.12.17 | version 1.0.1 | Device DescriptionのDataのvalueの表記をobjectからarrayに変更<br>Data Typeを修正(levelとpercentageを削除） |
-| 2017.12.18 | version 1.0.2 | Property nameに関する軽微な修正（共通項目の"Operating Status" -> "Operation Status" |
+| 2017.12.21 | version 1.0.0 |  |
 
-## 1. Abstract
-　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。
+## 1. 概要
+　ECHONET Lite WebAPI(EL-WebAPI)に基づく各機器の仕様をDevice Descriptionとして定義した。EL-WebAPIとECHONET LiteとのProtocol Bridgeを開発するためにDevice Descriptionを拡張してECHONET Lite protocolに関する情報を追加する。JSON file名はdeviceDescription_wEL.jsonとする。  
 
-## 2. Scope
-　このドキュメントで記述する対象機器は、重点８機器とECHONET Lite認証取得製品が存在する機器を前提とする。このドキュメントで記述するPropertyに関しては、ECHONET Liteで必須とされているものを前提とする。対象とするECHONET 機器オブジェクト詳細規定のバージョンは Release Iとする。
-
-## 3. Sample
-
-以下に一般照明のDevice Descriptionを例として示す。
-
-__Example__
+## 2. Definition
+### 2.1 全体構成  
+metaDataとdevices(device情報)で構成される。metaDataの内容は今後増える可能性がある。device情報にはまずdeviceに共通の項目"common"の記述があり、それに続いて各deviceの記述がある。  
+deviceNameはEL-WebAPIで定義されたdevice名である。  
 
 ```
 {
-    "type":"generalLighting",
-    "description":{"ja":"一般照明", "en":"General Lighting"},
-    "properties":[
-        {
-            "name":"on",
-            "description":{ "ja":"動作状態", "en":"Operation Status" },
-            "writable":true,
-            "observable":true,
-            "data":{
-                "type":"boolean",
-                "values":[
-                    {"value":true, "ja":"ON", "en":"ON"}, 
-                    {"value":false, "ja":"OFF", "en":"OFF"}
-                ]
-            }
-        },
-        {
-            "name":"isAtFault",
-            "description":{ "ja":"異常発生状態", "en":"Fault Status" },
-            "writable":false,
-            "observable":true,
-            "data":{
-                "type":"boolean",
-                "value":[
-                    {"value":true, "ja":"異常あり", "en":"Fault"},
-                    {"value":false, "ja":"異常無し", "en":"No Fault"}
-                ]
-            }
-        },
-        {
-            "name":"brightness",
-            "description":{ "ja":"輝度", "en":"Brightness" },
-            "writable":true,
-            "observable":false,
-            "data":{
-                "type":"integer",
-                "unit":"%",
-                "minimum":0,
-                "maximum":100
-            }
-        },
-        {
-            "name":"operatingMode",
-            "description":{ "ja":"動作モード", "en":"Operating Mode" },
-            "writable":true, 
-            "observable":false,
-            "data":{
-                "type":"key",
-                "values":[
-                    {"value":"normal", "ja":"通常灯", "en":"Normal Lighting"},
-                    {"value":"night", "ja":"常夜灯", "en":"Night Lighting"},
-                    {"value":"color", "ja":"カラー灯", "en":"Color Lighting"}
-                ]
-            }
-        },
-        {
-            "name":"rgb",
-            "description":{ "ja":"RGB設定", "en":"RGB Value" },
-            "writable":true,
-            "observable":false,
-            "data":{
-                "type":"object",
-                "field":[
-                    {
-                        "name":"r",
-                        "description":{ "ja":"赤", "en":"Red" },
-                        "data":{
-                            "type":"integer",
-                            "minimum":0,
-                            "maximum":255
-                        }
-                    },
-                    {
-                        "name":"r",
-                        "description":{ "ja":"赤", "en":"Red" },
-                        "data":{
-                            "type":"integer",
-                            "minimum":0,
-                            "maximum":255
-                        }
-                    },
-                    {
-                        "name":"r",
-                        "description":{ "ja":"赤", "en":"Red" },
-                        "data":{
-                            "type":"integer",
-                            "minimum":0,
-                            "maximum":255
-                        }
-                    }
-                ]
-            }
-        }
-    ],
-    "actions":[],
-    "events":[
-        { "name":"on" },
-        { "name":"isAtFault" }
+    "metaData": {
+        "date":<date>,                // Fileの作成日 "yyyy-mm-dd"
+        "release":<Release情報>        // ECHONET機器オブジェクト詳細規定のRelease情報
+    },
+    "devices":[
+        { <device description> },
+        { <device description> },
+        ...
     ]
 }
 ```
+
+全体構成の例
+
+```
+{
+    "metaData": {
+        "date":"2017-10-12",
+        "release":"I"
+    },
+    ”devices": [
+        { <device description of temperatureSensor> },
+        { <device description of homeAirConditioner> },
+        ...
+    ]
+}
+```
+
+### 2.2. device description
+device descriptionの構成を以下に示す。EL-WebAPIのDevice Descriptionから拡張しているのは"eoj"である。
+
+```
+{
+    "type":<device type>,
+    "eoj":<eoj>,
+    "description":<device type description>,
+    "properties":[{ <property> }, { <property> }... ],
+    "actions":[{ <action> }, { <property> }... ],
+    "events":[{ <property> }, { <property> }... ]
+}
+```
+
+| member | Data Type of JSON |Description |  Example |
+|:-----------|:-----|:-----|:-----|
+| eoj | string | EOJをHEX表示のstringで記述 |  "0x0280" |
+
+###2.3. property object
+property objectの構成を以下に示す。EL-WebAPIのDevice Descriptionから拡張しているのは"epc"と"data"である。"data"に関しては後述する。  
+EL-WebAPIでは不要であるがProtocol Bridgeとしては必要となるPropertyの場合(\*)、"name":null としている。  
+\* (A) atomic operationでのSET側propertyの場合 (B) 値の換算に必要なpropertyの場合
+
+```
+{
+    "name":<property name>,
+    "epc":<epc>,
+    "description":<property description>,
+    "writable":<writable flag>,
+    "observable":<observable flag>,
+    "query":<query info>,
+    "data":<data info>
+}
+```
+
+| member | Data Type of JSON |Description |  Example |
+|:-----------|:-----|:-----|:-----|
+| epc | string |EPCをHEX表示のstringで記述 |  "0x80" |
+
+property objectの例
+
+```
+{
+    "name": "on",
+    "epc":"0x80",
+    "description": { "ja":"動作状態", "en":"Operation Status" },
+    "writable": true,
+    "observable": true,
+    "data": {
+        "type": "boolean",
+        "value": {
+            {"value":true, "ja":"ON", "en":"ON", "edt":"0x30"}, 
+            {"value":false, "ja":"OFF", "en":"OFF", "edt":"0x31"}
+        }
+    }
+}
+```
+
+
+### 2.4. Data Type
+以下、EL-WebAPIのDevice Descriptionから拡張しているのは"edt"である。
+
+#### boolean  
+edtは1byteのunsigned。
+
+```
+{
+    "type":"boolean",
+    "values": [
+        {"value":true, "ja":<description in Japanese>, "en":<description in English>, "edt":<edt>},
+        {"value":false, "ja":<description in Japanese>, "en":<description in English>, "edt":<edt>}
+    ]
+}
+```
+edtが１byteの場合
+
+| member | Data Type of JSON |Description |  Example |
+|:-----------|:-----|:-----|:-----|
+| edt | string |EDT data in HEX string |  "0x30" |
+
+edtがbitmapの場合
+
+| member | Data Type of JSON |Description |  Example |
+|:-----------|:-----|:-----|:-----|
+| edt |object | {<br>"size":\<byte size>, <br>"index":\<byte index>, <br>"mask":\<bit mask>, <br>"data":\<bit data><br>}<br>byte index:先頭(0)からのbyte数(integer)<br>bitmask:"0bxxxxxxxx"形式のstring<br>bitData:値(integer)<br>  |   |
+| edt.size | number |bitmapの全体のbyte数 |  3 |
+| edt.index | number | 先頭(=0)からのbyte数 |  0 |
+| edt.mask | string | 対応するbitをbitmask("0bxxxxxxxx"形式のstring)で記述 | "0b00000010" |
+| edt.data | number | bitmapの値 | 1 |
+
+Example of boolean：edtが1byteの数値の場合
+    
+```
+{
+    "type":"boolean",
+    "values":[
+        {"value":true, "ja":"点灯", "en":"ON", "edt":"0x30"},
+        {"value":false, "ja":"消灯", "en":"OFF", "edt":"0x31"}
+    ]
+}
+```
+    
+Example of boolean：edtがbitmap(先頭のbyteの下から2bit目の値を利用する)の場合
+    
+```
+{
+    "type":"boolean",
+    "values":[
+        {"value":true,"ja":"点灯","en":"ON","edt":{"size":1, "index":0, "mask":"0b00000010", "data":1}},
+        {"value":false,"ja":"消灯","en":"OFF","edt":{"size":1, "index":0, "mask":"0b00000010", "data":0}}
+    ]
+}
+```
+
+#### key  
+edtは1byteのunsigned。
+
+```
+{
+    "type":"key",
+    "values":[<value object>]
+}
+```
+
+value object
+
+| member | Data Type of JSON |Description |  Example |
+|:-----------|:-----|:-----|:-----|
+| value | string | value | "cooling" |
+| ja | string | Description in Japanese | "冷房" |
+| en | string | Description in English | "Cooling" |
+| edt | string | EDT data in HEX string| "0x42" |
+
+
+Example of key
+
+```
+{
+    "type":"key",
+    "values":[
+        {"value":"cooling", "ja":"冷房", "en":"Cooling", "edt":"0x42"}, 
+        {"value":"heating", "ja":"暖房", "en":"Heating", "edt":"0x43"},
+        ...
+    ]
+}
+```
+
+#### number
+
+```
+{
+    "type":"number",
+    "unit":<unit>,
+    "minimum":<minimum number>,
+    "maximum":<maximum number>,
+    "alternatives":[<value object>],
+    "edt":{
+        "isUnsigned":<boolean>, 
+        "size":<byte size>},
+        "magnification":<magnification>,
+        "coefficient":<EPC of coefficient>,
+        "atomic":<EPC of atomic operation>,
+        "exceptions":[<value object>]
+    }
+}
+```
+
+| member | Data Type of JSON | Description | Example |
+|:-----------|:-----|:-----|:-----|
+| edt.isUnsigned | boolean | unsignedであるか否か | true |
+| edt.size | number | data size(number of bytes) | 4 |
+| edt.magnification | number | EDT値を実際の値に変換する際の倍率 | 0.1 |
+| edt.coefficient | [string] | 特定のEPCの値を係数とする場合のEPCをStringでHEX表記 | ["0xA0", "0xA1"] |
+| edt.atomic | string | GETの前にSETが必要な場合のSETのEPCをStringでHEX表記 | "0xA0" |
+| edt.exceptions | [object] | 特定の値に数値ではない意味を持たせる場合(GET only)<br>[\<value object>] |  |
+
+Example of "alternatives"
+	
+```
+{"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+```
+
+Example of "edt.exceptions"
+
+```
+{"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7F"},
+{"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x80"},
+{"value":"notApplicable", "ja":"計測不能","en":"Not Applicable", "edt":"0x7E"}
+```
+
+#### integer  
+"edt"に関してはnumberを参照
+
+```
+{
+    "type":"integer",
+    "unit":<unit>,
+    "minimum":<minimum number>,
+    "maximum":<maximum number>,
+    "edt":<edt>
+}
+```
+
+#### level
+edtは1byteのunsigned。
+
+```
+{
+    "type":"level",
+    "maximum":<maximum number>,
+    "alternatives":[<value object>],
+    "edt":{ "base":<base value in Hex string> }
+}
+```
+| member | Data Type of JSON | Description | Example |
+|:-----------|:-----|:-----|:-----|
+| edt.base | string | 最小値に対応するedtの値をHEX文字列表記 | "0x31" |
+
+Example of "alternatives"
+	
+```
+{"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+```
+
+Example of "edt.base"
+
+```
+{"base":"0x31"}
+```
+
+#### date  
+拡張なし  
+
+#### array
+
+```
+"type":"array",
+"element":{
+    "type":"integer",
+    ...
+}
+```
+
+#### object
+拡張なし  
 
 ## 4. Device Description
 
@@ -130,9 +298,9 @@ __Example__
 ### Properties
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
-|:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
+|:--------------|:----|:--------------|:----------|:--------|:----------------|:----|
 | on | GET, PUT| boolean | 0x80 | 動作状態<br>Operation Status |INF|
-| isAtFault |GET| boolean|0x88| 異常発生状態<br>Fault status |INF|
+| isAtFault | GET| boolean|0x88| 異常発生状態<br>Fault status |INF|
 
 ### Device Description (Common Items)
 
@@ -141,27 +309,29 @@ __Example__
     "properties":[
         {
             "name":"on",
+            "epc":"0x80",
             "description":{ "ja":"動作状態状態", "en":"Operation Status" },
             "writable":true,
             "observable":true,
             "data":{
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"ON", "en":"ON"}, 
-                    {"value":false, "ja":"OFF", "en":"OFF"}
+                    {"value":true, "ja":"ON", "en":"ON", "edt":"0x30"}, 
+                    {"value":false, "ja":"OFF", "en":"OFF", "edt":"0x31"}
                 ]
             }
         },
         {
             "name":"isAtFault",
+            "epc":"0x88",
             "description":{ "ja":"異常発生状態", "en":"Fault Status" },
             "writable":false,
             "observable":true,
             "data":{
                 "type":"boolean",
                 "values":[
-                    {"valu":true, "ja":"異常あり", "en":"Fault"},
-                    {"value":false, "ja":"異常無し", "en":"No Fault"}
+                    {"value":true, "ja":"異常あり", "en":"Fault", "edt":"0x41"},
+                    {"value":false, "ja":"異常無し", "en":"No Fault", "edt":"0x42"}
                 ]
             }
         }
@@ -176,6 +346,7 @@ __Example__
 
 ### 4.2 機器毎のDevice Description
 以下に機器毎のDevice Descriptionを記述する。実際のDevice Descriptionは前節の共通項目をマージしたものとなる。
+
 ### List
 
 | 機器名 | Device Type | EOJ |
@@ -226,19 +397,27 @@ __Example__
 ```
 {
     "type":"illuminanceSensor",
+    "eoj":"0x000D",
     "description":{"ja":"照度センサ", "en":"Illuminance Sensor"},
     "properties":[
         {
             "name":"illuminance",
-            "description":{ "ja":"照度計測値1", "en":"Illuminance value1" },
+            "epc":"0xE0",
+            "description":{ "ja":"照度計測値", "en":"Illuminance value" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer",
-                "unit":"Lux"
+                "unit":"Lux",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":2
+                }    
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -255,23 +434,36 @@ __Example__
 ```
 {
     "type":"temperatureSensor",
+    "eoj":"0x0011",
     "description":{"ja":"温度センサ", "en":"Temperature Sensor"},
     "properties":[
         {
             "name":"temperature",
-            "description":{ "ja":"温度計測値", "en":"Measured temperature value" },
+            "epc":"0xE0",
+            "description":{ "ja":"", "en":"" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"℃"
+                "unit":"℃",
+                "edt":{
+                    "isUnsigned":false,
+                    "size":2,
+                    "magnification":0.1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7FFF"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x8000"}
+                    ]
+                }    
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
-## 湿度センサ:humiditySensor:0x0012
+### 湿度センサ:humiditySensor:0x0012
 
 ### Properties
 
@@ -284,21 +476,33 @@ __Example__
 ```
 {
     "type":"humiditySensor",
+    "eoj":"0x0012",
     "description":{"ja":"湿度センサ", "en":"Humidity Sensor"},
     "properties":[
         {
             "name":"humidity",
-            "description":{ "ja":"相対湿度計測値", "en":"Measured value of relative humidity" },
+            "epc":"0xE0",
+            "description":{ "ja":"湿度", "en":"Humidity" },
             "writable":false,
             "observable":false,
             "data":{
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0xFF"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0xFE"}
+                    ]
+                }    
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -315,19 +519,28 @@ __Example__
 ```
 {
     "type":"electricPowerSensor",
+    "eoj":"0x0022",
     "description":{"ja":"電力量センサ", "en":"Electric Power Sensor"},
     "properties":[
         {
             "name":"electricEnergy",
+            "epc":"0xE0",
             "description":{ "ja":"積算電力量計測値", "en":"Integral electric energy" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer",
-                "unit":"kWh"            
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4,
+                    "magnification":0.001
+                }    
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -344,19 +557,32 @@ __Example__
 ```
 {
     "type":"airPressureSensor",
+    "eoj":"0x002D",
     "description":{"ja":"気圧センサ", "en":"Air Pressure Sensor"},
     "properties":[
         {
             "name":"airPressure",
+            "epc":"0xE0",
             "description":{ "ja":"気圧計測値", "en":"Air pressure measurement" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"hPa"
+                "unit":"hPa",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":2,
+                    "magnification":0.1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0xFFFF"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0xFFFE"}
+                    ]
+                }    
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -367,7 +593,7 @@ __Example__
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
 | powerSaving | GET, PUT| boolean | 0x8F | 節電動作設定<br>Power-saving operation setting | INF |
-| airFlowLevel | GET, PUT | integer | 0xA0 | 風量設定<br>Air flow rate setting | INF |
+| airFlowLevel | GET, PUT | object | 0xA0 | 風量設定<br>Air flow rate setting | INF |
 | operatingMode | GET, PUT | key | 0xB0 | 運転モード設定<br>Operation mode setting | INF |
 | targetTemperature | GET, PUT |integer | 0xB3 | 温度設定値<br>Set temperature value |
 | humidity| GET|integer | 0xBA | 室内相対湿度計測値<br>Measured value of room relative humidity |\*1|
@@ -382,72 +608,59 @@ __Example__
 ```
 {
     "type":"homeAirConditioner",
+    "eoj":"0x0130",
     "description":{"ja":"家庭用エアコン", "en":"Home Air Conditioner"},
     "properties":[
         {
             "name":"powerSaving",
+            "epc":"0x8F",
             "description":{ "ja":"節電動作設定", "en":"Power-saving operation setting" },
             "writable":true,
             "observable":true,
             "data":{
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"節電動作設定", "en":"Power Saving"},
-                    {"value":false, "ja":"節電動作解除", "en":"No Power Saving"}
+                    {"value":true, "ja":"節電動作設定", "en":"Power Saving", "edt":"0x41"},
+                    {"value":false, "ja":"節電動作解除", "en":"No Power Saving", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"airFlowLevel",
+            "epc":"0xA0",
             "description":{ "ja":"風量設定", "en":"Air flow rate setting" },
             "writable":true, 
             "observable":true,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"level",
-                        "description":{ "ja":"レベル", "en":"Level" },
-                        "data":{
-                            "type":"integer",
-                            "unit":"level",
-                            "minimum":1,
-                            "maximum":8
-                        }
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
-                ]
+                "type":"level",
+                "maximum":8,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+                ],
+                "edt":{ "base":"0x31" }
             }
         },
         {
             "name":"operatingMode",
+            "epc":"0xB0",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true, 
             "observable":true,
             "data":{ 
                 "type":"key",
                 "values":[
-                    {"value":"auto", "ja":"自動", "en":"Auto"}, 
-                    {"value":"cooling", "ja":"冷房", "en":"Cooling"}, 
-                    {"value":"heating", "ja":"暖房", "en":"Heating"},
-                    {"value":"dehumidification", "ja":"除湿", "en":"Dehumidification"}, 
-                    {"value":"circulation", "ja":"送風", "en":"Circulation"},
-                    {"value":"other", "ja":"その他", "en":"Other"}
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}, 
+                    {"value":"cooling", "ja":"冷房", "en":"Cooling", "edt":"0x42"}, 
+                    {"value":"heating", "ja":"暖房", "en":"Heating", "edt":"0x43"},
+                    {"value":"dehumidification", "ja":"除湿", "en":"Dehumidification", "edt":"0x44"}, 
+                    {"value":"circulation", "ja":"送風", "en":"Circulation", "edt":"0x45"},
+                    {"value":"other", "ja":"その他", "en":"Other", "edt":"0x40"}
                 ]
             }
         },
         {
             "name":"targetTemperature",
+            "epc":"0xB3",
             "description":{ "ja":"温度設定値", "en":"Set temperature value" },
             "writable":true, 
             "observable":false,
@@ -455,55 +668,95 @@ __Example__
                 "type":"integer", 
                 "unit":"℃", 
                 "minimum":0, 
-                "maximum":50
+                "maximum":50,
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1,
+                    "exceptions":[{"value":"undefined", "ja":"不明", "en":"Undefined", "edt":"0xFD"}]
+                }
             }
         },
         {
             "name":"humidity",
-            "description":{
-                "ja":"室内相対湿度計測値",
-                "en":"Measured value of room relative humidity"
-            },
+            "epc":"0xBA",
+            "description":{"ja":"室内相対湿度計測値", "en":"Measured value of room relative humidity"},
             "writable":false,
             "observable":false,
-            "data":{
-                "type":"integer",
-                "unit":"%",
-                "minimum":0,
-                "maximum":100
+            "data":{ 
+                "type":"percentage",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0xFF"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0xFE"},
+                        {"value":"notApplicable", "ja":"計測不能","en":"Not Applicable", "edt":"0xFD"}
+                    ]
+                }
             }
         },
         {
             "name":"roomTemperature",
+            "epc":"0xBB",
             "description":{ "ja":"室内温度計測値", "en":"Measured value of room temperature" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"number", 
-                "unit":"℃"
+                "unit":"℃",
+                "edt":{
+                    "isUnsigned":false, 
+                    "size":1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7F"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x80"},
+                        {"value":"notApplicable", "ja":"計測不能","en":"Not Applicable", "edt":"0x7E"}
+                    ]
+                }
             }
         },
         {
             "name":"airFlowTemperature",
+            "epc":"0xBD",
             "description":{ "ja":"吹き出し温度計測値", "en":"Measured cooled air temperature" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"number", 
-                "unit":"℃"
+                "unit":"℃",
+                "edt":{
+                    "isUnsigned":false, 
+                    "size":1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7F"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x80"},
+                        {"value":"notApplicable", "ja":"計測不能","en":"Not Applicable", "edt":"0x7E"}
+                    ]
+                }
             }
         },
         {
             "name":"outdoorTemperature",
+            "epc":"0xBE",
             "description":{ "ja":"外気温度計測値", "en":"Measured outdoor air temperature" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"number", 
-                "unit":"℃"
+                "unit":"℃",
+                "edt":{
+                    "isUnsigned":false, 
+                    "size":1,
+                    "exceptions":[
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7F"},
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x80"},
+                        {"value":"notApplicable", "ja":"計測不能","en":"Not Applicable", "edt":"0x7E"}
+                    ]
+                }
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"powerSaving" },
         { "name":"airFlowLevel" },
@@ -518,7 +771,7 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| airFlowLevel | GET, PUT | integer | 0xA0 | 風量設定<br>Air flow rate setting |
+| airFlowLevel | GET, PUT | level | 0xA0 | 風量設定<br>Air flow rate setting |
 | autoVentilation | GET, PUT | boolean | 0xBF | 換気自動設定<br>Ventilation auto setting |
 
 ### Device Description
@@ -526,54 +779,41 @@ __Example__
 ```
 {
     "type":"ventilationFan",
+    "eoj":"0x0133",
     "description":{"ja":"換気扇", "en":"Ventilation Fan"},
     "properties":[
         {
             "name":"airFlowLevel",
+            "epc":"0xA0",
             "description":{ "ja":"風量設定", "en":"Air flow rate setting" },
             "writable":true, 
             "observable":false,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"level",
-                        "description":{ "ja":"レベル", "en":"Level" },
-                        "data":{
-                            "type":"integer",
-                            "unit":"level",
-                            "minimum":1,
-                            "maximum":8
-                        }
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
-                ]
+                "type":"level",
+                "maximum":8,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+                ],
+                "edt":{ "base":"0x31" }
             }
         },
         {
             "name":"autoVentilation",
+            "epc":"0xBF",
             "description":{ "ja":"換気自動設定", "en":"Ventilation auto setting" },
             "writable":true,
             "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"自動", "en":"AUTO"}, 
-                    {"value":false, "ja":"非自動", "en":"Non AUTO"}
+                    {"value":true, "ja":"自動", "en":"AUTO", "edt":"0x41"}, 
+                    {"value":false, "ja":"非自動", "en":"Non AUTO", "edt":"0x42"}
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -583,48 +823,34 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| airFlowLevel | GET, PUT | integer | 0xA0 | 風量設定<br>Air flow rate setting |
+| airFlowLevel | GET, PUT | level | 0xA0 | 風量設定<br>Air flow rate setting |
 
 ### Device Description
 
 ```
 {
     "type":"airCleaner",
+    "eoj":"0x0135",
     "description":{"ja":"空気清浄器", "en":"Air Cleaner"},
     "properties":[
         {
             "name":"airFlowLevel",
+            "epc":"0xA0",
             "description":{ "ja":"風量設定", "en":"Air flow rate setting" },
             "writable":true, 
             "observable":false,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"level",
-                        "description":{ "ja":"レベル", "en":"Level" },
-                        "data":{
-                            "type":"integer",
-                            "unit":"level",
-                            "minimum":1,
-                            "maximum":8
-                        }
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
-                ]
+                "type":"level",
+                "maximum":8,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+                ],
+                "edt":{ "base":"0x31" }
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -642,10 +868,12 @@ __Example__
 ```
 {
     "type":"electricBlind",
+    "eoj":"0x0260",
     "description":{"ja":"電動ブラインド・日よけ", "en":"Electric Blind"},
     "properties":[
         {
             "name":"blindMotion",
+            "epc":"0xE0",
             "description":{
                 "ja":"開閉（張出し／収納）動作設定",
                 "en":"Open/close(extension/retraction) setting"
@@ -655,14 +883,15 @@ __Example__
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"open", "ja":"開", "en":"open"},
-                    {"value":"close", "ja":"閉", "en":"close"},
-                    {"value":"stop", "ja":"停止", "en":"stop"}
+                    {"value":"open", "ja":"開", "en":"open", "edt":"0x41"},
+                    {"value":"close", "ja":"閉", "en":"close", "edt":"0x42"},
+                    {"value":"stop", "ja":"停止", "en":"stop", "edt":"0x43"}
                 ]
             }
         },
         {
             "name":"openingDegree",
+            "epc":"0xE1",
             "description":{ "ja":"開度レベル設定", "en":"Degree-of-opening level" },
             "writable":true,
             "observable":false,
@@ -670,10 +899,15 @@ __Example__
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"blindMotion" }
     ]
@@ -696,24 +930,27 @@ __Example__
 ```
 {
     "type":"electricRainDoor",
+    "eoj":"0x0263",
     "description":{"ja":"電動雨戸・シャッター", "en":"Electric Rain Door"},
     "properties":[
         {
             "name":"blindMotion",
+            "epc":"0xE0",
             "description":{ "ja":"開閉動作設定", "en":"Open/Close setting" },
             "writable":true,
             "observable":true,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"open", "ja":"開", "en":"open"},
-                    {"value":"close", "ja":"閉", "en":"close"},
-                    {"value":"stop", "ja":"停止", "en":"stop"}
+                    {"value":"open", "ja":"開", "en":"open", "edt":"0x41"},
+                    {"value":"close", "ja":"閉", "en":"close", "edt":"0x42"},
+                    {"value":"stop", "ja":"停止", "en":"stop", "edt":"0x43"}
                 ]
             }
         },
         {
             "name":"openingDegree",
+            "epc":"0xE1",
             "description":{ "ja":"開度レベル設定", "en":"Degree-of-opening level" },
             "writable":true, 
             "observable":false,
@@ -721,10 +958,15 @@ __Example__
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"blindMotion" }
     ]
@@ -742,7 +984,7 @@ __Example__
 | daytimeReheatingIsPermitted | GET, PUT | boolean | 0xC0 | 昼間沸き増し許可設定<br>Daytime reheating permission setting |
 | alarmStatus | GET | object | 0xC2 | 警報発生状態<br>Alarm status | INF |
 | supplyingHotWater | GET | boolean | 0xC3 | 給湯中状態<br>Hot water supply status | INF |
-| energyShiftJoining | GET, PUT | boolean | 0xC7 | エネルギーシフト参加状態 |
+| energyShiftParticipation | GET, PUT | boolean | 0xC7 | エネルギーシフト参加状態 |
 | waterHeatingStartTime | GET | integer | 0xC8 | 沸き上げ開始基準時刻 |
 | numberOfEnergyShifts | GET | integer | 0xC9 | エネルギーシフト回数 |
 | waterHeatingTime1 | GET, PUT |integer | 0xCA | 昼間沸き上げシフト時刻１ |
@@ -759,53 +1001,55 @@ __Example__
 ```
 {
     "type":"electricWaterHeater",
+    "eoj":"0x026B",
     "description":{"ja":"電気温水器", "en":"Electric WaterHeater"},
     "properties":[
         {
             "name":"automaticWaterHeating",
+            "epc":"0xB0",
             "description":{ "ja":"沸き上げ自動設定", "en":"Automatic water heating setting" },
             "writable":true,
             "observable":true,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"auto", "ja":"自動沸き上げ", "en":"Auto Heating"},
-                    {"value":"manualNoHeating","ja":"手動沸き上げ停止","en":"Manual No Heating"},
-                    {"value":"manualHeating", "ja":"手動沸き上げ", "en":"Manual Heating"}
+                    {"value":"auto", "ja":"自動沸き上げ", "en":"Auto Heating", "edt":"0x41"},
+                    {"value":"manualNoHeating", "ja":"手動沸き上げ停止", "en":"Manual No Heating", "edt":"0x42"},
+                    {"value":"manualHeating", "ja":"手動沸き上げ", "en":"Manual Heating", "edt":"0x43"}
                 ]
             }
         },
         {
             "name":"heatingWater",
+            "epc":"0xB2",
             "description":{ "ja":"沸き上げ中状態", "en":"Water heater status" },
             "writable":false,
             "observable":true,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"沸き上げ中", "en":"Heating"}, 
-                    {"value":false, "ja":"沸き上げ無し", "en":"Not Heating"}
+                    {"value":true, "ja":"沸き上げ中", "en":"Heating", "edt":"0x41"},
+                    {"value":false, "ja":"沸き上げ無し", "en":"Not Heating", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"daytimeReheatingIsPermitted",
-            "description":{
-                "ja":"昼間沸き増し許可設定",
-                "en":"Daytime reheating permission setting"
-            },
+            "epc":"0xC0",
+            "description":{ "ja":"昼間沸き増し許可設定", "en":"Daytime reheating permission setting" },
             "writable":true,
-            "observable":true,
+            "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"許可", "en":"Permitted"}, 
-                    {"value":false, "ja":"禁止", "en":"Not Permitted"}
+                    {"value":true, "ja":"許可", "en":"Permitted", "edt":"0x41"},
+                    {"value":false, "ja":"禁止", "en":"Not Permitted", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"alarmStatus",
+            "epc":"0xC2",
             "description":{ "ja":"警報発生状態", "en":"Alarm status" },
             "writable":false,
             "observable":true,
@@ -818,30 +1062,48 @@ __Example__
                         "data":{
                             "type":"boolean",
                             "values":[
-                                {"value":true, "ja":"発生", "en":"Alarm"}, 
-                                {"value":false, "ja":"正常", "en":"No Alarm"}
+                                {
+                                    "value":true, "ja":"発生", "en":"Alarm",
+                                    "edt":{"size":4, "index":0, "mask":"0b00000001", "data":1}
+                                },
+                                {
+                                    "value":false, "ja":"正常", "en":"No Alarm",
+                                    "edt":{"size":4, "index":0, "mask":"0b00000001", "data":0}
+                                }
                             ]
                         }
                     },
                     {
                         "name":"leaking",
-                        "description":{ "ja":"漏水警報", "en":"No Hot Water" },
+                        "description":{ "ja":"漏水警報", "en":"Leaking" },
                         "data":{
                             "type":"boolean",
                             "values":[
-                                {"value":true, "ja":"発生", "en":"Alarm"}, 
-                                {"value":false, "ja":"正常", "en":"No Alarm"}
+                                {
+                                    "value":true, "ja":"発生", "en":"Alarm",
+                                    "edt":{"size":4, "index":0, "mask":"0b00000010", "data":1}
+                                },
+                                {
+                                    "value":false, "ja":"正常", "en":"No Alarm",
+                                    "edt":{"size":4, "index":0, "mask":"0b00000010", "data":0}
+                                }
                             ]
                         }
                     },
                     {
                         "name":"freezing",
-                        "description":{ "ja":"凍結警報", "en":"No Hot Water" },
+                        "description":{ "ja":"凍結警報", "en":"Freezing" },
                         "data":{
                             "type":"boolean",
                             "values":[
-                                {"value":true, "ja":"発生", "en":"Alarm"}, 
-                                {"value":false, "ja":"正常", "en":"No Alarm"}
+                                {
+                                    "value":true, "ja":"発生", "en":"Alarm",
+                                    "edt":{"size":4, "index":0, "mask":"0b00000100", "data":1}
+                                },
+                                {
+                                    "value":false, "ja":"正常", "en":"No Alarm",
+                                    "edt":{"size":4, "index":0, "mask":"0b00000100", "data":0}
+                                }
                             ]
                         }
                     }
@@ -850,68 +1112,86 @@ __Example__
         },
         {
             "name":"supplyingHotWater",
+            "epc":"0xC3",
             "description":{ "ja":"給湯中状態", "en":"Hot water supply status" },
             "writable":false,
             "observable":true,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"給湯中", "en":"Supplying"}, 
-                    {"value":false, "ja":"非給湯中", "en":"Not Supplying"}
+                    {"value":true, "ja":"給湯中", "en":"Supplying", "edt":"0x41"},
+                    {"value":false, "ja":"非給湯中", "en":"Not Supplying", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"energyShiftParticipation",
-            "description":{
-                "ja":"エネルギーシフト参加状態", 
-                "en":"Participation in Energy Shift"
-            },
+            "epc":"0xC7",
+            "description":{ "ja":"エネルギーシフト参加状態", "en":"Participation in Energy Shift" },
             "writable":true,
-            "observable":true,
+            "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"参加", "en":"Participation"}, 
-                    {"value":false, "ja":"不参加", "en":"Non Participation"}
+                    {"value":true, "ja":"参加", "en":"Participation", "edt":"0x01"},
+                    {"value":false, "ja":"不参加", "en":"Non Participation", "edt":"0x00"}
                 ]
             }
         },
         {
             "name":"waterHeatingStartTime",
+            "epc":"0xC8",
             "description":{ "ja":"沸き上げ開始基準時刻", "en":"Water Heating Start Time" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"hour"
+                "unit":"hour",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }    
             }
         },
         {
             "name":"numberOfEnergyShifts",
+            "epc":"0xC9",
             "description":{ "ja":"エネルギーシフト回数", "en":"Number Of Energy Shifts" },
             "writable":false,
             "observable":false,
-            "data":{ "type":"integer" }
+            "data":{ 
+                "type":"integer", 
+                "unit":"times",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }    
+            }
         },
         {
             "name":"waterHeatingTime1",
+            "epc":"0xCA",
             "description":{ "ja":"昼間沸き上げシフト時刻１", "en":"Water Heating Time1" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"integer", 
                 "unit":"hour", 
-                "minimum":9, 
-                "maximum":17
+                "minimum":9,
+                "maximum":17,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1,
+                    "exceptions":[
+                        {"value":"undefined", "ja":"未設定","en":"Undefined", "edt":"0x00"}
+                    ]
+                }
             }
         },
         {
             "name":"estimatedEnergyConsumption1",
-            "description":{
-                "ja":"昼間沸き上げシフト時刻１での沸き上げ予測電力量", 
-                "en":"Estimated Energy Consumption1"
-            },
+            "epc":"0xCB",
+            "description":{ "ja":"昼間沸き上げシフト時刻１での沸き上げ予測電力量", "en":"Estimated Energy Consumption1" },
             "writable":false,
             "observable":false,
             "data":{
@@ -922,7 +1202,11 @@ __Example__
                         "description":{ "ja":"10:00", "en":"10:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -930,7 +1214,11 @@ __Example__
                         "description":{ "ja":"13:00", "en":"13:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -938,7 +1226,11 @@ __Example__
                         "description":{ "ja":"15:00", "en":"15:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -946,7 +1238,11 @@ __Example__
                         "description":{ "ja":"17:00", "en":"17:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     }
                 ]
@@ -954,6 +1250,7 @@ __Example__
         },
         {
             "name":"energyConsumptionRate1",
+            "epc":"0xCC",
             "description":{ "ja":"時間あたり消費電力量１", "en":"Energy Consumption Rate1" },
             "writable":false,
             "observable":false,
@@ -965,7 +1262,11 @@ __Example__
                         "description":{ "ja":"10:00", "en":"10:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -973,7 +1274,11 @@ __Example__
                         "description":{ "ja":"13:00", "en":"13:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -981,7 +1286,11 @@ __Example__
                         "description":{ "ja":"15:00", "en":"15:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -989,7 +1298,11 @@ __Example__
                         "description":{ "ja":"17:00", "en":"17:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     }
                 ]
@@ -997,6 +1310,7 @@ __Example__
         },
         {
             "name":"waterHeatingTime2",
+            "epc":"0xCD",
             "description":{ "ja":"昼間沸き上げシフト時刻２", "en":"Water Heating Time2" },
             "writable":true, 
             "observable":false,
@@ -1004,15 +1318,20 @@ __Example__
                 "type":"integer", 
                 "unit":"hour", 
                 "minimum":10, 
-                "maximum":17
+                "maximum":17,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1,
+                    "exceptions":[
+                        {"value":"undefined", "ja":"未設定","en":"Undefined", "edt":"0x00"}
+                    ]
+                }
             }
         },
         {
             "name":"estimatedEnergyConsumption2",
-            "description":{
-                "ja":"昼間沸き上げシフト時刻２での沸き上げ予測電力量",
-                "en":"Estimated Energy Consumption2"
-            },
+            "epc":"0xCE",
+            "description":{ "ja":"昼間沸き上げシフト時刻２での沸き上げ予測電力量", "en":"Estimated Energy Consumption2" },
             "writable":false,
             "observable":false,
             "data":{
@@ -1023,7 +1342,11 @@ __Example__
                         "description":{ "ja":"13:00", "en":"13:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -1031,7 +1354,11 @@ __Example__
                         "description":{ "ja":"15:00", "en":"15:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -1039,7 +1366,11 @@ __Example__
                         "description":{ "ja":"17:00", "en":"17:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     }
                 ]
@@ -1047,6 +1378,7 @@ __Example__
         },
         {
             "name":"energyConsumptionRate2",
+            "epc":"0xCF",
             "description":{ "ja":"時間あたり消費電力量２", "en":"Energy Consumption Rate2" },
             "writable":false,
             "observable":false,
@@ -1058,7 +1390,11 @@ __Example__
                         "description":{ "ja":"13:00", "en":"13:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -1066,7 +1402,11 @@ __Example__
                         "description":{ "ja":"15:00", "en":"15:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -1074,7 +1414,11 @@ __Example__
                         "description":{ "ja":"17:00", "en":"17:00" },
                         "data":{
                             "type":"integer",
-                            "unit":"Wh"
+                            "unit":"Wh",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":2
+                            }
                         }
                     }
                 ]
@@ -1082,35 +1426,35 @@ __Example__
         },
         {
             "name":"automaticBathWaterHeating",
-            "description":{
-                "ja":"風呂自動モード設定",
-                "en":"Automatic Bath Water Heating Mode Setting"
-            },
+            "epc":"0xE3",
+            "description":{ "ja":"風呂自動モード設定", "en":"Automatic Bath Water Heating Mode Setting" },
             "writable":true,
-            "observable":true,
+            "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"自動", "en":"Auto"}, 
-                    {"value":false, "ja":"非自動", "en":"Non Auto"}
+                    {"value":true, "ja":"自動", "en":"Auto", "edt":"0x41"},
+                    {"value":false, "ja":"非自動", "en":"Non Auto", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"bathOperatingStatus",
+            "epc":"0xEA",
             "description":{ "ja":"風呂動作状態監視", "en":"Bath Operation Status Monitor" },
             "writable":false,
             "observable":true,
             "data":{ 
                 "type":"key",
                 "values":[
-                    {"value":"runningHotWater", "ja":"湯張り中", "en":"Running Hot Water"},
-                    {"value":"noOperation", "ja":"停止中", "en":"No Operation"},
-                    {"value":"keepingTemperature", "ja":"保温中", "en":"Keeping Temperature"}
+                    {"value":"runningHotWater", "ja":"湯張り中", "en":"Running Hot Water", "edt":"0x41"},
+                    {"value":"noOperation", "ja":"停止中", "en":"No Operation", "edt":"0x42"},
+                    {"value":"keepingTemperature", "ja":"保温中", "en":"Keeping Temperature", "edt":"0x43"}
                 ]
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"automaticWaterHeating" },
         { "name":"heatingWater" },
@@ -1134,22 +1478,25 @@ __Example__
 ```
 {
     "type":"electricKey",
+    "eoj":"0x026F",
     "description":{"ja":"電気錠", "en":"Electric Key"},
     "properties":[
         {
             "name":"islocked",
+            "epc":"0xE0",
             "description":{ "ja":"施錠設定1", "en":"Lock setting1" },
             "writable":true,
             "observable":true,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"施錠", "en":"Lock"}, 
-                    {"value":false, "ja":"開錠", "en":"Unlock"}
+                    {"value":true, "ja":"施錠", "en":"Lock", "edt":"0x41"},
+                    {"value":false, "ja":"解錠", "en":"Unlock", "edt":"0x42"}
                 ]
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"islocked" }
     ]
@@ -1173,62 +1520,68 @@ __Example__
 ```
 {
     "type":"instataneousWaterHeater",
+    "eoj":"0x0272",
     "description":{"ja":"瞬間式給湯器", "en":"Instataneous Water Heater"},
     "properties":[
         {
             "name":"heatingWater",
+            "epc":"0xD0",
             "description":{ "ja":"給湯器燃焼状態", "en":"Hot water heating status" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"燃焼中", "en":"Heating"}, 
-                    {"value":false, "ja":"燃焼無し", "en":"Not Heating"}
+                    {"value":true, "ja":"燃焼中", "en":"Heating", "edt":"0x41"},
+                    {"value":false, "ja":"燃焼無し", "en":"Not Heating", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"heatingBathWater",
+            "epc":"0xE2",
             "description":{ "ja":"風呂給湯器燃焼状態", "en":"Bath water heater status" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"燃焼中", "en":"Heating"}, 
-                    {"value":false, "ja":"燃焼無し", "en":"Not Heating"}
-                }
+                    {"value":true, "ja":"燃焼中", "en":"Heating", "edt":"0x41"},
+                    {"value":false, "ja":"燃焼無し", "en":"Not Heating", "edt":"0x42"}
+                ]
             }
         },
         {
             "name":"automaticBathWaterHeating",
+            "epc":"0xE3",
             "description":{ "ja":"風呂自動モード設定", "en":"Bath auto mode setting" },
             "writable":true,
             "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"自動", "en":"Auto"}, 
-                    {"value":false, "ja":"非自動", "en":"Non Auto"}
+                    {"value":true, "ja":"自動", "en":"Auto", "edt":"0x41"},
+                    {"value":false, "ja":"非自動", "en":"Non Auto", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"bathOperatingStatus",
+            "epc":"0xEF",
             "description":{ "ja":"風呂動作状態監視", "en":"Bath operation status monitor" },
             "writable":false, 
             "observable":true,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"runningHotWater", "ja":"湯張り中", "en":"Running Hot Water"},
-                    {"value":"noOperation", "ja":"停止中", "en":"No Operation"},
-                    {"value":"keepingTemperature", "ja":"保温中", "en":"Keeping Temperature"}
+                    {"value":"runningHotWater", "ja":"湯張り中", "en":"Running Hot Water", "edt":"0x41"},
+                    {"value":"noOperation", "ja":"停止中", "en":"No Operation", "edt":"0x42"},
+                    {"value":"keepingTemperature", "ja":"保温中", "en":"Keeping Temperature", "edt":"0x43"}
                 ]
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"bathOperatingStatus" }
     ]
@@ -1242,65 +1595,53 @@ __Example__
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
 | operatingMode | GET, PUT | key | 0xB0 | 運転設定<br>Operation setting |
-| dryLevel | GET, PUT | integer | 0xB4 | 乾燥運転設定<br>Bathroom dryer operation setting |
+| dryLevel | GET, PUT | level | 0xB4 | 乾燥運転設定<br>Bathroom dryer operation setting |
 
 ### Device Description
 
 ```
 {
     "type":"bathroomHeaterDryer",
+    "eoj":"0x0273",
     "description":{"ja":"浴室暖房乾燥機", "en":"Bathroom Heater Dryer"},
     "properties":[
         {
             "name":"operatingMode",
+            "epc":"0xB0",
             "description":{ "ja":"運転設定", "en":"Operation setting" },
             "writable":true,
             "observable":false,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"ventilation", "ja":"換気運転", "en":"Ventilation"},
-                    {"value":"preheating", "ja":"入浴前予備暖房運転", "en":"Preheating"},
-                    {"value":"heating", "ja":"入浴中暖房運転", "en":"Heating"},
-                    {"value":"drying", "ja":"乾燥運転", "en":"Drying"},
-                    {"value":"cooling", "ja":"涼風運転", "en":"Cooling"},
-                    {"value":"stop", "ja":"停止", "en":"Stop"}
+                    {"value":"ventilation", "ja":"換気運転", "en":"Ventilation", "edt":"0x10"},
+                    {"value":"preheating", "ja":"入浴前予備暖房運転", "en":"Preheating", "edt":"0x20"},
+                    {"value":"heating", "ja":"入浴中暖房運転", "en":"Heating", "edt":"0x30"},
+                    {"value":"drying", "ja":"乾燥運転", "en":"Drying", "edt":"0x40"},
+                    {"value":"cooling", "ja":"涼風運転", "en":"Cooling", "edt":"0x50"},
+                    {"value":"stop", "ja":"停止", "en":"Stop", "edt":"0x00"}
                 ]
             }
         },
         {
             "name":"dryLevel",
+            "epc":"0xB4",
             "description":{ "ja":"乾燥運転設定", "en":"Bathroom dryer operation setting" },
             "writable":true, 
             "observable":false,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"level",
-                        "description":{ "ja":"レベル", "en":"Level" },
-                        "data":{
-                            "type":"integer",
-                            "unit":"level",
-                            "minimum":1,
-                            "maximum":8
-                        }
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
-                ]
+                "type":"level",
+                "maximum":8,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"},
+                    {"value":"standard", "ja":"標準", "en":"Standard", "edt":"0x42"}
+                ],
+                "edt":{ "base":"0x31" }
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -1318,35 +1659,43 @@ __Example__
 ```
 {
     "type":"pvPowerGeneration",
+    "eoj":"0x0279",
     "description":{"ja":"住宅用太陽光発電", "en":"PV Power Generation"},
     "properties":[
         {
             "name":"instantaneousPowerGeneration",
-            "description":{
-                "ja":"瞬時発電電力計測値",
-                "en":"Measured instantaneous amount of electricity generated"
-            },
+            "epc":"0xE0",
+            "description":{ "ja":"瞬時発電電力計測値", "en":"Measured instantaneous amount of electricity generated" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"W"
+                "unit":"W",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":2
+                }
             }
         },
         {
             "name":"integralEnergyGeneration",
-            "description":{
-                "ja":"積算発電電力量計測値",
-                "en":"Measured cumulative amount of electric energy generated"
-            },
+            "epc":"0xE1",
+            "description":{ "ja":"積算発電電力量計測値", "en":"Measured cumulative amount of electric energy generated" },
             "writable":false, 
             "observable":false,
             "data":{
-                "type":"integer", 
-                "unit":"kWh"
+                "type":"number", 
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4,
+                    "magnification":0.001
+                }
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -1364,10 +1713,12 @@ __Example__
 ```
 {
     "type":"hotWaterHeatSource",
+    "eoj":"0x027A",
     "description":{"ja":"冷温水熱源機", "en":"Hot Water Heat Source"},
     "properties":[
         {
             "name":"waterTemperature1",
+            "epc":"0xE1",
             "description":{ "ja":"水温設定1", "en":"waterTemperature1" },
             "writable":true, 
             "observable":false,
@@ -1375,42 +1726,34 @@ __Example__
                 "type":"integer", 
                 "unit":"℃", 
                 "minimum":0, 
-                "maximum":100
+                "maximum":100,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x71"}
+                ],
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }    
             }
         },
         {
             "name":"waterTemperature2",
+            "epc":"0xE2",
             "description":{ "ja":"水温設定2", "en":"waterTemperature2" },
             "writable":true, 
             "observable":false,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"level",
-                        "description":{ "ja":"レベル", "en":"Level" },
-                        "data":{
-                            "type":"integer",
-                            "unit":"level",
-                            "minimum":1,
-                            "maximum":8
-                        }
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
-                ]
+                "type":"level",
+                "maximum":31,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+                ],
+                "edt":{ "base":"0x21" }
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -1420,8 +1763,8 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| waterTemperature1 | GET, PUT | integer | 0xE0 | 温度設定1<br>Temperature setting 1 | \*1 |
-| waterTemperature2 | GET, PUT | integer | 0xE1 | 温度設定2<br>Temperature setting 2 | \*1 |
+| waterTemperature1 | GET, PUT | object | 0xE0 | 温度設定1<br>Temperature setting 1 | \*1 |
+| waterTemperature2 | GET, PUT | object | 0xE1 | 温度設定2<br>Temperature setting 2 | \*1 |
 
 \*1) どちらかの実装が必須
 
@@ -1430,73 +1773,43 @@ __Example__
 ```
 {
     "type":"floorHeater",
+    "eoj":"0x027B",
     "description":{"ja":"床暖房", "en":"Floor Heater"},
     "properties":[
         {
             "name":"waterTemperature1",
+            "epc":"0xE0",
             "description":{ "ja":"温度設定1", "en":"Temperature1" },
             "writable":true,
             "observable":false,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"temperature",
-                        "description":{ "ja":"温度", "en":"Temperature" },
-                        "data":{
-                            "type":"integer", 
-                            "unit":"℃", 
-                            "minimum":0, 
-                            "maximum":50
-                        }                        
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
+                "type":"integer",
+                "unit":"℃", 
+                "minimum":0, 
+                "maximum":50,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
                 ]
             }
         },
         {
             "name":"waterTemperature2",
+            "epc":"0xE1",
             "description":{ "ja":"温度設定2", "en":"Temperature2" },
             "writable":true, 
             "observable":false,
             "data":{
-                "type":"object", 
-                "field":[
-                    {
-                        "name":"level",
-                        "description":{ "ja":"レベル", "en":"Level" },
-                        "data":{
-                            "type":"integer",
-                            "unit":"level",
-                            "minimum":1,
-                            "maximum":8
-                        }
-                    },
-                    {
-                        "name":"auto",
-                        "description":{ "ja":"自動設定", "en":"Auto" },
-                        "data":{
-                            "type":"boolean",
-                            "values":[
-                                {"value":true, "ja":"自動", "en":"AUTO"}, 
-                                {"value":false, "ja":"マニュアル", "en":"MANUAL"}
-                            ]
-                        }                        
-                    }
-                ]
+                "type":"level",
+                "maximum":15,
+                "alternatives":[
+                    {"value":"auto", "ja":"自動", "en":"Auto", "edt":"0x41"}
+                ],
+                "edt":{ "base":"0x31" }
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -1516,35 +1829,43 @@ __Example__
 ```
 {
     "type":"fuelCell",
+    "eoj":"0x027C",
     "description":{"ja":"燃料電池", "en":"Fuel Cell"},
     "properties":[
         {
             "name":"instantaneousPowerGeneration",
-            "description":{
-                "ja":"瞬時発電電力計測値",
-                "en":"Measured instantaneous power generation output"
-            },
+            "epc":"0xC4",
+            "description":{ "ja":"瞬時発電電力計測値", "en":"Measured instantaneous power generation output" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"W"
+                "unit":"W",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":2
+                }
             }
         },
         {
             "name":"integralEnergyGeneration",
-            "description":{
-                "ja":"積算発電電力量計測値",
-                "en":"Measured cumulative power generation output"
-            },
+            "epc":"0xC5",
+            "description":{ "ja":"積算発電電力量計測値", "en":"Measured cumulative power generation output" },
             "writable":false, 
             "observable":false,
             "data":{
-                "type":"integer", 
-                "unit":"kWh"
+                "type":"number", 
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4,
+                    "magnification":0.001
+                }
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -1564,7 +1885,7 @@ __Example__
 | integralDischargingEnergy | GET | integer| 0xA9 | AC積算放電電力量計測値<br>AC measured cumulative discharging electric energy |\*1|
 | targetChargingEnergy | GET, PUT | integer| 0xAA | AC充電量設定値<br>AC charge amount setting value |INF|
 | targetDischargingEnergy | GET, PUT | integer| 0xAB | AC放電量設定値<br>AC discharge amount setting value |INF|
-| OperatingStatus | GET | key | 0xCF | 運転動作状態<br>Working operation status |INF|
+| operatingStatus | GET | key | 0xCF | 運転動作状態<br>Working operation status |INF|
 | operatingMode | GET, PUT | key | 0xDA | 運転モード設定<br>Operation mode setting |INF|
 | remainingStoredEnergy1 | GET | integer | 0xE2 | 蓄電残量1<br>Remaining stored electricity 1 | |
 | remainingStoredEnergy2 | GET | integer | 0xE3 | 蓄電残量2<br>Remaining stored electricity 2 |\*2|
@@ -1579,179 +1900,235 @@ __Example__
 ```
 {
     "type":"storageBattery",
+    "eoj":"0x027D",
     "description":{"ja":"蓄電池", "en":"Storage Battery"},
     "properties":[
         {
             "name":"effectiveChargingCapacity",
+            "epc":"0xA0",
             "description":{ "ja":"AC実効容量（充電）", "en":"AC effective capacity(charging)" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"effectiveDischargingCapacity",
-            "description":{
-                "ja":"AC実効容量（放電）",
-                "en":"AC effective capacity(discharging)"
-            },
+            "epc":"0xA1",
+            "description":{ "ja":"AC実効容量（放電）", "en":"AC effective capacity(discharging)" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"chargeableCapacity",
+            "epc":"0xA2",
             "description":{ "ja":"充電可能容量", "en":"AC chargeable capacity" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"dischargeableCapacity",
+            "epc":"0xA3",
             "description":{ "ja":"放電可能容量", "en":"AC dischargeable capacity" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"chargeableEnergy",
+            "epc":"0xA4",
             "description":{ "ja":"充電可能量", "en":"AC chargeable electric energy" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"dischargeableEnergy",
+            "epc":"0xA5",
             "description":{ "ja":"放電可能量", "en":"AC dischargeable electric energy" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"integralChargingEnergy",
-            "description":{
-                "ja":"AC積算充電電力量計測値<br>",
-                "en":"AC measured cumulative charging electric energy"
-            },
+            "epc":"0xA8",
+            "description":{ "ja":"AC積算充電電力量計測値<br>", "en":"AC measured cumulative charging electric energy" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"kWh"
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"integralDischargingEnergy",
-            "description":{
-                "ja":"AC積算放電電力量計測値<br>",
-                "en":"AC measured cumulative discharging electric energy"
-            },
+            "epc":"0xA9",
+            "description":{ "ja":"AC積算放電電力量計測値<br>", "en":"AC measured cumulative discharging electric energy" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"kWh"
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"targetChargingEnergy",
+            "epc":"0xAA",
             "description":{ "ja":"AC充電量設定値", "en":"AC charge amount setting value" },
             "writable":true,
             "observable":true,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"targetDischargingEnergy",
+            "epc":"0xAB",
             "description":{ "ja":"AC放電量設定値", "en":"AC discharge amount setting value" },
             "writable":true,
             "observable":true,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }    
             }
         },
         {
             "name":"operatingStatus",
+            "epc":"0xCF",
             "description":{ "ja":"運転動作状態", "en":"Working operation status" },
             "writable":false,
             "observable":true,
             "data":{ 
                 "type":"key",
                 "values":[
-                    {"value":"rapidCharging", "ja":"急速充電", "en":"rapidCharging"},
-                    {"value":"charging", "ja":"充電", "en":"charging"},
-                    {"value":"discharging", "ja":"放電", "en":"discharging"},
-                    {"value":"standby", "ja":"待機", "en":"standby"},
-                    {"value":"test", "ja":"テスト", "en":"test"},
-                    {"value":"auto", "ja":"自動", "en":"auto"},
-                    {"value":"restart", "ja":"再起動", "en":"restart"},
-                    {"value":"capacityRecalculation","ja":"実行容量再計算処理","en":"capacityRecalculation"},
-                    {"value":"other", "ja":"その他", "en":"other"}
+                    {"value":"rapidCharging", "ja":"急速充電", "en":"rapidCharging", "edt":"0x41"},
+                    {"value":"charging", "ja":"充電", "en":"charging", "edt":"0x42"},
+                    {"value":"discharging", "ja":"放電", "en":"discharging", "edt":"0x43"},
+                    {"value":"standby", "ja":"待機", "en":"standby", "edt":"0x44"},
+                    {"value":"test", "ja":"テスト", "en":"test", "edt":"0x45"},
+                    {"value":"auto", "ja":"自動", "en":"auto", "edt":"0x46"},
+                    {"value":"restart", "ja":"再起動", "en":"restart", "edt":"0x48"},
+                    {"value":"capacityRecalculation", "ja":"実行容量再計算処理", "en":"capacityRecalculation", "edt":"0x49"},
+                    {"value":"other", "ja":"その他", "en":"other", "edt":"0x40"}
                 ]
             }
         },
         {
             "name":"operatingMode",
+            "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true,
             "observable":true,
             "data":{ 
                 "type":"key",
                 "values":[
-                    {"value":"rapidCharging", "ja":"急速充電", "en":"rapidCharging"},
-                    {"value":"charging", "ja":"充電", "en":"charging"},
-                    {"value":"discharging", "ja":"放電", "en":"discharging"},
-                    {"value":"standby", "ja":"待機", "en":"standby"},
-                    {"value":"test", "ja":"テスト", "en":"test"},
-                    {"value":"auto", "ja":"自動", "en":"auto"},
-                    {"value":"restart", "ja":"再起動", "en":"restart"},
-                    {"value":"capacityRecalculation","ja":"実行容量再計算処理","en":"capacityRecalculation"},
-                    {"value":"other", "ja":"その他", "en":"other"}
+                    {"value":"rapidCharging", "ja":"急速充電", "en":"rapidCharging", "edt":"0x41"},
+                    {"value":"charging", "ja":"充電", "en":"charging", "edt":"0x42"},
+                    {"value":"discharging", "ja":"放電", "en":"discharging", "edt":"0x43"},
+                    {"value":"standby", "ja":"待機", "en":"standby", "edt":"0x44"},
+                    {"value":"test", "ja":"テスト", "en":"test", "edt":"0x45"},
+                    {"value":"auto", "ja":"自動", "en":"auto", "edt":"0x46"},
+                    {"value":"restart", "ja":"再起動", "en":"restart", "edt":"0x48"},
+                    {"value":"capacityRecalculation", "ja":"実行容量再計算処理", "en":"capacityRecalculation", "edt":"0x49"},
+                    {"value":"other", "ja":"その他", "en":"other", "edt":"0x40"}
                 ]
             }
         },
         {
             "name":"remainingStoredEnergy1",
+            "epc":"0xE2",
             "description":{ "ja":"蓄電残量1", "en":"Remaining stored electricity 1" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"remainingStoredEnergy2",
+            "epc":"0xE3",
             "description":{ "ja":"蓄電残量2", "en":"Remaining stored electricity 2" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"integer", 
-                "unit":"Ah"
+                "unit":"Ah",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":2,
+                    "magnification":0.1
+                }    
             }
         },
         {
             "name":"remainingStoredEnergy3",
+            "epc":"0xE4",
             "description":{ "ja":"蓄電残量3", "en":"Remaining stored electricity 3" },
             "writable":false,
             "observable":false,
@@ -1759,28 +2136,34 @@ __Example__
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }
             }
         },
         {
             "name":"batteryType",
+            "epc":"0xE6",
             "description":{ "ja":"蓄電池タイプ", "en":"Battery type" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"key",
                 "values":[
-                    {"value":"unknown", "ja":"不明", "en":"unknown"},
-                    {"value":"lead", "ja":"鉛", "en":"lead"},
-                    {"value":"ni-mh", "ja":"NiH", "en":"ni-mh"},
-                    {"value":"ni-cd", "ja":"NiCd", "en":"ni-cd"},
-                    {"value":"lib", "ja":"Li-ion", "en":"lib"},
-                    {"value":"zinc", "ja":"Zn", "en":"zinc"},
-                    {"value":"alkaline", "ja":"充電式アルカリ", "en":"alkaline"}
+                    {"value":"unknown", "ja":"不明", "en":"unknown", "edt":"0x00"},
+                    {"value":"lead", "ja":"鉛", "en":"lead", "edt":"0x01"},
+                    {"value":"ni-mh", "ja":"NiH", "en":"ni-mh", "edt":"0x02"},
+                    {"value":"ni-cd", "ja":"NiCd", "en":"ni-cd", "edt":"0x03"},
+                    {"value":"lib", "ja":"Li-ion", "en":"lib", "edt":"0x04"},
+                    {"value":"zinc", "ja":"Zn", "en":"zinc", "edt":"0x05"},
+                    {"value":"alkaline", "ja":"充電式アルカリ", "en":"alkaline", "edt":"0x06"}
                 ]
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"targetChargingEnergy" },
         { "name":"targetDischargingEnergy" },
@@ -1821,97 +2204,108 @@ __Example__
 ```
 {
     "type":"evChargerDischarger",
+    "eoj":"0x027E",
     "description":{"ja":"電気自動車充放電器", "en":"EV Charger Discharger"},
     "properties":[
         {
             "name":"dischargeableCapacity1",
-            "description":{
-                "ja":"車載電池の放電可能容量値1",
-                "en":"Dischargeable capacity of vehicle mounted battery 1"
-            },
+            "epc":"0xC0",
+            "description":{ "ja":"車載電池の放電可能容量値1", "en":"Dischargeable capacity of vehicle mounted battery 1" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"remainingDischargeableCapacity1",
-            "description":{
-                "ja":"車載電池の放電可能残容量1",
-                "en":"Remaining dischargeable capacity of vehicle mounted battery 1"
-            },
+            "epc":"0xC2",
+            "description":{ "ja":"車載電池の放電可能残容量1", "en":"Remaining dischargeable capacity of vehicle mounted battery 1" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"remainingDischargeableCapacity3",
-            "description":{
-                "ja":"車載電池の放電可能残容量3",
-                "en":"Remaining dischargeable capacity of vehicle mounted battery 3"
-            },
+            "epc":"0xC4",
+            "description":{ "ja":"車載電池の放電可能残容量3", "en":"Remaining dischargeable capacity of vehicle mounted battery 3" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }
             }
         },
         {
             "name":"ratedChargePower",
+            "epc":"0xC5",
             "description":{ "ja":"定格充電能力", "en":"Rated charge capacity" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"W"
+                "unit":"W",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"ratedDischargePower",
+            "epc":"0xC6",
             "description":{ "ja":"定格放電能力", "en":"Rated discharge capacity" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"W"
+                "unit":"W",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"chargeDischargeStatus",
-            "description":{
-                "ja":"車両接続・充放電可否状態",
-                "en":"Vehicle connection and chargeable/dischargeable status"
-            	   },
+            "epc":"0xC7",
+            "description":{ "ja":"車両接続・充放電可否状態", "en":"Vehicle connection and chargeable/dischargeable status" },
             "writable":false, 
             "observable":true,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"undefined", "ja":"不定", "en":"Undefined"},
-                    {"value":"notConnected", "ja":"車両未接続", "en":"Not Connected"},
-                    {"value":"connected", "ja":"車両接続・充電不可・放電不可", "en":"Connected"},
-                    {"value":"chargeableDischargeable",
-                     "ja":"車両接続・充電可・放電可", "en":"Chargeable Dischargeable"},
-                    {"value":"dischargeable",
-                     "ja":"車両接続・充電不可・放電可", "en":"Dischargeable"},
-                    {"value":"chargeable", "ja":"車両接続・ 充電可 ・放電不可", "en":"Chargeable"}
+                    {"value":"undefined", "ja":"不定", "en":"Undefined", "edt":"0xFF"},
+                    {"value":"notConnected", "ja":"車両未接続", "en":"Not Connected", "edt":"0x30"},
+                    {"value":"connected", "ja":"車両接続・ 充電不可 ・放電不可", "en":"Connected", "edt":"0x40"},
+                    {"value":"chargeable", "ja":"車両接続・ 充電可 ・放電不可", "en":"Chargeable", "edt":"0x41"},
+                    {"value":"dischargeable", "ja":"車両接続・ 充電不可 ・放電可", "en":"Dischargeable", "edt":"0x42"},
+                    {"value":"chargeableDischargeable", "ja":"車両接続・ 充電可 ・放電可", "en":"Chargeable and Dischargeable", "edt":"0x43"}
                 ]
             }
         },
         {
             "name":"minMaxChargePower",
-            "description":{
-                "ja":"最小最大充電電力値",
-                "en":"Minimum/maximum charging electric energy"
-            },
+            "epc":"0xC8",
+            "description":{ "ja":"最小最大充電電力値", "en":"Minimum/maximum charging electric energy" },
             "writable":false,
             "observable":false,
             "data":{
@@ -1922,7 +2316,11 @@ __Example__
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"integer",
-                            "unit":"W"
+                            "unit":"W",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -1930,7 +2328,11 @@ __Example__
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"integer",
-                            "unit":"W"
+                            "unit":"W",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     }
                 ]
@@ -1938,10 +2340,8 @@ __Example__
         },
         {
             "name":"minMaxDischargePower",
-            "description":{
-                "ja":"最小最大放電電力値",
-                "en":"Minimum/maximum discharging electric energy"
-            },
+            "epc":"0xC9",
+            "description":{ "ja":"最小最大放電電力値", "en":"Minimum/maximum discharging electric energy" },
             "writable":false,
             "observable":false,
             "data":{
@@ -1952,7 +2352,11 @@ __Example__
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"integer",
-                            "unit":"W"
+                            "unit":"W",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     },
                     {
@@ -1960,7 +2364,11 @@ __Example__
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"integer",
-                            "unit":"W"
+                            "unit":"W",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4
+                            }
                         }
                     }
                 ]
@@ -1968,10 +2376,8 @@ __Example__
         },
         {
             "name":"minMaxChargeCurrent",
-            "description":{
-                "ja":"最小最大充電電流値",
-                "en":"Minimum/maximum charging electric current"
-            },
+            "epc":"0xCA",
+            "description":{ "ja":"最小最大充電電流値", "en":"Minimum/maximum charging electric current" },
             "writable":false,
             "observable":false,
             "data":{
@@ -1982,7 +2388,12 @@ __Example__
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"integer",
-                            "unit":"A"
+                            "unit":"A",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4,
+                                "magnification":0.1
+                            }
                         }
                     },
                     {
@@ -1990,7 +2401,12 @@ __Example__
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"integer",
-                            "unit":"A"
+                            "unit":"A",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4,
+                                "magnification":0.1
+                            }
                         }
                     }
                 ]
@@ -1998,10 +2414,8 @@ __Example__
         },
         {
             "name":"minMaxDischargeCurrent",
-            "description":{
-                "ja":"最小最大放電電流値",
-                "en":"Minimum/maximum discharging electric current"
-            },
+            "epc":"0xCB",
+            "description":{ "ja":"最小最大放電電流値", "en":"Minimum/maximum discharging electric current" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2012,7 +2426,12 @@ __Example__
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"integer",
-                            "unit":"A"
+                            "unit":"A",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4,
+                                "magnification":0.1
+                            }
                         }
                     },
                     {
@@ -2020,7 +2439,12 @@ __Example__
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"integer",
-                            "unit":"A"
+                            "unit":"A",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":4,
+                                "magnification":0.1
+                            }
                         }
                     }
                 ]
@@ -2028,97 +2452,108 @@ __Example__
         },
         {
             "name":"equipmentType",
+            "epc":"0xCC",
             "description":{ "ja":"充放電器タイプ", "en":"Charger/Discharger type" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"AC_CPLT", "ja":"AC_CPLT", "en":"AC_CPLT"},
-                    {"value":"AC_HLC_Charge", "ja":"AC_HLC（充電のみ）", "en":"AC_HLC_Charge"},
-                    {"value":"AC_HLC_ChargeDischarge",
-                     "ja":"AC_HLC（充放電可）", "en":"AC_HLC_ChargeDischarge"},
-                    {"value":"DC_AA_Charge", "ja":"DCタイプ_AA（充電のみ）", "en":"DC_AA_Charge"},
-                    {"value":"DC_AA_ChargeDischarge",
-                     "ja":"DCタイプ_AA（充放電可）", "en":"DC_AA_ChargeDischarge"},
-                    {"value":"DC_AA_Discharge",
-                     "ja":"DCタイプ_BB（放電のみ）", "en":"DC_AA_Discharge"},
-                    {"value":"DC_BB_Charge", "ja":"DCタイプ_BB（充電のみ）", "en":"DC_BB_Charge"},
-                    {"value":"DC_BB_ChargeDischarge",
-                     "ja":"DCタイプ_BB（充放電可）", "en":"DC_BB_ChargeDischarge"},
-                    {"value":"DC_BB_Discharge",
-                     "ja":"DCタイプ_BB（放電のみ）", "en":"DC_BB_Discharge"},
-                    {"value":"DC_EE_Charge", "ja":"DCタイプ_EE（充電のみ）", "en":"DC_EE_Charge"},
-                    {"value":"DC_EE_ChargeDischarge",
-                     "ja":"DCタイプ_EE（充放電可）", "en":"DC_EE_ChargeDischarge"},
-                    {"value":"DC_EE_Discharge",
-                     "ja":"DCタイプ_EE（放電のみ）", "en":"DC_EE_Discharge"},
-                    {"value":"DC_FF_Charge", "ja":"DCタイプ_FF（充電のみ）", "en":"DC_FF_Charge"},
-                    {"value":"DC_FF_ChargeDischarge",
-                     "ja":"DCタイプ_FF（充放電可）", "en":"DC_FF_ChargeDischarge"},
-                    {"value":"DC_FF_Discharge",
-                     "ja":"DCタイプ_FF（放電のみ）", "en":"DC_FF_Discharge"}
+                    {"value":"AC_CPLT", "ja":"AC_CPLT", "en":"AC_CPLT", "edt":"0x11"},
+                    {"value":"AC_HLC_Charge", "ja":"AC_HLC（充電のみ）", "en":"AC_HLC_Charge", "edt":"0x12"},
+                    {"value":"AC_HLC_ChargeDischarge", "ja":"AC_HLC（充放電可）", "en":"AC_HLC_ChargeDischarge", "edt":"0x13"},
+                    {"value":"DC_AA_Charge", "ja":"DCタイプ_AA（充電のみ）", "en":"DC_AA_Charge", "edt":"0x21"},
+                    {"value":"DC_AA_ChargeDischarge", "ja":"DCタイプ_AA（充放電可）", "en":"DC_AA_ChargeDischarge", "edt":"0x22"},
+                    {"value":"DC_AA_Discharge", "ja":"DCタイプ_BB（放電のみ）", "en":"DC_AA_Discharge", "edt":"0x23"},
+                    {"value":"DC_BB_Charge", "ja":"DCタイプ_BB（充電のみ）", "en":"DC_BB_Charge", "edt":"0x31"},
+                    {"value":"DC_BB_ChargeDischarge", "ja":"DCタイプ_BB（充放電可）", "en":"DC_BB_ChargeDischarge", "edt":"0x32"},
+                    {"value":"DC_BB_Discharge", "ja":"DCタイプ_BB（放電のみ）", "en":"DC_BB_Discharge", "edt":"0x33"},
+                    {"value":"DC_EE_Charge", "ja":"DCタイプ_EE（充電のみ）", "en":"DC_EE_Charge", "edt":"0x41"},
+                    {"value":"DC_EE_ChargeDischarge", "ja":"DCタイプ_EE（充放電可）", "en":"DC_EE_ChargeDischarge", "edt":"0x42"},
+                    {"value":"DC_EE_Discharge", "ja":"DCタイプ_EE（放電のみ）", "en":"DC_EE_Discharge", "edt":"0x43"},
+                    {"value":"DC_FF_Charge", "ja":"DCタイプ_FF（充電のみ）", "en":"DC_FF_Charge", "edt":"0x51"},
+                    {"value":"DC_FF_ChargeDischarge", "ja":"DCタイプ_FF（充放電可）", "en":"DC_FF_ChargeDischarge", "edt":"0x52"},
+                    {"value":"DC_FF_Discharge", "ja":"DCタイプ_FF（放電のみ）", "en":"DC_FF_Discharge", "edt":"0x53"}
                 ]
             }
         },
         {
+            "name":null,
+            "epc":"0xCD",
+            "description":{ "ja":"車両接続確認", "en":"Vehicle Connection Confirmation" },
+            "writable":true, 
+            "observable":false,
+            "data":{
+                "type":"key",
+                "values":[{"edt":"0x10"}]
+            }
+        },
+        {
             "name":"usedCapacity1",
-            "description":{
-                "ja":"車載電池の使用容量値1",
-                "en":"Used capacity of vehicle mounted battery 1"
-            },
+            "epc":"0xD0",
+            "description":{ "ja":"車載電池の使用容量値1", "en":"Used capacity of vehicle mounted battery 1 " },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"operatingMode",
+            "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"charge", "ja":"充電", "en":"Charge"},
-                    {"value":"discharge", "ja":"放電", "en":"Discharge"},
-                    {"value":"standby", "ja":"待機", "en":"Standby"},
-                    {"value":"idle", "ja":"停止", "en":"Idle"},
-                    {"value":"other", "ja":"その他", "en":"Other"}
+                    {"value":"charge", "ja":"充電", "en":"Charge", "edt":"0x42"},
+                    {"value":"discharge", "ja":"放電", "en":"Discharge", "edt":"0x43"},
+                    {"value":"standby", "ja":"待機", "en":"Standby", "edt":"0x44"},
+                    {"value":"idle", "ja":"停止", "en":"Idle", "edt":"0x47"},
+                    {"value":"other", "ja":"その他", "en":"Other", "edt":"0x40"}
                 ]
             }
         },
         {
             "name":"remainingStoredEnergy1",
-            "description":{
-                "ja":"車載電池の電池残容量1",
-                "en":"Remaining stored electricity of vehicle mounted battery1"
-            },
+            "epc":"0xE2",
+            "description":{ "ja":"車載電池の電池残容量1", "en":"Remaining stored electricity of vehicle mounted battery1" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"remainingStoredEnergy3",
-            "description":{
-                "ja":"車載電池の電池残容量3",
-                "en":"Remaining stored electricity of vehicle mounted battery3"
-            },
+            "epc":"0xE4",
+            "description":{ "ja":"車載電池の電池残容量3", "en":"Remaining stored electricity of vehicle mounted battery3" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"chargeDischargeStatus" }
     ]
@@ -2144,35 +2579,71 @@ __Example__
 ```
 {
     "type":"powerDistributionBoard",
+    "eoj":"0x0287",
     "description":{"ja":"分電盤メータリング", "en":"Power Distribution Board"},
     "properties":[
         {
             "name":"normDirIntegralEnergy",
-            "description":{
-                "ja":"積算電力量計測値（正方向）",
-                "en":"Measured cumulative amount of electric energy (normal direction)"
-            },
+            "epc":"0xC0",
+            "description":{ "ja":"積算電力量計測値（正方向）", "en":"Measured cumulative amount of electric energy (normal direction)" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"kWh"
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4,
+                    "coefficient":["0xC2"],
+                    "exceptions":[
+                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                    ]
+                }    
             }
         },
         {
             "name":"revDirIntegralEnergy",
-            "description":{
-                "ja":"積算電力量計測値（逆方向）",
-                "en":"Measured cumulative amount of electric energy (reverse direction)"
-            },
+            "epc":"0xC1",
+            "description":{ "ja":"積算電力量計測値（逆方向）", "en":"Measured cumulative amount of electric energy (reverse direction)" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"kWh"
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4,
+                    "coefficient":["0xC2"],
+                    "exceptions":[
+                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                    ]
+                }    
+            }
+        },
+        {
+            "name":null,
+            "epc":"0xC2",
+            "description":{ "ja":"積算電力量単位", "en":"Unit of cumulative amounts of electric energy" },
+            "writable":false, 
+            "observable":false,
+            "data":{
+                "type":"key", 
+                "values":[
+                    {"value":1, "edt":"0x00"}, 
+                    {"value":0.1, "edt":"0x01"}, 
+                    {"value":0.01, "edt":"0x02"}, 
+                    {"value":0.001, "edt":"0x03"}, 
+                    {"value":0.0001, "edt":"0x04"}, 
+                    {"value":10, "edt":"0x0A"}, 
+                    {"value":100, "edt":"0x0B"}, 
+                    {"value":1000, "edt":"0x0C"}, 
+                    {"value":10000, "edt":"0x0D"}
+                ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2215,41 +2686,86 @@ __Example__
 ```
 {
     "type":"lvSmartElectricEnergyMeter",
+    "eoj":"0x0288",
     "description":{"ja":"低圧スマート電力量メータ", "en":"Low Voltage Smart Electric Energy Meter"},
     "properties":[
         {
-            "name":"effectiveDigits",
-            "description":{
-                "ja":"積算電力量有効桁数",
-                "en":"Number of effective digits for cumulative amounts of electric energy"
-            },
+            "name":null,
+            "epc":"0xD3",
+            "description":{ "ja":"係数", "en":"Coefficient" },
             "writable":false,
             "observable":false,
-            "data":{ "type":"integer" }
+            "data":{ 
+                "type":"integer",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":4
+                }
+            }
+        },
+        {
+            "name":"effectiveDigits",
+            "epc":"0xD7",
+            "description":{ "ja":"積算電力量有効桁数", "en":"Number of effective digits for cumulative amounts of electric energy" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"integer",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1
+                }
+            }
         },
         {
             "name":"normDirIntegralEnergy",
-            "description":{
-                "ja":"積算電力量計測値（正方向計測値）",
-                "en":"Measured cumulative amount of electric energy (normal direction)"
-            },
+            "epc":"0xE0",
+            "description":{ "ja":"積算電力量計測値（正方向計測値）", "en":"Measured cumulative amount of electric energy (normal direction)" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"kWh"
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":4,
+                    "coefficient":["0xD3","0xE1"],
+                    "exceptions":[
+                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                    ]
+                }
+            }
+        },
+        {
+            "name":null,
+            "epc":"0xE1",
+            "description":{ "ja":"積算電力量単位", "en":"Unit of cumulative amounts of electric energy" },
+            "writable":false, 
+            "observable":false,
+            "data":{
+                "type":"key", 
+                "values":[
+                    {"value":1, "edt":"0x00"}, 
+                    {"value":0.1, "edt":"0x01"}, 
+                    {"value":0.01, "edt":"0x02"}, 
+                    {"value":0.001, "edt":"0x03"}, 
+                    {"value":0.0001, "edt":"0x04"}, 
+                    {"value":10, "edt":"0x0A"}, 
+                    {"value":100, "edt":"0x0B"}, 
+                    {"value":1000, "edt":"0x0C"}, 
+                    {"value":10000, "edt":"0x0D"}
+                ]
             }
         },
         {
             "name":"normDirIntegralEnergyLog1",
-            "description":{
-                "ja":"積算電力量計測値履歴1（正方向計測値）",
-                "en":"Historical data of measured cumulative amounts of electric energy 1(normal direction)"
-            },
+            "epc":"0xE2",
+            "description":{ "ja":"積算電力量計測値履歴1（正方向計測値）", "en":"Historical data of measured cumulative amounts of electric energy 1(normal direction)" },
             "writable":false,
             "observable":false,
             "query":{
                 "name":"day",
+                "epc":"0xE5",
                 "type":"integer",
                 "minimum":0,
                 "maximum":99
@@ -2260,7 +2776,13 @@ __Example__
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
-                        "data":{ "type":"integer" }
+                        "data":{
+                            "type":"integer",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":2
+                            }
+                        }
                     },
                     {
                         "name":"energy",
@@ -2269,7 +2791,15 @@ __Example__
                             "type":"array",
                             "element":{
                                 "type":"integer",
-                                "unit":"kWh"
+                                "unit":"kWh",
+                                "edt":{
+                                    "isUnsigned":true, 
+                                    "size":4,
+                                    "coefficient":["0xD3","0xE1"],
+                                    "exceptions":[
+                                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                    ]
+                                }
                             }
                         }
                     }
@@ -2278,19 +2808,26 @@ __Example__
         },
         {
             "name":"revDirIntegralEnergy",
-            "description":{
-                "ja":"積算電力量計測値（逆方向計測値）",
-                "en":"Measured cumulative amount of electric energy (reverse direction)"
-            },
+            "epc":"0xE3",
+            "description":{ "ja":"積算電力量計測値（逆方向計測値）", "en":"Measured cumulative amount of electric energy (reverse direction)" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"kWh"
+                "unit":"kWh",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":4,
+                    "coefficient":["0xD3","0xE1"],
+                    "exceptions":[
+                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                    ]
+                }
             }
         },
         {
             "name":"revDirIntegralEnergyLog1",
+            "epc":"0xE4",
             "description":{
                 "ja":"積算電力量計測値履歴1（逆方向計測値）",
                 "en":"Historical data of measured cumulative amounts of electric energy 1(reverse direction)"
@@ -2299,6 +2836,7 @@ __Example__
             "observable":false,
             "query":{
                 "name":"day",
+                "epc":"0xE5",
                 "type":"integer",
                 "minimum":0,
                 "maximum":99
@@ -2309,7 +2847,13 @@ __Example__
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
-                        "data":{ "type":"integer" }
+                        "data":{
+                            "type":"integer",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":2
+                            }
+                        }
                     },
                     {
                         "name":"energy",
@@ -2318,7 +2862,15 @@ __Example__
                             "type":"array",
                             "element":{
                                 "type":"integer",
-                                "unit":"kWh"
+                                "unit":"kWh",
+                                "edt":{
+                                    "isUnsigned":true, 
+                                    "size":4,
+                                    "coefficient":["0xD3","0xE1"],
+                                    "exceptions":[
+                                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                    ]
+                                }
                             }
                         }
                     }
@@ -2326,20 +2878,48 @@ __Example__
             }
         },
         {
-            "name":"instantaneousPower",
+            "name":null,
+            "epc":"0xE5",
             "description":{
-                "ja":"瞬時電力計測値",
-                "en":"Measured instantaneous electric energy"
+                "ja":"積算履歴収集日１",
+                "en":"Day for which the historical data of measured cumulative amounts of electric energy is to be retrieved 1"
             },
+            "writable":true, 
+            "observable":false,
+            "data":{
+                "type":"integer", 
+                "unit":"day",
+                "minimum":0,
+                "maximum":99,
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1
+                }                
+            }
+        },
+        {
+            "name":"instantaneousPower",
+            "epc":"0xE7",
+            "description":{ "ja":"瞬時電力計測値", "en":"Measured instantaneous electric energy" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"W"
+                "unit":"W",
+                "edt":{
+                    "isUnsigned":false, 
+                    "size":4,
+                    "exceptions":[
+                        {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x80000000"},
+                        {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7FFFFFFF"},
+                        {"value":"noData", "ja":"データなし","en":"noData", "edt":"0x7FFFFFFE"}
+                    ]
+                }
             }
         },
         {
             "name":"instantaneousCurrent",
+            "epc":"0xE8",
             "description":{ "ja":"瞬時電流計測値", "en":"Measured instantaneous currents" },
             "writable":false,
             "observable":false,
@@ -2350,16 +2930,36 @@ __Example__
                         "name":"r",
                         "description":{ "ja":"r相", "en":"r phase" },
                         "data":{
-                            "type":"integer",
-                            "unit":"A"
+                            "type":"number",
+                            "unit":"A",
+                            "edt":{
+                                "isUnsigned":false, 
+                                "size":2,
+                                "magnification":0.1,
+                                "exceptions":[
+                                    {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x8000"},
+                                    {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7FFF"},
+                                    {"value":"noData", "ja":"データなし","en":"noData", "edt":"0x7FFE"}
+                                ]
+                            }
                         }
                     },
                     {
                         "name":"t",
                         "description":{ "ja":"t相", "en":"t phase" },
                         "data":{
-                            "type":"integer",
-                            "unit":"A"
+                            "type":"number",
+                            "unit":"A",
+                            "edt":{
+                                "isUnsigned":false, 
+                                "size":2,
+                                "magnification":0.1,
+                                "exceptions":[
+                                    {"value":"underflow", "ja":"Under Flow","en":"Under Flow", "edt":"0x8000"},
+                                    {"value":"overflow", "ja":"Over Flow", "en":"Over Flow", "edt":"0x7FFF"},
+                                    {"value":"noData", "ja":"データなし","en":"noData", "edt":"0x7FFE"}
+                                ]
+                            }
                         }
                     }
                 ]
@@ -2367,10 +2967,8 @@ __Example__
         },
         {
             "name":"normDirIntegralEnergyEvery30Min",
-            "description":{
-                "ja":"定時積算電力量計測値（正方向計測値）",
-                "en":"Cumulative amounts of electric energy measured at fixed time (normal direction)"
-            },
+            "epc":"0xEA",
+            "description":{ "ja":"定時積算電力量計測値（正方向計測値）", "en":"Cumulative amounts of electric energy measured at fixed time (normal direction)" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2379,14 +2977,28 @@ __Example__
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{
+                            "type":"date",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":[2,1,1,1,1,1]
+                            }
+                        }
                     },
                     {
                         "name":"energy",
                         "description":{ "ja":"電力量", "en":"energy" },
                         "data":{
                             "type":"integer",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":4,
+                                "coefficient":["0xD3","0xE1"],
+                                "exceptions":[
+                                    {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                ]
+                            }
                         }
                     }
                 ]
@@ -2394,10 +3006,8 @@ __Example__
         },
         {
             "name":"revDirIntegralEnergyEvery30Min",
-            "description":{
-                "ja":"定時積算電力量計測値（逆方向計測値）",
-                "en":"Cumulative amounts of electric energy measured at fixed time (reverse direction)"
-            },
+            "epc":"0xEB",
+            "description":{ "ja":"定時積算電力量計測値（逆方向計測値）", "en":"Cumulative amounts of electric energy measured at fixed time (reverse direction)" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2406,20 +3016,36 @@ __Example__
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{
+                            "type":"date",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":[2,1,1,1,1,1]
+                            }
+                        }
                     },
                     {
                         "name":"energy",
                         "description":{ "ja":"電力量", "en":"energy" },
                         "data":{
                             "type":"integer",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":4,
+                                "coefficient":["0xD3","0xE1"],
+                                "exceptions":[
+                                    {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                ]
+                            }
                         }
                     }
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2463,20 +3089,30 @@ __Example__
 ```
 {
     "type":"hvSmartElectricEnergyMeter",
+    "eoj":"0x028A",
     "description":{"ja":"高圧スマート電力量メータ", "en":"High Voltage Smart Electric Energy Meter"},
     "properties":[
         {
             "name":"monthlyMaxDemandPower",
+            "epc":"0xC1",
             "description":{ "ja":"月間最大需要電力", "en":"Monthly maximum electric power demand" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"kW"
+                "unit":"kW",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":4,
+                    "exceptions":[
+                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                    ]
+                }
             }
         },
         {
             "name":"averageDemandPower",
+            "epc":"0xC3",
             "description":{
                 "ja":"定時需要電力（30分平均電力）",
                 "en":"Electric power demand at fixed time(30-minute average electric power)"
@@ -2489,14 +3125,27 @@ __Example__
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{
+                            "type":"date",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":[2,1,1,1,1,1]
+                            }
+                        }
                     },
                     {
                         "name":"energy",
                         "description":{ "ja":"電力量", "en":"Energy" },
                         "data":{
                             "type":"integer",
-                            "unit":"kWh"
+                            "unit":"kW",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":4,
+                                "exceptions":[
+                                    {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                ]
+                            }
                         }
                     }
                 ]
@@ -2504,26 +3153,48 @@ __Example__
         },
         {
             "name":"effectiveDigits",
-            "description":{
-                "ja":"需要電力有効桁数",
-                "en":"Number of effective digits of electric power demand"
-            },
+            "epc":"0xC4",
+            "description":{ "ja":"需要電力有効桁数", "en":"Number of effective digits of electric power demand" },
             "writable":false,
             "observable":false,
             "data":{
-                "type":"integer"
+                "type":"integer",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1
+                }
+            }
+        },
+        {
+            "name":null,
+            "epc":"0xC5",
+            "description":{ "ja":"需要電力単位", "en":"Unit of amounts of electric power" },
+            "writable":false, 
+            "observable":false,
+            "data":{
+                "type":"key", 
+                "values":[
+                    {"value":1, "edt":"0x00"}, 
+                    {"value":0.1, "edt":"0x01"}, 
+                    {"value":0.01, "edt":"0x02"}, 
+                    {"value":0.001, "edt":"0x03"}, 
+                    {"value":0.0001, "edt":"0x04"}, 
+                    {"value":10, "edt":"0x0A"}, 
+                    {"value":100, "edt":"0x0B"}, 
+                    {"value":1000, "edt":"0x0C"}, 
+                    {"value":10000, "edt":"0x0D"}
+                ]
             }
         },
         {
             "name":"demandPowerLog",
-            "description":{
-                "ja":"需要電力計測値履歴",
-                "en":"Historical data of measured electric power demand"
-            },
+            "epc":"0xC6",
+            "description":{ "ja":"需要電力計測値履歴", "en":"Historical data of measured electric power demand" },
             "writable":false,
             "observable":false,
             "query":{
                 "name":"day",
+                "epc":"0xE1",
                 "type":"integer",
                 "minimum":0,
                 "maximum":99
@@ -2536,7 +3207,11 @@ __Example__
                         "description":{ "ja":"日", "en":"Date" },
                         "data":{
                             "type":"integer",
-                            "unit":"day"
+                            "unit":"day",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -2546,7 +3221,14 @@ __Example__
                             "type":"array",
                             "element":{
                                 "type":"integer",
-                                "unit":"kW"
+                                "unit":"kW",
+                                "edt":{
+                                    "isUnsigned":true, 
+                                    "size":4,
+                                    "exceptions":[
+                                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                    ]
+                                }
                             }
                         }
                     }
@@ -2554,21 +3236,74 @@ __Example__
             }
         },
         {
+            "name":null,
+            "epc":"0xD3",
+            "description":{ "ja":"係数", "en":"Coefficient" },
+            "writable":false,
+            "observable":false,
+            "data":{ 
+                "type":"integer",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":4
+                }
+            }
+        },
+        {
+            "name":null,
+            "epc":"0xD4",
+            "description":{ "ja":"係数の倍率", "en":"Multiplying factor for coefficient" },
+            "writable":false, 
+            "observable":false,
+            "data":{
+                "type":"key", 
+                "values":[
+                    {"value":1, "edt":"0x00"}, 
+                    {"value":0.1, "edt":"0x01"}, 
+                    {"value":0.01, "edt":"0x02"}, 
+                    {"value":0.001, "edt":"0x03"}
+                ]
+            }
+        },
+        {
             "name":"fixedDate",
+            "epc":"0xE0",
             "description":{ "ja":"確定日", "en":"Fixed Date" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"day"
+                "unit":"day",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1
+                }
+            }
+        },
+        {
+            "name":null,
+            "epc":"0xE1",
+            "description":{
+                "ja":"積算履歴収集日",
+                "en":"Day for which the historical data of measured cumulative amounts of electric energy is to be retrieved"
+            },
+            "writable":true, 
+            "observable":false,
+            "data":{
+                "type":"integer", 
+                "unit":"day",
+                "minimum":0,
+                "maximum":99,
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1
+                }                
             }
         },
         {
             "name":"integralActiveEnergy",
-            "description":{
-                "ja":"積算有効電力量計測値",
-                "en":"Measured cumulative amounts of active electric energy"
-            },
+            "epc":"0xE2",
+            "description":{ "ja":"積算有効電力量計測値", "en":"Measured cumulative amounts of active electric energy" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2577,14 +3312,28 @@ __Example__
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{
+                            "type":"date",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":[2,1,1,1,1,1]
+                            }
+                        }
                     },
                     {
                         "name":"energy",
                         "description":{ "ja":"電力量", "en":"Energy" },
                         "data":{
                             "type":"integer",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":4,
+                                "coefficient":["0xD3","0xD4","0xE6"],
+                                "exceptions":[
+                                    {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                ]
+                            }
                         }
                     }
                 ]
@@ -2592,10 +3341,8 @@ __Example__
         },
         {
             "name":"integralActiveEnergyEvery30Min",
-            "description":{
-                "ja":"定時積算有効電力量計測値",
-                "en":"Cumulative amounts of active electric energy at fixed time"
-            },
+            "epc":"0xE3",
+            "description":{ "ja":"定時積算有効電力量計測値", "en":"Cumulative amounts of active electric energy at fixed time" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2604,14 +3351,28 @@ __Example__
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{
+                            "type":"date",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":[2,1,1,1,1,1]
+                            }
+                        }
                     },
                     {
                         "name":"energy",
                         "description":{ "ja":"電力量", "en":"Energy" },
                         "data":{
                             "type":"integer",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":4,
+                                "coefficient":["0xD3","0xD4","0xE6"],
+                                "exceptions":[
+                                    {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                ]
+                            }
                         }
                     }
                 ]
@@ -2619,16 +3380,45 @@ __Example__
         },
         {
             "name":"integralActiveEnergyEffectiveDigits",
+            "epc":"0xE5",
             "description":{
                 "ja":"積算有効電力量有効桁数",
                 "en":"Number of effective digits for cumulative amount of active electric energy"
             },
             "writable":false,
             "observable":false,
-            "data":{ "type":"integer" }
+            "data":{
+                "type":"integer",
+                "edt":{
+                    "isUnsigned":true, 
+                    "size":1
+                }
+            }
+        },
+        {
+            "name":null,
+            "epc":"0xE6",
+            "description":{ "ja":"積算有効電力量単位", "en":"Unit of cumulative amounts of effective electric energy" },
+            "writable":false, 
+            "observable":false,
+            "data":{
+                "type":"key", 
+                "values":[
+                    {"value":1, "edt":"0x00"}, 
+                    {"value":0.1, "edt":"0x01"}, 
+                    {"value":0.01, "edt":"0x02"}, 
+                    {"value":0.001, "edt":"0x03"}, 
+                    {"value":0.0001, "edt":"0x04"}, 
+                    {"value":10, "edt":"0x0A"}, 
+                    {"value":100, "edt":"0x0B"}, 
+                    {"value":1000, "edt":"0x0C"}, 
+                    {"value":10000, "edt":"0x0D"}
+                ]
+            }
         },
         {
             "name":"activeEnergyLog",
+            "epc":"0xE7",
             "description":{
                 "ja":"積算有効電力量計測値履歴",
                 "en":"Historical data of measured cumulative amount of active electric energy"
@@ -2637,6 +3427,7 @@ __Example__
             "observable":false,
             "query":{
                 "name":"day",
+                "epc":"0xE1",
                 "type":"integer",
                 "minimum":0,
                 "maximum":99
@@ -2649,7 +3440,11 @@ __Example__
                         "description":{ "ja":"日", "en":"Day" },
                         "data":{
                             "type":"integer", 
-                            "unit":"day"
+                            "unit":"day",
+                            "edt":{
+                                "isUnsigned":true, 
+                                "size":2
+                            }
                         }
                     },
                     {
@@ -2659,14 +3454,24 @@ __Example__
                             "type":"array",
                             "element":{
                                 "type":"integer",
-                                "unit":"kWh"
+                                "unit":"kWh",
+                                "edt":{
+                                    "isUnsigned":true, 
+                                    "size":4,
+                                    "coefficient":["0xD3","0xD4","0xE6"],
+                                    "exceptions":[
+                                        {"value":"noData", "ja":"データなし","en":"No Data", "edt":"0xFFFFFFFE"}
+                                    ]
+                                }
                             }
                         }
                     }
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2675,7 +3480,7 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| brightness | GET, PUT | integer | 0xB0 | 照度レベル設定<br>Illuminance level |\*1|
+| brightness | GET, PUT | integer | 0xB0 | 照度レベル設定 <br>Illuminance level |\*1|
 | operatingMode | GET, PUT | key | 0xB6 | 点灯モード設定<br>Lighting mode setting |
 | rgb | GET, PUT | object | 0xC0 | カラー灯モード時RGB設定<br>RGB setting for color lighting |\*1|
 
@@ -2686,38 +3491,46 @@ __Example__
 ```
 {
     "type":"generalLighting",
+    "eoj":"0x0290",
     "description":{"ja":"一般照明", "en":"General Lighting"},
     "properties":[
         {
             "name":"brightness",
-            "description":{ "ja":"照度レベル設定", "en":"Illuminance level" },
+            "epc":"0xB0",
+            "description":{ "ja":"照度レベル設定", "en":"Illuminance Level" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }    
             }
         },
         {
             "name":"operatingMode",
+            "epc":"0xB6",
             "description":{ "ja":"点灯モード設定", "en":"Lighting mode setting" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"auto", "ja":"自動", "en":"automatic"},
-                    {"value":"normal", "ja":"通常灯", "en":"Normal Lighting"},
-                    {"value":"night", "ja":"常夜灯", "en":"Night Lighting"},
-                    {"value":"color", "ja":"カラー灯", "en":"Color Lighting"}
+                    {"value":"auto", "ja":"自動", "en":"automatic", "edt":"0x41"},
+                    {"value":"normal", "ja":"通常灯", "en":"Normal Lighting", "edt":"0x42"},
+                    {"value":"night", "ja":"常夜灯", "en":"Night Lighting", "edt":"0x43"},
+                    {"value":"color", "ja":"カラー灯", "en":"Color Lighting", "edt":"0x45"}
                 ]
             }
         },
         {
             "name":"rgb",
-            "description":{ "ja":"カラー灯モード時RGB設定", "en":"RGB setting for color lighting" },
+            "epc":"0xC0",
+            "description":{ "ja":"RGB設定", "en":"RGB Setting" },
             "writable":true,
             "observable":false,
             "data":{
@@ -2729,7 +3542,11 @@ __Example__
                         "data":{
                             "type":"integer",
                             "minimum":0,
-                            "maximum":255
+                            "maximum":255,
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":1
+                            }
                         }
                     },
                     {
@@ -2738,7 +3555,11 @@ __Example__
                         "data":{
                             "type":"integer",
                             "minimum":0,
-                            "maximum":255
+                            "maximum":255,
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":1
+                            }
                         }
                     },
                     {
@@ -2747,13 +3568,19 @@ __Example__
                         "data":{
                             "type":"integer",
                             "minimum":0,
-                            "maximum":255
+                            "maximum":255,
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":1
+                            }
                         }
                     }
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2771,21 +3598,29 @@ __Example__
 ```
 {
     "type":"monoFunctionalLighting",
+    "eoj":"0x0291",
     "description":{"ja":"単機能照明", "en":"Mono Functional Lighting"},
     "properties":[
         {
             "name":"brightness",
-            "description":{ "ja":"照度レベル設定", "en":"Illuminance level" },
+            "epc":"0xB0",
+            "description":{ "ja":"照度レベル設定", "en":"Illuminance Level" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }    
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2797,6 +3632,7 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
+| ratedChargePower | GET | integer| 0xC5 | 定格充電能力<br>Rated charge capacity |
 | chargeStatus | GET | key | 0xC7 | 車両接続・充電可否状態<br>Vehicle connection and chargeable status |INF|
 | equipmentType | GET | key | 0xCC | 充電器タイプ<br>Charger type |
 | usedCapacity1 | GET | integer | 0xD0 | 車載電池の使用容量値1<br>Used capacity of vehicle mounted battery 1 |
@@ -2809,73 +3645,103 @@ __Example__
 ```
 {
     "type":"evChargerDischarger",
-    "description":{"ja":"電気自動車充放電器", "en":"EV Charger Discharger"},
+    "eoj":"0x02A1",
+    "description":{"ja":"電気自動車充電器", "en":"EV Charger Discharger"},
     "properties":[
         {
+            "name":"ratedChargePower",
+            "epc":"0xC5",
+            "description":{ "ja":"定格充電能力", "en":"Rated charge capacity" },
+            "writable":false, 
+            "observable":false,
+            "data":{
+                "type":"integer", 
+                "unit":"W",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
+            }
+        },
+        {
             "name":"chargeStatus",
-            "description":{
-                "ja":"車両接続・充電可否状態",
-                "en":"Vehicle connection and chargeable status"
-            },
+            "epc":"0xC7",
+            "description":{ "ja":"車両接続・充電可否状態", "en":"Vehicle connection and chargeable status" },
             "writable":false, 
             "observable":true,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"undefined", "ja":"不定", "en":"Undefined"},
-                    {"value":"notConnected", "ja":"車両未接続", "en":"Not Connected"},
-                    {"value":"chargeable", "ja":"車両接続・ 充電可", "en":"Chargeable"},
-                    {"value":"notChargeable", "ja":"車両接続・ 充電不可", "en":"Not Chargeable"}
+                    {"value":"undefined", "ja":"不定", "en":"Undefined", "edt":"0xFF"},
+                    {"value":"notConnected", "ja":"車両未接続", "en":"Not Connected", "edt":"0x30"},
+                    {"value":"chargeable", "ja":"車両接続・ 充電可", "en":"Chargeable", "edt":"0x40"},
+                    {"value":"notChargeable", "ja":"車両接続・ 充電不可", "en":"Not Chargeable", "edt":"0x41"}
                 ]
             }
         },
         {
             "name":"equipmentType",
+            "epc":"0xCC",
             "description":{ "ja":"充放電器タイプ", "en":"Charger/Discharger type" },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"AC_CPLT", "ja":"AC_CPLT", "en":"AC_CPLT"},
-                    {"value":"AC_HLC_Charge", "ja":"AC_HLC（充電のみ）", "en":"AC_HLC_Charge"},
-                    {"value":"DC_AA_Charge", "ja":"DCタイプ_AA（充電のみ）", "en":"DC_AA_Charge"},
-                    {"value":"DC_BB_Charge", "ja":"DCタイプ_BB（充電のみ）", "en":"DC_BB_Charge"},
-                    {"value":"DC_EE_Charge", "ja":"DCタイプ_EE（充電のみ）", "en":"DC_EE_Charge"},
-                    {"value":"DC_FF_Charge", "ja":"DCタイプ_FF（充電のみ）", "en":"DC_FF_Charge"}
+                    {"value":"AC_CPLT", "ja":"AC_CPLT", "en":"AC_CPLT", "edt":"0x11"},
+                    {"value":"AC_HLC_Charge", "ja":"AC_HLC（充電のみ）", "en":"AC_HLC_Charge", "edt":"0x12"},
+                    {"value":"DC_AA_Charge", "ja":"DCタイプ_AA（充電のみ）", "en":"DC_AA_Charge", "edt":"0x21"},
+                    {"value":"DC_BB_Charge", "ja":"DCタイプ_BB（充電のみ）", "en":"DC_BB_Charge", "edt":"0x31"},
+                    {"value":"DC_EE_Charge", "ja":"DCタイプ_EE（充電のみ）", "en":"DC_EE_Charge", "edt":"0x41"},
+                    {"value":"DC_FF_Charge", "ja":"DCタイプ_FF（充電のみ）", "en":"DC_FF_Charge", "edt":"0x51"}
                 ]
             }
         },
         {
+            "name":null,
+            "epc":"0xCD",
+            "description":{ "ja":"車両接続確認", "en":"Vehicle Connection Confirmation" },
+            "writable":true, 
+            "observable":false,
+            "data":{
+                "type":"key",
+                "values":[{"edt":"0x10"}]
+            }
+        },
+        {
             "name":"usedCapacity1",
-            "description":{
-                "ja":"車載電池の使用容量値1",
-                "en":"Used capacity of vehicle mounted battery 1"
-            },
+            "epc":"0xD0",
+            "description":{ "ja":"車載電池の使用容量値1", "en":"Used capacity of vehicle mounted battery 1 " },
             "writable":false, 
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"operatingMode",
+            "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true, 
             "observable":true,
             "data":{
                 "type":"key",
                 "values":[
-                    {"value":"charge", "ja":"充電", "en":"Charge"},
-                    {"value":"standby", "ja":"待機", "en":"Standby"},
-                    {"value":"idle", "ja":"停止", "en":"Idle"},
-                    {"value":"other", "ja":"その他", "en":"Other"}
+                    {"value":"charge", "ja":"充電", "en":"Charge", "edt":"0x42"},
+                    {"value":"standby", "ja":"待機", "en":"Standby", "edt":"0x44"},
+                    {"value":"idle", "ja":"停止", "en":"Idle", "edt":"0x47"},
+                    {"value":"other", "ja":"その他", "en":"Other", "edt":"0x40"}
                 ]
             }
         },
         {
             "name":"remainingStoredEnergy1",
+            "epc":"0xE2",
             "description":{
                 "ja":"車載電池の電池残容量1",
                 "en":"Remaining stored electricity of vehicle mounted battery1"
@@ -2884,11 +3750,16 @@ __Example__
             "observable":false,
             "data":{
                 "type":"integer", 
-                "unit":"Wh"
+                "unit":"Wh",
+                "edt":{
+                    "isUnsigned":true,
+                    "size":4
+                }
             }
         },
         {
             "name":"remainingStoredEnergy3",
+            "epc":"0xE4",
             "description":{
                 "ja":"車載電池の電池残容量3",
                 "en":"Remaining stored electricity of vehicle mounted battery3"
@@ -2899,10 +3770,15 @@ __Example__
                 "type":"integer",
                 "unit":"%",
                 "minimum":0,
-                "maximum":100
+                "maximum":100,
+                "edt":{
+                    "isUnsigned":true,
+                    "size":1
+                }    
             }
         }
     ],
+    "actions":[],
     "events":[
         { "name":"chargeStatus" },
         { "name":"operatingMode" }
@@ -2916,29 +3792,33 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| doorIsOpen<br>ドア開閉状態 | GET | boolean | 0xB0 | ドア開閉状態<br>Door open/close status |
+| doorIsOpen <br>ドア開閉状態 | GET | boolean | 0xB0 | ドア開閉状態<br>Door open/close status |
 
 ### Device Description
 
 ```
 {
     "type":"refrigerator",
+    "eoj":"0x03B7",
     "description":{"ja":"冷凍冷蔵庫", "en":"refrigerator"},
     "properties":[
         {
             "name":"doorIsOpen",
+            "epc":"0xB0",
             "description":{ "ja":"ドア開閉状態", "en":"Door open/close status" },
             "writable":false,
             "observable":false,
             "data":{ 
             "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"開", "en":"Open"}, 
-                    {"value":false, "ja":"閉", "en":"Close"}
+                    {"value":true, "ja":"開", "en":"Open", "edt":"0x41"},
+                    {"value":false, "ja":"閉", "en":"Close", "edt":"0x42"}
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2957,22 +3837,26 @@ __Example__
 ```
 {
     "type":"combinationMicrowaveOven",
+    "eoj":"0x03B8",
     "description":{"ja":"オーブンレンジ", "en":"Combination Microwave Oven"},
     "properties":[
         {
             "name":"doorIsOpen",
+            "epc":"0xB0",
             "description":{ "ja":"ドア開閉状態", "en":"Door open/close status" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"開", "en":"Open"}, 
-                    {"value":false, "ja":"閉", "en":"Close"}
+                    {"value":true, "ja":"開", "en":"Open", "edt":"0x41"},
+                    {"value":false, "ja":"閉", "en":"Close", "edt":"0x42"}
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 
@@ -2982,7 +3866,7 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| heatingStatus | GET | key | 0xB1 | 加熱状態<br>Heating Status |
+| heatingStatus | GET | object | 0xB1 | 加熱状態<br>Heating Status |
 
 ### Actions
 
@@ -2995,26 +3879,90 @@ __Example__
 ```
 {
     "type":"cookingHeater",
+    "eoj":"0x03B9",
     "description":{"ja":"クッキングヒータ", "en":"Cooking Heater"},
     "properties":[
         {
             "name":"heatingStatus",
+            "epc":"0xB1",
             "description":{ "ja":"過熱状態", "en":"heating Status" },
             "writable":false, 
             "observable":false,
             "data":{
-                "type":"key",
-                "values":[
-                    {"value":"standby", "ja":"待機", "en":"standby"},
-                    {"value":"heating", "ja":"運転", "en":"heating"},
-                    {"value":"pause", "ja":"一時停止", "en":"pause"},
-                    {"value":"heatingProhibited", "ja":"加熱禁止", "en":"heatingProhibited"},
-                    {"value":"unknown", "ja":"不明", "en":"unknown"}
+                "type":"object",
+                "field":[
+                    {
+                        "name":"leftStove",
+                        "description":{ "ja":"左コンロ", "en":"Left Stove" },
+                        "data":{
+                            "type":"key",
+                            "values":[
+                                {"value":"standby", "ja":"待機", "en":"standby", "edt":"0x40"},
+                                {"value":"heating", "ja":"運転", "en":"heating", "edt":"0x41"},
+                                {"value":"pause", "ja":"一時停止", "en":"pause", "edt":"0x42"},
+                                {"value":"heatingProhibited", "ja":"加熱禁止", "en":"heatingProhibited", "edt":"0x50"},
+                                {"value":"unknown", "ja":"不明", "en":"unknown", "edt":"0xFF"}
+                            ]
+                        }
+                    },
+                    {
+                        "name":"rightStove",
+                        "description":{ "ja":"右コンロ", "en":"Right Stove" },
+                        "data":{
+                            "type":"key",
+                            "values":[
+                                {"value":"standby", "ja":"待機", "en":"standby", "edt":"0x40"},
+                                {"value":"heating", "ja":"運転", "en":"heating", "edt":"0x41"},
+                                {"value":"pause", "ja":"一時停止", "en":"pause", "edt":"0x42"},
+                                {"value":"heatingProhibited", "ja":"加熱禁止", "en":"heatingProhibited", "edt":"0x50"},
+                                {"value":"unknown", "ja":"不明", "en":"unknown", "edt":"0xFF"}
+                            ]
+                        }
+                    },
+                    {
+                        "name":"farSideStove",
+                        "description":{ "ja":"奥コンロ", "en":"Far-Side Stove" },
+                        "data":{
+                            "type":"key",
+                            "values":[
+                                {"value":"standby", "ja":"待機", "en":"standby", "edt":"0x40"},
+                                {"value":"heating", "ja":"運転", "en":"heating", "edt":"0x41"},
+                                {"value":"pause", "ja":"一時停止", "en":"pause", "edt":"0x42"},
+                                {"value":"heatingProhibited", "ja":"加熱禁止", "en":"heatingProhibited", "edt":"0x50"},
+                                {"value":"unknown", "ja":"不明", "en":"unknown", "edt":"0xFF"}
+                            ]
+                        }
+                    },
+                    {
+                        "name":"roaster",
+                        "description":{ "ja":"ロースター", "en":"Roaster" },
+                        "data":{
+                            "type":"key",
+                            "values":[
+                                {"value":"standby", "ja":"待機", "en":"standby", "edt":"0x40"},
+                                {"value":"heating", "ja":"運転", "en":"heating", "edt":"0x41"},
+                                {"value":"pause", "ja":"一時停止", "en":"pause", "edt":"0x42"},
+                                {"value":"heatingProhibited", "ja":"加熱禁止", "en":"heatingProhibited", "edt":"0x50"},
+                                {"value":"unknown", "ja":"不明", "en":"unknown", "edt":"0xFF"}
+                            ]
+                        }
+                    }
                 ]
             }
         }
     ],
-    "actions":[ "cancelAll" ]
+    "actions":[
+        {
+            "name":"cancelAll",
+            "epc":"0xB3",
+            "description":{ "ja":"一括停止設定", "en":"All Stop setting" },
+            "data":{
+                "type":"key",
+                "values":[ {"edt":"0x40"} ]
+            }
+        }
+    ],
+    "events":[]
 }
 ```
 
@@ -3024,8 +3972,8 @@ __Example__
 
 | Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| doorIsOpen <br>ドア開閉状態 | GET | boolean| 0xB0 | ドア開閉状態<br>Door open/close status |\*1|
-| timeToFinish | GET | object | 0xED | 洗濯乾燥残り時間<br>Time remaining to complete washer and dryer cycle |\*1|
+| doorOpenStatus<br>ドア開閉状態 | GET | boolean| 0xB0 | ドア開閉状態<br>Door open/close status |\*1|
+| doorIsOpen | GET | object | 0xED | 洗濯乾燥残り時間<br>Time remaining to complete washer and dryer cycle |\*1|
 
 \*1) 必須項目ではない
 
@@ -3034,27 +3982,27 @@ __Example__
 ```
 {
     "type":"washerDryer",
+    "eoj":"0x03D3",
     "description":{"ja":"洗濯乾燥機", "en":"Washer and Dryer"},
     "properties":[
         {
             "name":"doorIsOpen",
+            "epc":"0xB0",
             "description":{ "ja":"ドア開閉状態", "en":"Door open/close status" },
             "writable":false,
             "observable":false,
             "data":{ 
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"開", "en":"Open"}, 
-                    {"value":false, "ja":"閉", "en":"Close"}
+                    {"value":true, "ja":"開", "en":"Open", "edt":"0x41"},
+                    {"value":false, "ja":"閉", "en":"Close", "edt":"0x42"}
                 ]
             }
         },
         {
             "name":"timeToFinish",
-            "description":{
-                "ja":"洗濯乾燥残り時間",
-                "en":"Time remaining to complete washer and dryer cycle"
-            },
+            "epc":"0xED",
+            "description":{ "ja":"洗濯乾燥残り時間", "en":"Time remaining to complete washer and dryer cycle" },
             "writable":false,
             "observable":false,
             "data":{
@@ -3065,7 +4013,11 @@ __Example__
                         "description":{ "ja":"時間", "en":"Hour" },
                         "data":{
                             "type":"integer",
-                            "unit":"hour"
+                            "unit":"hour",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":1
+                            }
                         }
                     },
                     {
@@ -3073,17 +4025,42 @@ __Example__
                         "description":{ "ja":"分", "en":"Minute" },
                         "data":{
                             "type":"integer",
-                            "unit":"minute"
+                            "unit":"minute",
+                            "edt":{
+                                "isUnsigned":true,
+                                "size":1
+                            }
                         }
                     }
                 ]
             }
         }
-    ]
+    ],
+    "actions":[],
+    "events":[]
 }
 ```
 ## スイッチ:switch:0x05FD
-個別Propertyは存在しない
+```
+{
+    "type":"switch",
+    "eoj":"0x05FD",
+    "description":{"ja":"スイッチ", "en":"Switch"},
+    "properties":[],
+    "actions":[],
+    "events":[]
+}
+```
 
 ## コントローラ:controller:0x05FF
-個別Propertyは存在しない
+
+```
+{
+    "type":"controller",
+    "eoj":"0x05FF",
+    "description":{"ja":"コントローラ", "en":"Controller"},
+    "properties":[],
+    "actions":[],
+    "events":[]
+}
+```

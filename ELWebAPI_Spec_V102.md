@@ -6,7 +6,7 @@ Revision History
 |:-----------|:-----|:-----|
 | 2017.12.11 | version 1.0.0 |  |
 | 2017.12.17 | version 1.0.1 | Device DescriptionのDataのvalueの表記をobjectからarrayに変更<br>Data Typeを修正(levelとpercentageを削除） |
-
+| 2017.12.20 | version 1.0.2 | Data Typeを修正(levelを復活） |
 ## 1. Abstract
 　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎の仕様は別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドミュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。  
 　このドキュメントではWebAPI(REST)のメソッドとしてのGET, PUT, POSTとECHONET LiteのサービスとしてのGET, GET_RES, SET, INFという用語を使用する。特にGETに関しては文脈で区別がつかない場合はGET(REST), GET(EL)と表記する。また、プロパティ（Property）という用語も区別が必要なので、ECHONET Liteの場合は"エコーネットプロパティ"、WebAPIの場合はPropertyと表記する。
@@ -701,11 +701,14 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 |:-----------|:-----|:-----|:-----|
 | boolean | boolean |true または false の２値をとるデータ型 | values | 
 | key | string |状態を表すkeyword | values | 
-| number | number |固定小数点数値 | unit<br>minimum<br>maximum | 
-| integer | number |整数値 | unit<br>minimum<br>maximum | 
+| number | number<br>string(\*) |固定小数点数値 | unit<br>minimum<br>maximum<br>alternatives(\*) | 
+| integer | number<br>string(\*) |整数値 | unit<br>minimum<br>maximum<br>alternatives(\*) |
+| level | number<br>string(\*) | 強弱のレベルを表す整数値<br>1が弱、最大レベルは"maximum"で定義する | maximum<br>alternatives(\*) |
 | date | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" || 
 | array |  [ ] |同一data typeの要素の配列 | element |
 | object |  { } |複数の要素から構成されるデータ | field |
+
+(\*)定義されたdata type以外にkeyのdata typeも扱う場合に利用するmember。例えばlevelのdata typeで1...maximumの整数値の他に"auto"という値も扱う場合など
 
 ### 6.2 Description of Data Type Object
 #### 6.2.1 boolean
@@ -787,15 +790,20 @@ Format of Device Description
     "type":"number",
     "unit":<unit>,
     "minimum":<minimum number>,
-    "maximum":<maximum number>
+    "maximum":<maximum number>,
+    "alternatives":[
+        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
+        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
+        ...
+    ]
 }
 ```
 | member | Data Type of JSON |Description | 
 |:-----------|:-----|:-----|
 | unit | string |単位 | 
 | minimum |  number |最小値 |
-| maximum | number |最大値 | 
-	
+| maximum | number |最大値 |
+| alternatives | [object] |value objectの配列<br>value object: 取りうる値とそのdescription<br>{<br>"value":\<value>,<br>"ja":\<description in Japanese>,<br>"en":\<description in English><br>} |	
 Example of Device Description  
 
 ```
@@ -821,15 +829,20 @@ Format of Device Description
     "type":"integer",
     "unit":<unit>,
     "minimum":<minimum number>,
-    "maximum":<maximum number>
+    "maximum":<maximum number>,
+    "alternatives":[
+        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
+        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
+        ...
+    ]
 }
 ```
 | member | Data Type of JSON |Description | 
 |:-----------|:-----|:-----|
 | unit | string |単位 | 
 | minimum |  number |最小値 |
-| maximum | number |最大値 | 
-
+| maximum | number |最大値 |
+| alternatives | [object] |value objectの配列<br>value object: 取りうる値とそのdescription<br>{<br>"value":\<value>,<br>"ja":\<description in Japanese>,<br>"en":\<description in English><br>} |
 Example of Device Description  
 
 ```
@@ -844,7 +857,42 @@ Example of Device Description
 Example of body data  
 
 ```
-{ "temperature":25 }, { "temperature":-10] }
+{ "temperature":25 }, { "temperature":-10 }
+```
+
+#### 6.2.5 level
+Format of Device Description
+
+```
+{
+    "type":"level",
+    "maximum":<maximum number>,
+    "alternatives":[
+        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
+        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
+        ...
+    ]
+}
+```
+| member | Data Type of JSON |Description | 
+|:-----------|:-----|:-----|
+| maximum | number |最大値 |
+| alternatives | [object] |value objectの配列<br>value object: 取りうる値とそのdescription<br>{<br>"value":\<value>,<br>"ja":\<description in Japanese>,<br>"en":\<description in English><br>} |
+
+Example of Device Description  
+
+```
+{
+    "type":"level",
+    "maximum":8,
+    "alternatives":[{"value":"auto", "ja":"自動", "en":"auto"}]
+}
+```
+
+Example of body data  
+
+```
+{ "airFlowLevel":8 }, { "airFlowLevel":"auto" }
 ```
 
 #### 6.2.5 date  
