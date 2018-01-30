@@ -18,4 +18,4 @@
 
 
 ## Protocol BridgeとDevice Description with ECHONET Lite Protocol
-　プロトコルブリッジを実装するには、上記のECHONET Lite WebAPI Device Descriptionの情報に加えて、ECHONET Lite側の情報も必要となる。そこでECHONET Lite WebAPI Device Descriptionの仕様を拡張しECHONET Lite protocolに関する情報を追加したドキュメント __Device Description of EL-WebAPI and ECHONET Lite Protocol__ を作成した。また各機器のDevice Descriptionを集めたJSON file __deviceDescription_wEL.json__ を作成した。  
+　プロトコルブリッジを実装するには、上記のECHONET Lite WebAPI Device Descriptionの情報に加えて、ECHONET Lite側の情報も必要となる。そこでECHONET Lite WebAPI Device Descriptionの仕様を拡張しECHONET Lite protocolに関する情報を追加したドキュメント __Device Description of EL-WebAPI and ECHONET Lite Protocol__ (DeviceDescription_ProtocolBridge.md)を作成した。また各機器のDevice Descriptionを集めたJSON file __deviceDescription_protocolBridge.json__ を作成した。  )
