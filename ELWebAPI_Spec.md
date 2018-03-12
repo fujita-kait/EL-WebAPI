@@ -10,7 +10,7 @@ Revision History
 | 2018.01.30 | version 1.0.3 | Data Type "key" の名前を "enum" に修正 |
 | 2018.02.04 | version 1.0.4 | Typo修正　instataneous -> instantaneous |
 | 2018.02.13 | version 1.0.5 | Arrayのmember名elementをdataに変更（recursive処理に対応するため） |
-| 2018.03.08 | version 1.0.6 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加 |
+| 2018.03.08 | version 1.0.6 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加<br>eoj, epc, edtを追加 |
 
 ## 1. Abstract
 　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎の仕様は別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドキュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。  
@@ -122,6 +122,7 @@ Device Descriptionの全体構成を以下に示す。
 ```
 {
     "type":<device type>,
+    "eoj":<eoj in Hex string>,
     "description":<device type description>,
     "properties":[ <property>, <property> ... ],
     "actions":[ <action>, <action>... ],
@@ -144,6 +145,7 @@ Property objectは機器のPropertyを記述する。ECHONET LiteでGETをサポ
 ```
 {
     "name":<property name>,
+    "epc":<epc in Hex string>,
     "description":<property description>,
     "writable":<writable flag>,
     "observable":<observable flag>,
@@ -196,10 +198,12 @@ Event object は状態変化やエラー通知などの機器からの通知を�
 ```
 {
     "type":"generalLighting",
+    "eoj":"0x0290",
     "description":{"ja":"一般照明", "en":"General Lighting"},
     "properties":[
         {
             "name":"on",
+            "epc":"0x80",
             "description":{ "ja":"動作状態", "en":"Operation Status" },
             "writable":true,
             "observable":true,
@@ -213,6 +217,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
         },
         {
             "name":"isAtFault",
+            "epc":"0x88",
             "description":{ "ja":"異常発生状態", "en":"Fault Status" },
             "writable":false,
             "observable":true,
@@ -226,6 +231,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
         },
         {
             "name":"brightness",
+            "epc":"0xB0",
             "description":{ "ja":"照度レベル設定", "en":"Illuminance Level" },
             "writable":true,
             "observable":false,
@@ -238,21 +244,23 @@ Event object は状態変化やエラー通知などの機器からの通知を�
         },
         {
             "name":"operatingMode",
+            "epc":"0xB6",
             "description":{ "ja":"点灯モード設定", "en":"Lighting Mode Setting" },
             "writable":true, 
             "observable":false,
             "data":{
                 "type":"enum",
                 "values":[
-                    {"value":"auto", "ja":"自動灯", "en":"Automatic Lighting"},
-                    {"value":"normal", "ja":"通常灯", "en":"Normal Lighting"},
-                    {"value":"night", "ja":"常夜灯", "en":"Night Lighting"},
-                    {"value":"color", "ja":"カラー灯", "en":"Color Lighting"}
+                    {"value":"auto", "ja":"自動灯", "en":"Automatic Lighting", "edt":"0x41"},
+                    {"value":"normal", "ja":"通常灯", "en":"Normal Lighting", "edt":"0x42"},
+                    {"value":"night", "ja":"常夜灯", "en":"Night Lighting", "edt":"0x43"},
+                    {"value":"color", "ja":"カラー灯", "en":"Color Lighting", "edt":"0x45"}
                 ]
             }
         },
         {
             "name":"rgb",
+            "epc":"0xC0",
             "description":{ "ja":"カラー灯モード時RGB設定", "en":"RGB Setting for Color Lighting" },
             "writable":true,
             "observable":false,
@@ -715,22 +723,22 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 (\*)定義されたdata type以外にkeyのdata typeも扱う場合に利用するmember。例えばlevelのdata typeで1...maximumの整数値の他に"auto"という値も扱う場合など
 
 ### 6.2 Description of Data Type Object
-#### 6.2.1 boolean
+#### 6.2.1 boolean, enum
+booleanはvalue objectのvalue propertyの値がtrue or false。  
+enumはvalue objectのvalue propertyの値が状態を表すstring（例："cooling"）。  
+
 Format
 
 ```
 {
-    "type":"boolean",
-    "values":[
-        {"value":true,  "ja":<description in Japanese>, "en":<description in English>},
-        {"value":false, "ja":<description in Japanese>, "en":<description in English>}
-    ]
+	"type":<"boolean" or "enum">,
+    "values":[ <value object>, <value object>, ... ]
 }
 ```
 
 | Property | Type |Required |Description |  Example |
 |:-----------|:-----|:-----|:-----|:-----|
-| type   | string |Yes| "boolean"||
+| type   | string |Yes| "boolean" or "enum"||
 | values | array |Yes|value objectの配列||
 
 Format of value object
@@ -745,47 +753,30 @@ Format of value object
 
 | Property | Type |Required |Description |  Example |
 |:-----------|:-----|:-----|:-----|:-----|
-| value | boolean |Yes| true or false| true|
-| ja | string |Yes| description in Japanese| "異常あり"|
-| en | string |Yes| description in Japanese| "Fault"|
+| value | boolean:boolean<br>enum:string or number |Yes|WebAPIのbody data<br>boolean:true or false<br>enum:状態 |<br>true<br>"cooling"|
+| ja | string |no| description in Japaneese | "有" |
+| en | string |no| description in English | "Yes" |
+| edt | string<br>number |Yes| 1byte dataのHex表記<br>bitmapの場合の数値 |  "0x30"<br>1 |
 
-Example of Device Description  
+Example of Device Description:boolean  
     
 ```
 {
     "type":"boolean",
     "values":[
-        {"value":true, "ja":"異常あり", "en":"Fault"},
-        {"value":false, "ja":"異常無し", "en":"No Fault"}
+        {"value":true, "ja":"異常あり", "en":"Fault", "edt":"0x41"},
+        {"value":false, "ja":"異常無し", "en":"No Fault", "edt":"0x42"}
     ]
 }
 ```
 
-Example of body data  
+Example of body data  :boolean
     
 ```
 { "on":true }, { "on":false }
 ```
 
-#### 6.2.2 enum
-Format
-
-```
-{
-    "type":"boolean",
-    "values":[
-        {"value":true,  "ja":<description in Japanese>, "en":<description in English>},
-        {"value":false, "ja":<description in Japanese>, "en":<description in English>}
-    ]
-}
-```
-
-| Property | Type |Required |Description |  Example |
-|:-----------|:-----|:-----|:-----|:-----|
-| type   | string |Yes| "boolean"||
-| values | array |Yes|value objectの配列||
-
-Example of Device Description  
+Example of Device Description:enum  
     
 ```
 {
@@ -797,13 +788,13 @@ Example of Device Description
     ]
 }
 ```
-Example of body data  
+Example of body data:enum  
     
 ```
 { "operatingMode":"normal" }, { "operatingMode":"color" }  
 ```
 
-#### 6.2.3  number
+#### 6.2.2 number
 Format of Device Description
 
 ```
@@ -813,11 +804,7 @@ Format of Device Description
     "minimum":<minimum number>,
     "maximum":<maximum number>,
     "minimumDigit":<minimum digit>
-    "alternatives":[
-        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
-        {"value":<value>, "ja":<description in Japanese>, "en":<description in English>},
-        ...
-    ]
+    "alternatives":[ <value object>, <value object>, ... ]
 }
 ```
 
@@ -847,7 +834,7 @@ Example of body data
 { "humidity":45 }, { "integralEnergy":15.5 }, { "airFlowLevel":"auto" }
 ```
 
-#### 6.2.4 date  
+#### 6.2.3 date  
 Format of Device Description
 
 ```
@@ -870,7 +857,7 @@ Example of body data
 { "date" :"2017-01-24T13:15:22+09:00" }
 ```
 
-#### 6.2.5 array
+#### 6.2.4 array
 Format of Device Description
 
 ```
@@ -905,7 +892,7 @@ Example of body data
 { "powerConsumption":[23, 12, 0,...] }
 ```
 
-#### 6.2.6 object
+#### 6.2.5 object
 Format of Device Description
 
 ```
