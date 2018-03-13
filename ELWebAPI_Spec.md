@@ -11,6 +11,7 @@ Revision History
 | 2018.02.04 | version 1.0.4 | Typo修正　instataneous -> instantaneous |
 | 2018.02.13 | version 1.0.5 | Arrayのmember名elementをdataに変更（recursive処理に対応するため） |
 | 2018.03.08 | version 1.0.6 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加<br>eoj, epc, edtを追加 |
+| 2018.03.13 | version 1.0.7 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
 
 ## 1. Abstract
 　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎の仕様は別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドキュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。  
@@ -266,7 +267,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"r",
                         "description":{ "ja":"赤", "en":"Red" },
@@ -552,8 +553,8 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
     200 OK
     {
         <propertyName>:{
-            <elementName>:<data> }, 
-            <elementName>:<data> }, 
+            <elementName>:<data> , 
+            <elementName>:<data> , 
             ...
         }
     }
@@ -578,9 +579,9 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
     200 OK
     {
         "rgb":{
-            "r":20 },
-            "g":255},
-            "b":0  }
+            "r":20,
+            "g":255,
+            "b":0
         }
     }
     ```
@@ -707,7 +708,7 @@ actionの実行をリクエストする
 ### 6.1 Definition of Data Type
 EL-WebAPIで取得または設定するProperty値の data type を以下のように定義する。  
 
-- Simple Data: boolean, enum, number, integer, date
+- Simple Data: boolean, enum, number, integer, date-time
 - Structured Data: array, object
 
 | Data Type<br>of WebAPI | Data Type<br>of JSON |Description | Member of<br>Device Description | 
@@ -716,9 +717,9 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 | enum | string |状態を表すkeyword | values | 
 | number | number<br>string(\*) |数値 | unit<br>minimum<br>maximum<br>minimumDigit<br>alternatives(\*) | 
 | level | number<br>string(\*) | 強弱のレベルを表す整数値<br>1が弱、最大レベルは"maximum"で定義する | maximum<br>alternatives(\*) |
-| date | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" || 
+| date-time | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" || 
 | array |  [ ] |同一data typeの要素の配列 | data |
-| object |  { } |複数の要素から構成されるデータ | field |
+| object |  { } |複数の要素から構成されるデータ | elements |
 
 (\*)定義されたdata type以外にkeyのdata typeも扱う場合に利用するmember。例えばlevelのdata typeで1...maximumの整数値の他に"auto"という値も扱う場合など
 
@@ -747,7 +748,8 @@ Format of value object
 {
     "value":<true or false>,
     "ja":<description in Japanese>,
-    "en":<description in English>}
+    "en":<description in English>},
+    "edt":<edt value>
 }
 ```
 
@@ -834,12 +836,12 @@ Example of body data
 { "humidity":45 }, { "integralEnergy":15.5 }, { "airFlowLevel":"auto" }
 ```
 
-#### 6.2.3 date  
+#### 6.2.3 date-time  
 Format of Device Description
 
 ```
 {
-    "type":"date"
+    "type":"date-time"
 }
 ```
 
@@ -847,14 +849,14 @@ Example of Device Description
 
 ```
 {
-    "type":"date"
+    "type":"date-time"
 }
 ```
 
 Example of body data  
 
 ```
-{ "date" :"2017-01-24T13:15:22+09:00" }
+{ "date-time" :"2017-01-24T13:15:22+09:00" }
 ```
 
 #### 6.2.4 array
@@ -898,27 +900,37 @@ Format of Device Description
 ```
 {
     "type":"object",
-    "field":[
-        {
-            "name":<element name>,
-            "description":<element description>,
-            "data":<data type object>
-        },
-        ...
-    ]
+    "elements":[ <element object>, <element object>, ...]
 }
 ```
 
 | Property | Type |Required |Description |  Example |
 |:-----------|:-----|:-----|:-----|:-----|
-| field | array |Yes|data type objectの配列 | 
+| elements | array |Yes|element objectの配列 | 
+
+Format of element object
+
+```
+{
+    "name":<element name>,
+    "description":<description of element>,
+    "data":<data type object>
+}
+```
+
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| name | string |Yes|element name | 
+| description | object |Yes|description of element | 
+| data | object |Yes|data type object | 
+
 
 Example of Device Description (1)  
 
 ```
 {
     "type":"object",
-    "field":[
+    "elements":[
         {
             "name":"r",
             "description":{ "ja":"赤", "en":"Red" },
@@ -966,7 +978,7 @@ Example of Device Description (2)
 
 ```
 "type":"object",
-"field":[
+"elements":[
     {
         "name":"day",
         "description":{ "ja":"日", "en":"day" },

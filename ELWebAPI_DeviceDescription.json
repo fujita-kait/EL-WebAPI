@@ -457,7 +457,7 @@
             "observable":true,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"noHotWater",
                         "description":{ "ja":"湯切れ警報", "en":"No Hot Water" },
@@ -588,7 +588,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"10:00",
                         "description":{ "ja":"10:00", "en":"10:00" },
@@ -632,7 +632,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"10:00",
                         "description":{ "ja":"10:00", "en":"10:00" },
@@ -700,7 +700,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"13:00",
                         "description":{ "ja":"13:00", "en":"13:00" },
@@ -736,7 +736,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"13:00",
                         "description":{ "ja":"13:00", "en":"13:00" },
@@ -1422,7 +1422,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -1453,7 +1453,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -1484,7 +1484,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -1517,7 +1517,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -1723,7 +1723,7 @@
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
@@ -1774,7 +1774,7 @@
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
@@ -1816,7 +1816,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"r",
                         "description":{ "ja":"r相", "en":"r phase" },
@@ -1849,11 +1849,11 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -1877,11 +1877,11 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -1923,11 +1923,11 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -1970,7 +1970,7 @@
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Date" },
@@ -2015,11 +2015,11 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2043,11 +2043,11 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2088,7 +2088,7 @@
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
@@ -2155,7 +2155,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"r",
                         "description":{ "ja":"赤", "en":"Red" },
@@ -2374,7 +2374,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"leftStove",
                         "description":{ "ja":"左コンロ", "en":"Left Stove" },
@@ -2467,7 +2467,7 @@
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"Hour",
                         "description":{ "ja":"時間", "en":"Hour" },

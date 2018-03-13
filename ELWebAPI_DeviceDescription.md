@@ -11,6 +11,7 @@
 | 2018.02.13 | version 1.0.6 | 湿度センサの data type: percentage -> integer<br>Arrayのmember名elementをdataに変更 |
 | 2018.03.08 | version 1.0.7 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加 |
 | 2018.03.09 | version 1.0.8 | eoj, epc, edtを追加 |
+| 2018.03.13 | version 1.0.9 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
 
 ## 1. Abstract
 　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。
@@ -145,7 +146,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"r",
                         "description":{ "ja":"赤", "en":"Red" },
@@ -863,7 +864,7 @@ __Example__
             "observable":true,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"noHotWater",
                         "description":{ "ja":"湯切れ警報", "en":"No Hot Water" },
@@ -994,7 +995,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"10:00",
                         "description":{ "ja":"10:00", "en":"10:00" },
@@ -1038,7 +1039,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"10:00",
                         "description":{ "ja":"10:00", "en":"10:00" },
@@ -1106,7 +1107,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"13:00",
                         "description":{ "ja":"13:00", "en":"13:00" },
@@ -1142,7 +1143,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"13:00",
                         "description":{ "ja":"13:00", "en":"13:00" },
@@ -1994,7 +1995,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -2025,7 +2026,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -2056,7 +2057,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -2089,7 +2090,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"minimum",
                         "description":{ "ja":"最小値", "en":"minimum" },
@@ -2353,7 +2354,7 @@ __Example__
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
@@ -2404,7 +2405,7 @@ __Example__
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
@@ -2446,7 +2447,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"r",
                         "description":{ "ja":"r相", "en":"r phase" },
@@ -2479,11 +2480,11 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2507,11 +2508,11 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2593,11 +2594,11 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2640,10 +2641,10 @@ __Example__
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
-                        "description":{ "ja":"日", "en":"Date" },
+                        "description":{ "ja":"日", "en":"date-time" },
                         "data":{
                             "type":"number",
                             "unit":"day"
@@ -2685,11 +2686,11 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2713,11 +2714,11 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"dateAndTime",
                         "description":{ "ja":"日時", "en":"Date and Time" },
-                        "data":{ "type":"date" }
+                        "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
@@ -2758,7 +2759,7 @@ __Example__
             },
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"day",
                         "description":{ "ja":"日", "en":"Day" },
@@ -2841,7 +2842,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"r",
                         "description":{ "ja":"赤", "en":"Red" },
@@ -3141,7 +3142,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"leftStove",
                         "description":{ "ja":"左コンロ", "en":"Left Stove" },
@@ -3250,7 +3251,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"object",
-                "field":[
+                "elements":[
                     {
                         "name":"Hour",
                         "description":{ "ja":"時間", "en":"Hour" },
