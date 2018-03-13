@@ -1,6 +1,6 @@
 {
     "metaData": {
-        "date":"2018-03-09",
+        "date":"2018-03-13",
         "release":"J"
     },
     "common": 
@@ -2106,6 +2106,81 @@
                                 "type":"number",
                                 "unit":"kWh"
                             }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+},
+{
+    "type":"generalLighting",
+    "eoj":"0x0290",
+    "description":{"ja":"一般照明", "en":"General Lighting"},
+    "properties":[
+        {
+            "name":"brightness",
+            "epc":"0xB0",
+            "description":{ "ja":"照度レベル設定", "en":"Illuminance level" },
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"%",
+                "minimum":0,
+                "maximum":100
+            }
+        },
+        {
+            "name":"operatingMode",
+            "epc":"0xB6",
+            "description":{ "ja":"点灯モード設定", "en":"Lighting mode setting" },
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"enum",
+                "values":[
+                    {"value":"auto", "ja":"自動", "en":"Auto Lighting", "edt":"0x41"},
+                    {"value":"normal", "ja":"通常灯", "en":"Normal Lighting", "edt":"0x42"},
+                    {"value":"night", "ja":"常夜灯", "en":"Night Lighting", "edt":"0x43"},
+                    {"value":"color", "ja":"カラー灯", "en":"Color Lighting", "edt":"0x45"}
+                ]
+            }
+        },
+        {
+            "name":"rgb",
+            "epc":"0xC0",
+            "description":{ "ja":"カラー灯モード時RGB設定", "en":"RGB setting for color lighting" },
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "field":[
+                    {
+                        "name":"r",
+                        "description":{ "ja":"赤", "en":"Red" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":255
+                        }
+                    },
+                    {
+                        "name":"g",
+                        "description":{ "ja":"緑", "en":"Green" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":255
+                        }
+                    },
+                    {
+                        "name":"b",
+                        "description":{ "ja":"青", "en":"Blue" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":255
                         }
                     }
                 ]
