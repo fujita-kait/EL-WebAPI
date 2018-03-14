@@ -12,9 +12,10 @@
 | 2018.03.08 | version 1.0.7 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加 |
 | 2018.03.09 | version 1.0.8 | eoj, epc, edtを追加 |
 | 2018.03.13 | version 1.0.9 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
+| 2018.03.14 | version 1.0.10 | eventsを削除 |
 
 ## 1. Abstract
-　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。
+　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。なお、ECHONET Lite WebAPIで取得するDevice Descriptionには"events"があるが、この内容は"observable":trueのpropertyのリストであるのでProtocol Bridgeが生成できるので、このdocumentおよびJSON dataには記載しない。
 
 ### 1.1 JSON file
 　ECHONET Lite WebAPI Device DescriptionはJSON fileで提供される。JSON fileの構成は以下の通り。
@@ -67,7 +68,7 @@ Example
 
 
 ## 2. Scope
-　このドキュメントで記述する対象機器は、重点８機器とECHONET Lite認証取得製品が存在する機器を前提とする。このドキュメントで記述するPropertyに関しては、ECHONET Liteで必須とされているものを前提とする。対象とするECHONET 機器オブジェクト詳細規定のバージョンは Release Iとする。
+　このドキュメントで記述する対象機器は、重点８機器とECHONET Lite認証取得製品が存在する機器を前提とする。このドキュメントで記述するPropertyに関しては、ECHONET Liteで必須とされているものを前提とする。対象とするECHONET 機器オブジェクト詳細規定のバージョンは Release Jとする。
 
 ## 3. Sample
 
@@ -178,11 +179,7 @@ __Example__
             }
         }
     ],
-    "actions":[],
-    "events":[
-        { "name":"on" },
-        { "name":"isAtFault" }
-    ]
+    "actions":[]
 }
 ```
 
@@ -234,11 +231,6 @@ __Example__
                 ]
             }
         }
-    ],
-    "actions":[],
-    "events":[
-        { "name":"on" },
-        { "name":"isAtFault" }
     ]
 }
 ```
@@ -576,11 +568,6 @@ __Example__
                 "unit":"℃"
             }
         }
-    ],
-    "events":[
-        { "name":"powerSaving" },
-        { "name":"airFlowLevel" },
-        { "name":"operatingMode" }
     ]
 }
 ```
@@ -718,9 +705,6 @@ __Example__
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"blindMotion" }
     ]
 }
 ```
@@ -772,9 +756,6 @@ __Example__
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"blindMotion" }
     ]
 }
 ```
@@ -1203,13 +1184,6 @@ __Example__
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"automaticWaterHeating" },
-        { "name":"heatingWater" },
-        { "name":"alarmStatus" },
-        { "name":"supplyingHotWater" },
-        { "name":"bathOperatingStatus" }
     ]
 }
 ```
@@ -1244,9 +1218,6 @@ __Example__
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"islocked" }
     ]
 }
 ```
@@ -1328,9 +1299,6 @@ __Example__
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"bathOperatingStatus" }
     ]
 }
 ```
@@ -1850,12 +1818,6 @@ __Example__
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"targetChargingEnergy" },
-        { "name":"targetDischargingEnergy" },
-        { "name":"operatingStatus" },
-        { "name":"operatingMode" }
     ]
 }
 ```
@@ -2209,9 +2171,6 @@ __Example__
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"chargeDischargeStatus" }
     ]
 }
 ```
@@ -3032,10 +2991,6 @@ __Example__
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"chargeStatus" },
-        { "name":"operatingMode" }
     ]
 }
 ```
@@ -3070,9 +3025,7 @@ __Example__
                 ]
             }
         }
-    ],
-    "actions":[],
-    "events":[]
+    ]
 }
 ```
 

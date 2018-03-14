@@ -37,11 +37,6 @@
                 ]
             }
         }
-    ],
-    "actions":[],
-    "events":[
-        { "name":"on" },
-        { "name":"isAtFault" }
     ]
 },
     "devices": [
@@ -254,11 +249,6 @@
                 "unit":"℃"
             }
         }
-    ],
-    "events":[
-        { "name":"powerSaving" },
-        { "name":"airFlowLevel" },
-        { "name":"operatingMode" }
     ]
 },
 {
@@ -355,9 +345,6 @@
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"blindMotion" }
     ]
 },
 {
@@ -393,9 +380,6 @@
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"blindMotion" }
     ]
 },
 {
@@ -796,13 +780,6 @@
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"automaticWaterHeating" },
-        { "name":"heatingWater" },
-        { "name":"alarmStatus" },
-        { "name":"supplyingHotWater" },
-        { "name":"bathOperatingStatus" }
     ]
 },
 {
@@ -824,9 +801,6 @@
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"islocked" }
     ]
 },
 {
@@ -891,9 +865,6 @@
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"bathOperatingStatus" }
     ]
 },
 {
@@ -1308,12 +1279,6 @@
                 ]
             }
         }
-    ],
-    "events":[
-        { "name":"targetChargingEnergy" },
-        { "name":"targetDischargingEnergy" },
-        { "name":"operatingStatus" },
-        { "name":"operatingMode" }
     ]
 },
 {
@@ -1636,9 +1601,6 @@
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"chargeDischargeStatus" }
     ]
 },
 {
@@ -2311,10 +2273,6 @@
                 "maximum":100
             }
         }
-    ],
-    "events":[
-        { "name":"chargeStatus" },
-        { "name":"operatingMode" }
     ]
 },
 {
@@ -2336,9 +2294,7 @@
                 ]
             }
         }
-    ],
-    "actions":[],
-    "events":[]
+    ]
 },
 {
     "type":"combinationMicrowaveOven",
