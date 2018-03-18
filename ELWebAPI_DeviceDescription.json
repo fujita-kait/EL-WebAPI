@@ -1,6 +1,6 @@
 {
     "metaData": {
-        "date":"2018-03-13",
+        "date":"2018-03-15",
         "release":"J"
     },
     "common": 
@@ -10,7 +10,7 @@
     "description":{"ja":"共通項目", "en":"Common items"},
     "properties":[
         {
-            "name":"on",
+            "name":"operationStatus",
             "epc":"0x80",
             "description":{ "ja":"動作状態状態", "en":"Operation Status" },
             "writable":true,
@@ -24,6 +24,22 @@
             }
         },
         {
+            "name":"installationLocation",
+            "epc":"0x81",
+            "description":{"ja":"設置場所", "en":"Installation location"},
+            "writable":true,
+            "observable":true,
+            "data":{ "type":"string" }
+        },
+        {
+            "name":"productCode",
+            "epc":"0x8C",
+            "description":{"ja":"商品コード", "en":"Product code"},
+            "writable":false,
+            "observable":false,
+            "data":{ "type":"string" }
+        },
+        {
             "name":"isAtFault",
             "epc":"0x88",
             "description":{ "ja":"異常発生状態", "en":"Fault Status" },
@@ -35,6 +51,16 @@
                     {"valu":true, "ja":"異常あり", "en":"Fault", "edt":"0x41"},
                     {"value":false, "ja":"異常無し", "en":"No Fault", "edt":"0x42"}
                 ]
+            }
+        },
+        {
+            "name":"currentDateAndTime",
+            "epc":"0x98",
+            "description":{"ja":"現在⽇時", "en":"Current date and time"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"date-time"
             }
         }
     ]
@@ -195,7 +221,7 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"℃",
+                "unit":"Celsius",
                 "minimum":0,
                 "maximum":50
             }
@@ -224,7 +250,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"℃"
+                "unit":"Celsius",
+                "minimum":-127,
+                "maximum":125
             }
         },
         {
@@ -235,7 +263,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"℃"
+                "unit":"Celsius",
+                "minimum":-127,
+                "maximum":125
             }
         },
         {
@@ -246,7 +276,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"℃"
+                "unit":"Celsius",
+                "minimum":-127,
+                "maximum":125
             }
         }
     ]
@@ -1026,6 +1058,22 @@
     "description":{"ja":"燃料電池", "en":"Fuel Cell"},
     "properties":[
         {
+            "name":"ratedPowerGeneration",
+            "epc":"0x",
+            "description":{
+                "ja":"定格発電出⼒",
+                "en":"Rated power generation output"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
+            }
+        },
+        {
             "name":"instantaneousPowerGeneration",
             "epc":"0xC4",
             "description":{
@@ -1036,7 +1084,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W"
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
             }
         },
         {
@@ -1051,7 +1101,118 @@
             "data":{
                 "type":"number",
                 "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
                 "minimumDigit":0.001
+            }
+        },
+        {
+            "name":"powerGenerationStatus",
+            "epc":"0xCB",
+            "description":{ "ja":"発電動作状態", "en":"Power generation status" },
+            "writable":false,
+            "observable":true,
+            "data":{ 
+                "type":"enum",
+                "values":[
+                    {"value":"generating", "ja":"発電中", "en":"Generating", "edt":"0x41"},
+                    {"value":"stopped", "ja":"停⽌中", "en":"Stopped", "edt":"0x42"},
+                    {"value":"starting", "ja":"起動中", "en":"Starting", "edt":"0x43"},
+                    {"value":"stopping", "ja":"停⽌動作中", "en":"Stopping", "edt":"0x44"},
+                    {"value":"idling", "ja":"アイドル中", "en":"Idling", "edt":"0x45"}
+                ]
+            }
+        },
+        {
+            "name":"powerSystemInterconnectionStatus",
+            "epc":"0xD0",
+            "description":{ "ja":"系統連系状態", "en":"System interconnected type" },
+            "writable":false,
+            "observable":false,
+            "data":{ 
+                "type":"enum",
+                "values":[
+                    {
+                        "value":"reversePowerFlowAcceptable",
+                        "ja":"系統連系（逆潮流可）",
+                        "en":"System Interconnected Type(revese power flow acceptable)",
+                        "edt":"0x00"
+                    },
+                    {
+                        "value":"independent",
+                        "ja":"独⽴",
+                        "en":"Independent Type",
+                        "edt":"0x01"
+                    },
+                    {
+                        "value":"reversePowerFlowNotAcceptable",
+                        "ja":"系統連系（逆潮流不可）",
+                        "en":"System Interconnected Type(revese power flow not acceptable)",
+                        "edt":"0x02"
+                    }
+                ]
+            }
+        },
+        {
+            "name":"requestedTimeForGeneration",
+            "epc":"0xD1",
+            "description":{ "ja":"発電要請時刻設定", "en":"Power generation request time setting" },
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"startHour",
+                        "description":{ "ja":"開始時刻：時", "en":"Start time:hour" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":23
+                        }
+                    },
+                    {
+                        "name":"startMinute",
+                        "description":{ "ja":"開始時刻：分", "en":"Start time:minute" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":59
+                        }
+                    },
+                    {
+                        "name":"endHour",
+                        "description":{ "ja":"終了時刻：時", "en":"End time:hour" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":23
+                        }
+                    },
+                    {
+                        "name":"endMinute",
+                        "description":{ "ja":"終了時刻：分", "en":"End time:minute" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":59
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"assignedPowerGenerationStatus",
+            "epc":"0xD2",
+            "description":{ "ja":"指定発電状態", "en":"XX" },
+            "writable":true,
+            "observable":false,
+            "data":{ 
+                "type":"enum",
+                "values":[
+                    {"value":"maximumRating", "ja":"定格最⼤", "en":"Maximum Rating", "edt":"0x41"},
+                    {"value":"loadFollowing", "ja":"不可追従", "en":"Load Following", "edt":"0x42"}
+                ]
             }
         }
     ]
@@ -1069,7 +1230,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1083,7 +1246,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1094,7 +1259,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1105,7 +1272,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1116,7 +1285,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1127,7 +1298,9 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1142,6 +1315,8 @@
             "data":{ 
                 "type":"number",
                 "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
                 "minimumDigit":0.001
             }
         },
@@ -1156,7 +1331,10 @@
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"kWh"
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
+                "minimumDigit":0.001
             }
         },
         {
@@ -1168,7 +1346,8 @@
             "data":{ 
                 "type":"number",
                 "unit":"Wh",
-                "minimumDigit":0.001
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1179,7 +1358,79 @@
             "observable":true,
             "data":{ 
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"minMaxChargingPower",
+            "epc":"0xC8",
+            "description":{
+                "ja":"最小最大充電電力値",
+                "en":"Minimum/maximum charging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"minimum",
+                        "description":{ "ja":"最小値", "en":"minimum value" },
+                        "data":{
+                            "type":"number",
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
+                        }
+                    },
+                    {
+                        "name":"maximum",
+                        "description":{ "ja":"最大値", "en":"maximum value" },
+                        "data":{
+                            "type":"number",
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"minMaxDischargingPower",
+            "epc":"0xC9",
+            "description":{
+                "ja":"最小最大放電電力値",
+                "en":"Minimum/maximum discharging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"minimum",
+                        "description":{ "ja":"最小値", "en":"minimum value" },
+                        "data":{
+                            "type":"number",
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
+                        }
+                    },
+                    {
+                        "name":"maximum",
+                        "description":{ "ja":"最大値", "en":"maximum value" },
+                        "data":{
+                            "type":"number",
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
+                        }
+                    }
+                ]
             }
         },
         {
@@ -1204,6 +1455,46 @@
             }
         },
         {
+            "name":"ratedElectricEnergy",
+            "epc":"0xD0",
+            "description":{ "ja":"定格電⼒量", "en":"Rated electric energy" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"ratedCapacity",
+            "epc":"0xD1",
+            "description":{ "ja":"定格容量", "en":"Rated capacity" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"ratedVoltage",
+            "epc":"0xD2",
+            "description":{ "ja":"定格電圧", "en":"Rated voltage" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"V",
+                "minimum":0,
+                "maximum":32766
+            }
+        },
+        {
             "name":"operatingMode",
             "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
@@ -1221,6 +1512,36 @@
                     {"value":"restart", "ja":"再起動", "en":"restart", "edt":"0x48"},
                     {"value":"capacityRecalculation","ja":"実行容量再計算処理","en":"capacityRecalculation", "edt":"0x49"},
                     {"value":"other", "ja":"その他", "en":"other", "edt":"0x40"}
+                ]
+            }
+        },
+        {
+            "name":"powerSystemInterconnectionStatus",
+            "epc":"0xDB",
+            "description":{ "ja":"系統連系状態", "en":"System interconnected type" },
+            "writable":false,
+            "observable":false,
+            "data":{ 
+                "type":"enum",
+                "values":[
+                    {
+                        "value":"reversePowerFlowAcceptable",
+                        "ja":"系統連系（逆潮流可）",
+                        "en":"System Interconnected Type(revese power flow acceptable)",
+                        "edt":"0x00"
+                    },
+                    {
+                        "value":"independent",
+                        "ja":"独⽴",
+                        "en":"Independent Type",
+                        "edt":"0x01"
+                    },
+                    {
+                        "value":"reversePowerFlowNotAcceptable",
+                        "ja":"系統連系（逆潮流不可）",
+                        "en":"System Interconnected Type(revese power flow not acceptable)",
+                        "edt":"0x02"
+                    }
                 ]
             }
         },
@@ -1290,35 +1611,73 @@
             "name":"dischargeableCapacity1",
             "epc":"0xC0",
             "description":{
-                "ja":"車載電池の放電可能容量値1",
+                "ja":"車載電池の放電可能容量値１",
                 "en":"Dischargeable capacity of vehicle mounted battery 1"
             },
             "writable":false,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"dischargeableCapacity2",
+            "epc":"0xC1",
+            "description":{
+                "ja":"車載電池の放電可能容量値２",
+                "en":"Dischargeable capacity of vehicle mounted battery 2"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
+                "minimumDigit":0.1
             }
         },
         {
             "name":"remainingDischargeableCapacity1",
             "epc":"0xC2",
             "description":{
-                "ja":"車載電池の放電可能残容量1",
+                "ja":"車載電池の放電可能残容量１",
                 "en":"Remaining dischargeable capacity of vehicle mounted battery 1"
             },
             "writable":false,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"remainingDischargeableCapacity1",
+            "epc":"0xC3",
+            "description":{
+                "ja":"車載電池の放電可能残容量２",
+                "en":"Remaining dischargeable capacity of vehicle mounted battery 2"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
+                "minimumDigit":0.1
             }
         },
         {
             "name":"remainingDischargeableCapacity3",
             "epc":"0xC4",
             "description":{
-                "ja":"車載電池の放電可能残容量3",
+                "ja":"車載電池の放電可能残容量３",
                 "en":"Remaining dischargeable capacity of vehicle mounted battery 3"
             },
             "writable":false,
@@ -1338,7 +1697,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W"
+                "unit":"W",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1349,7 +1710,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W"
+                "unit":"W",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -1358,7 +1721,7 @@
             "description":{
                 "ja":"車両接続・充放電可否状態",
                 "en":"Vehicle connection and chargeable/dischargeable status"
-            	   },
+                   },
             "writable":false,
             "observable":true,
             "data":{
@@ -1377,7 +1740,7 @@
             }
         },
         {
-            "name":"minMaxChargePower",
+            "name":"minMaxDischargingPower",
             "epc":"0xC8",
             "description":{
                 "ja":"最小最大充電電力値",
@@ -1393,7 +1756,9 @@
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"number",
-                            "unit":"W"
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
                         }
                     },
                     {
@@ -1401,14 +1766,16 @@
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"number",
-                            "unit":"W"
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
                         }
                     }
                 ]
             }
         },
         {
-            "name":"minMaxDischargePower",
+            "name":"minMaxDischargingPower",
             "epc":"0xC9",
             "description":{
                 "ja":"最小最大放電電力値",
@@ -1424,7 +1791,9 @@
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"number",
-                            "unit":"W"
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
                         }
                     },
                     {
@@ -1432,7 +1801,9 @@
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"number",
-                            "unit":"W"
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
                         }
                     }
                 ]
@@ -1456,6 +1827,8 @@
                         "data":{
                             "type":"number",
                             "unit":"A",
+                            "minimum":0,
+                            "maximum":3276.6,
                             "minimumDigit":0.1
                         }
                     },
@@ -1465,6 +1838,8 @@
                         "data":{
                             "type":"number",
                             "unit":"A",
+                            "minimum":0,
+                            "maximum":3276.6,
                             "minimumDigit":0.1
                         }
                     }
@@ -1489,6 +1864,8 @@
                         "data":{
                             "type":"number",
                             "unit":"A",
+                            "minimum":0,
+                            "maximum":3276.6,
                             "minimumDigit":0.1
                         }
                     },
@@ -1498,6 +1875,8 @@
                         "data":{
                             "type":"number",
                             "unit":"A",
+                            "minimum":0,
+                            "maximum":3276.6,
                             "minimumDigit":0.1
                         }
                     }
@@ -1541,17 +1920,161 @@
             }
         },
         {
+            "name":"chargeableCapacity",
+            "epc":"0xCE",
+            "description":{ "ja":"⾞載電池の充電可能容量値", "en":"Chargeable capacity of vehicle mounted battery" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"remainingChargeableCapacity",
+            "epc":"0xCF",
+            "description":{ "ja":"⾞載電池の充電可能残容量値", "en":"Remaining Chargeable capacity of vehicle mounted battery" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
             "name":"usedCapacity1",
             "epc":"0xD0",
             "description":{
-                "ja":"車載電池の使用容量値1",
+                "ja":"車載電池の使用容量値１",
                 "en":"Used capacity of vehicle mounted battery 1"
             },
             "writable":false,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"usedCapacity2",
+            "epc":"0xD1",
+            "description":{
+                "ja":"車載電池の使用容量値２",
+                "en":"Used capacity of vehicle mounted battery 2"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"ratedVoltage",
+            "epc":"0xD2",
+            "description":{
+                "ja":"定格電圧",
+                "en":"Rated voltage"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"V",
+                "minimum":0,
+                "maximum":32766
+            }
+        },
+        {
+            "name":"measuredInstantaneousPower",
+            "epc":"0xD3",
+            "description":{
+                "ja":"瞬時充放電電⼒計測値",
+                "en":"Measured instantaneous charging/discharging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":-999999999,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"measuredInstantaneousCurrent",
+            "epc":"0xD4",
+            "description":{
+                "ja":"瞬時充放電電流計測値",
+                "en":"Measured instantaneous charging/discharging electric current"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":-3276.7,
+                "maximum":3276.6,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"measuredInstantaneousVoltage",
+            "epc":"0xD5",
+            "description":{
+                "ja":"瞬時充放電電圧計測値",
+                "en":"Measured instantaneous charging/discharging electric voltage"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"V",
+                "minimum":-32767,
+                "maximum":32766
+            }
+        },
+        {
+            "name":"measuredCumulativeDischargeEnergy",
+            "epc":"0xD6",
+            "description":{
+                "ja":"積算放電電⼒量計測値",
+                "en":"Measured cumulative amount of discharging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
+                "minimumDigit":0.001
+            }
+        },
+        {
+            "name":"measuredCumulativeChargeEnergy",
+            "epc":"0xD8",
+            "description":{
+                "ja":"積算充電電⼒量計測値",
+                "en":"Measured cumulative amount of charging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
+                "minimumDigit":0.001
             }
         },
         {
@@ -1572,24 +2095,73 @@
             }
         },
         {
+            "name":"powerSystemInterconnectionStatus",
+            "epc":"0xDB",
+            "description":{ "ja":"系統連系状態", "en":"System interconnected type" },
+            "writable":false,
+            "observable":false,
+            "data":{ 
+                "type":"enum",
+                "values":[
+                    {
+                        "value":"reversePowerFlowAcceptable",
+                        "ja":"系統連系（逆潮流可）",
+                        "en":"System Interconnected Type(revese power flow acceptable)",
+                        "edt":"0x00"
+                    },
+                    {
+                        "value":"independent",
+                        "ja":"独⽴",
+                        "en":"Independent Type",
+                        "edt":"0x01"
+                    },
+                    {
+                        "value":"reversePowerFlowNotAcceptable",
+                        "ja":"系統連系（逆潮流不可）",
+                        "en":"System Interconnected Type(revese power flow not acceptable)",
+                        "edt":"0x02"
+                    }
+                ]
+            }
+        },
+        {
             "name":"remainingStoredEnergy1",
             "epc":"0xE2",
             "description":{
-                "ja":"車載電池の電池残容量1",
+                "ja":"車載電池の電池残容量１",
                 "en":"Remaining stored electricity of vehicle mounted battery1"
             },
             "writable":false,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"remainingStoredEnergy2",
+            "epc":"0xE3",
+            "description":{
+                "ja":"車載電池の電池残容量２",
+                "en":"Remaining stored electricity of vehicle mounted battery2"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
+                "minimumDigit":0.1
             }
         },
         {
             "name":"remainingStoredEnergy3",
             "epc":"0xE4",
             "description":{
-                "ja":"車載電池の電池残容量3",
+                "ja":"車載電池の電池残容量３",
                 "en":"Remaining stored electricity of vehicle mounted battery3"
             },
             "writable":false,
@@ -1600,8 +2172,142 @@
                 "minimum":0,
                 "maximum":100
             }
+        },
+        {
+            "name":"vehicleID",
+            "epc":"0xE6",
+            "description":{
+                "ja":"車両ID",
+                "en":"Identification of electric vehicle"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"string"
+            }
+        },
+        {
+            "name":"chargeAmount1",
+            "epc":"0xE7",
+            "description":{"ja":"充電量設定値１", "en":"Charging amount 1"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"chargeAmount2",
+            "epc":"0xE9",
+            "description":{"ja":"充電量設定値２", "en":"Charging amount 2"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"dischargeAmount",
+            "epc":"0xEA",
+            "description":{"ja":"放電量設定値", "en":"Discharging amount setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"chargeEnergey",
+            "epc":"0xEB",
+            "description":{"ja":"充電電⼒設定値", "en":"Charging electrig energy setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"dischargeEnergey",
+            "epc":"0xEC",
+            "description":{"ja":"放電電⼒設定値", "en":"Disharging electrig energy setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"chargeCurrent",
+            "epc":"0xED",
+            "description":{"ja":"充電電流設定値", "en":"Charging current setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":6553.3,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"dischargeCurrent",
+            "epc":"0xEE",
+            "description":{"ja":"放電電流設定値", "en":"Discharging current setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":6553.3,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"independentRatedVoltage",
+            "epc":"0xEF",
+            "description":{"ja":"定格電圧（独⽴時）", "en":"Rated voltage(independent operation)"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Ah",
+                "minimum":0,
+                "maximum":32766
+            }
         }
-    ]
+    ],
+	"actions":[
+	    {
+	        "name":"vcConfirmation",
+	        "description":{ "ja":"⾞両接続確認", "en":"Vehicle connection confirmation" }
+	    },
+	    {
+	        "name":"resetCumulativeDischargeEnergy",
+	        "description":{ "ja":"積算放電電⼒量リセット設定", "en":"Cumulative amount of discharging electric energy reset setting" }
+	    },
+	    {
+	        "name":"resetCumulativeChargeEnergy",
+	        "description":{ "ja":"積算充電電⼒量リセット設定", "en":"Cumulative amount of charging electric energy reset setting" }
+	    }
+	]
 },
 {
     "type":"powerDistributionBoard",
@@ -1665,7 +2371,10 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"kWh"
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":99999.9,
+                "minimumDigit":0.1
             }
         },
         {
@@ -1677,19 +2386,28 @@
             },
             "writable":false,
             "observable":false,
-            "query":{
-                "name":"day",
-                "type":"number",
-                "minimum":0,
-                "maximum":99
-            },
+            "query":[
+                {
+                    "name":"day",
+                    "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                    "data":{
+                        "type":"number",
+                        "minimum":0,
+                        "maximum":99
+                    }
+                }
+            ],
             "data":{
                 "type":"object",
                 "elements":[
                     {
                         "name":"day",
-                        "description":{ "ja":"日", "en":"Day" },
-                        "data":{ "type":"number" }
+                        "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":99
+                        }
                     },
                     {
                         "name":"energy",
@@ -1698,7 +2416,10 @@
                             "type":"array",
                             "data":{
                                 "type":"number",
-                                "unit":"kWh"
+                                "unit":"kWh",
+                                "minimum":0,
+                                "maximum":99999.9,
+                                "minimumDigit":0.1
                             }
                         }
                     }
@@ -1716,7 +2437,10 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"kWh"
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":99999.9,
+                "minimumDigit":0.1
             }
         },
         {
@@ -1728,19 +2452,28 @@
             },
             "writable":false,
             "observable":false,
-            "query":{
-                "name":"day",
-                "type":"number",
-                "minimum":0,
-                "maximum":99
-            },
+            "query":[
+                {
+                    "name":"day",
+                    "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                    "data":{
+                        "type":"number",
+                        "minimum":0,
+                        "maximum":99
+                    }
+                }
+            ],
             "data":{
                 "type":"object",
                 "elements":[
                     {
                         "name":"day",
-                        "description":{ "ja":"日", "en":"Day" },
-                        "data":{ "type":"number" }
+                        "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                        "data":{
+                            "type":"number",
+                            "minimum":0,
+                            "maximum":99
+                        }
                     },
                     {
                         "name":"energy",
@@ -1749,7 +2482,10 @@
                             "type":"array",
                             "data":{
                                 "type":"number",
-                                "unit":"kWh"
+                                "unit":"kWh",
+                                "minimum":0,
+                                "maximum":99999.9,
+                                "minimumDigit":0.1
                             }
                         }
                     }
@@ -1767,7 +2503,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W"
+                "unit":"W",
+                "minimum":-2147483647,
+                "maximum":2147483645
             }
         },
         {
@@ -1785,6 +2523,8 @@
                         "data":{
                             "type":"number",
                             "unit":"A",
+                            "minimum":-3276.7,
+                            "maximum":3276.5,
                             "minimumDigit":0.1
                         }
                     },
@@ -1794,6 +2534,8 @@
                         "data":{
                             "type":"number",
                             "unit":"A",
+                            "minimum":-3276.7,
+                            "maximum":3276.5,
                             "minimumDigit":0.1
                         }
                     }
@@ -1822,7 +2564,10 @@
                         "description":{ "ja":"電力量", "en":"energy" },
                         "data":{
                             "type":"number",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "minimum":0,
+                            "maximum":99999.9,
+                            "minimumDigit":0.1
                         }
                     }
                 ]
@@ -1850,10 +2595,96 @@
                         "description":{ "ja":"電力量", "en":"energy" },
                         "data":{
                             "type":"number",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "minimum":0,
+                            "maximum":99999.9,
+                            "minimumDigit":0.1
                         }
                     }
                 ]
+            }
+        },
+        {
+            "name":"IntegralEnergyLog2",
+            "epc":"0xEC",
+            "description":{
+                "ja":"積算電力量計測値履歴2（正方向、逆方向計測値）",
+                "en":"Historical data of measured cumulative amounts of electric energy 2(normal and reverse directions)"
+            },
+            "writable":false,
+            "observable":false,
+            "query":[
+                {
+                    "name":"dayAndTime",
+                    "description":{ "ja":"日時", "en":"Day and Time" },
+                    "data":{"type":"day-time"}
+                },
+                {
+                    "name":"numberOfCollectionSegments",
+                    "description":{ "ja":"収集コマ数", "en":"Number of collection segments" },
+                    "data":{
+                        "type":"number",
+                        "minimum":1,
+                        "maximum":12
+                    }
+                }
+            ],
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"dayAndTime",
+                        "description":{ "ja":"日時", "en":"Day and Time" },
+                        "data":{"type":"day-time"}
+                    },
+                    {
+                        "name":"numberOfCollectionSegments",
+                        "description":{ "ja":"収集コマ数", "en":"Number of collection segments" },
+                        "data":{
+                            "type":"number",
+                            "minimum":1,
+                            "maximum":12
+                        }
+                    },
+                    {
+                        "name":"energy",
+                        "description":{ "ja":"積算電力量", "en":"Integral energy" },
+                        "data":{
+                            "type":"array",
+                            "data":{
+                                "type":"object",
+                                "elements":[
+                                    {
+                                        "name":"dayAndTime",
+                                        "description":{ "ja":"正方向", "en":"Normal direction" },
+                                        "data":{
+                                            "type":"number",
+                                            "unit":"kWh",
+                                            "minimum":0,
+                                            "maximum":99999.9,
+                                            "minimumDigit":0.1
+                                        }
+                                    },
+                                    {
+                                        "name":"dayAndTime",
+                                        "description":{ "ja":"逆方向", "en":"Reversal direction" },
+                                        "data":{
+                                            "type":"number",
+                                            "unit":"kWh",
+                                            "minimum":0,
+                                            "maximum":99999.9,
+                                            "minimumDigit":0.1
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            },
+            "note":{
+                "ja":"queryの分の値は0または30とする。それ以外の値は0または30に丸められる。秒の値は無視される",
+                "en":"about query, value of minutes should be either 0 or 30, and value of seconds is ignored"
             }
         }
     ]
@@ -1864,18 +2695,35 @@
     "description":{"ja":"高圧スマート電力量メータ", "en":"High Voltage Smart Electric Energy Meter"},
     "properties":[
         {
-            "name":"monthlyMaxDemandPower",
+            "name":"monthlyMaxPowerDemand",
             "epc":"0xC1",
             "description":{ "ja":"月間最大需要電力", "en":"Monthly maximum electric power demand" },
             "writable":false,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"kW"
+                "unit":"kW",
+                "minimum":0,
+                "maximum":9999999.9,
+                "minimumDigit":0.1
             }
         },
         {
-            "name":"averageDemandPower",
+            "name":"integralMaxPowerDemand",
+            "epc":"0xC2",
+            "description":{ "ja":"累積最大需要電力", "en":"Cumulative maximum electric power demand" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"kW",
+                "minimum":0,
+                "maximum":9999999.9,
+                "minimumDigit":0.1
+            }
+        },
+        {
+            "name":"averagePowerDemand",
             "epc":"0xC3",
             "description":{
                 "ja":"定時需要電力（30分平均電力）",
@@ -1896,7 +2744,10 @@
                         "description":{ "ja":"電力量", "en":"Energy" },
                         "data":{
                             "type":"number",
-                            "unit":"kW"
+                            "unit":"kW",
+                            "minimum":0,
+                            "maximum":9999999.9,
+                            "minimumDigit":0.1
                         }
                     }
                 ]
@@ -1916,7 +2767,7 @@
             }
         },
         {
-            "name":"demandPowerLog",
+            "name":"PowerDemandLog",
             "epc":"0xC6",
             "description":{
                 "ja":"需要電力計測値履歴",
@@ -1924,31 +2775,153 @@
             },
             "writable":false,
             "observable":false,
-            "query":{
-                "name":"day",
-                "type":"number",
-                "minimum":0,
-                "maximum":99
-            },
+            "query":[
+                {
+                    "name":"day",
+                    "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                    "data":{
+                        "type":"number",
+                        "minimum":0,
+                        "maximum":99
+                    }
+                }
+            ],
             "data":{
                 "type":"object",
                 "elements":[
                     {
                         "name":"day",
-                        "description":{ "ja":"日", "en":"Date" },
+                        "description":{ "ja":"履歴収集日", "en":"Day for collection" },
                         "data":{
                             "type":"number",
-                            "unit":"day"
+                            "unit":"day",
+                            "minimum":0,
+                            "maximum":99
                         }
                     },
                     {
                         "name":"power",
-                        "description":{ "ja":"電力", "en":"Power" },
+                        "description":{ "ja":"需要電力", "en":"Power Demand" },
                         "data":{
                             "type":"array",
                             "data":{
                                 "type":"number",
-                                "unit":"kW"
+                                "unit":"kW",
+                                "minimum":0,
+                                "maximum":9999999.9,
+                                "minimumDigit":0.1
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"integralReactivePowerConsumption",
+            "epc":"0xCA",
+            "description":{
+                "ja":"⼒測積算無効電⼒量(遅れ)計測値",
+                "en":"Measurement data of reactive electric power consumption (lag) for power factor measurement"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"dateAndTime",
+                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "data":{ "type":"date-time" }
+                    },
+                    {
+                        "name":"energy",
+                        "description":{ "ja":"無効電⼒量", "en":"Reactive Electric Power Consumption" },
+                        "data":{
+                            "type":"number",
+                            "unit":"kvarh",
+                            "minimum":0,
+                            "maximum":9999999.9,
+                            "minimumDigit":0.1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"integralReactivePowerConsumptionEvery30Min",
+            "epc":"0xCB",
+            "description":{
+                "ja":"定時⼒測積算無効電⼒量(遅れ)計測値",
+                "en":"Measurement data of cumulative amount of reactive electric power consumption (lag) at fixed time for power factor measurement"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"dateAndTime",
+                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "data":{ "type":"date-time" }
+                    },
+                    {
+                        "name":"energy",
+                        "description":{ "ja":"無効電⼒量", "en":"Reactive Electric Power Consumption" },
+                        "data":{
+                            "type":"number",
+                            "unit":"kvarh",
+                            "minimum":0,
+                            "maximum":9999999.9,
+                            "minimumDigit":0.1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"integralReactivePowerConsumptionLog",
+            "epc":"0xCE",
+            "description":{
+                "ja":"⼒測積算無効電⼒量(遅れ)計測値履歴",
+                "en":"Historical data of measurement data of cumulative amount of reactive electric power consumption (lag) for power factor measurement"
+            },
+            "writable":false,
+            "observable":false,
+            "query":[
+                {
+                    "name":"day",
+                    "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                    "data":{
+                        "type":"number",
+                        "minimum":0,
+                        "maximum":99
+                    }
+                }
+            ],
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"day",
+                        "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                        "data":{
+                            "type":"number",
+                            "unit":"day",
+                            "minimum":0,
+                            "maximum":99
+                        }
+                    },
+                    {
+                        "name":"power",
+                        "description":{ "ja":"無効電⼒量", "en":"Reactive Electric Power Consumption" },
+                        "data":{
+                            "type":"array",
+                            "data":{
+                                "type":"number",
+                                "unit":"kvarh",
+                                "minimum":0,
+                                "maximum":9999999.9,
+                                "minimumDigit":0.1
                             }
                         }
                     }
@@ -1963,7 +2936,8 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"day"
+                "minimum":1,
+                "maximum":31
             }
         },
         {
@@ -1985,10 +2959,13 @@
                     },
                     {
                         "name":"energy",
-                        "description":{ "ja":"電力量", "en":"Energy" },
+                        "description":{ "ja":"電力量", "en":"energy" },
                         "data":{
                             "type":"number",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "minimum":0,
+                            "maximum":9999999.9,
+                            "minimumDigit":0.1
                         }
                     }
                 ]
@@ -2013,10 +2990,44 @@
                     },
                     {
                         "name":"energy",
-                        "description":{ "ja":"電力量", "en":"Energy" },
+                        "description":{ "ja":"電力量", "en":"energy" },
                         "data":{
                             "type":"number",
-                            "unit":"kWh"
+                            "unit":"kWh",
+                            "minimum":0,
+                            "maximum":9999999.9,
+                            "minimumDigit":0.1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"integralActiveEnergyForPowerFactor",
+            "epc":"0xE4",
+            "description":{
+                "ja":"力測積算有効電力量計測値",
+                "en":"Measurement data of cumulative amounts of active electric energy for power factor measurement"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"dateAndTime",
+                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "data":{ "type":"date-time" }
+                    },
+                    {
+                        "name":"energy",
+                        "description":{ "ja":"電力量", "en":"energy" },
+                        "data":{
+                            "type":"number",
+                            "unit":"kWh",
+                            "minimum":0,
+                            "maximum":9999999.9,
+                            "minimumDigit":0.1
                         }
                     }
                 ]
@@ -2042,12 +3053,17 @@
             },
             "writable":false,
             "observable":false,
-            "query":{
-                "name":"day",
-                "type":"number",
-                "minimum":0,
-                "maximum":99
-            },
+            "query":[
+                {
+                    "name":"day",
+                    "description":{ "ja":"履歴収集日", "en":"Day for collection" },
+                    "data":{
+                        "type":"number",
+                        "minimum":0,
+                        "maximum":99
+                    }
+                }
+            ],
             "data":{
                 "type":"object",
                 "elements":[
@@ -2066,7 +3082,10 @@
                             "type":"array",
                             "data":{
                                 "type":"number",
-                                "unit":"kWh"
+                                "unit":"kWh",
+                                "minimum":0,
+                                "maximum":9999999.9,
+                                "minimumDigit":0.1
                             }
                         }
                     }
@@ -2271,6 +3290,106 @@
                 "unit":"%",
                 "minimum":0,
                 "maximum":100
+            }
+        }
+    ]
+},
+{
+    "type":"enhancedLightingSystem",
+    "eoj":"0x02A4",
+    "description":{"ja":"拡張照明システム","en":"Enhanced Lighting System"},
+    "properties":[
+        {
+            "name":"brightness",
+            "epc":"0xB0",
+            "description":{ "ja":"照度レベル設定","en":"Brightness"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"integer",
+                "unit":"%",
+                "minimum":0,
+                "maximum":100
+            }
+        },
+        {
+            "name":"sceneControlSetting",
+            "epc":"0xC0",
+            "description":{ "ja":"シーン制御設定","en":"Scene Control Setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"integer",
+                "minimum":1,
+                "maximum":253
+            },
+            "note":{"ja":"最大値はmaxNumberOfsceneControlの値", "en":"Maximum value is the value of maxNumberOfsceneControl"}
+        },
+        {
+            "name":"maxNumberOfsceneControl",
+            "epc":"0xC1",
+            "description":{ "ja":"シーン制御設定可能数","en":"XXX"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"integer",
+                "minimum":1,
+                "maximum":253
+            }
+        },
+        {
+            "name":"powerConsumptionRateList",
+            "epc":"0xC2",
+            "description":{ "ja":"電⼒消費率リスト","en":"Power Consumption Rate List"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"array",
+                "data":{
+                    "type":"integer",
+                    "unit":"%",
+                    "minimum":0,
+                    "maximum":100
+                }
+            }
+        },
+        {
+            "name":"powerConsumptionAtFullLighting",
+            "epc":"0xC3",
+            "description":{"ja":"全灯時消費電⼒","en":"Power Consumption at Full Lighting"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
+            }
+        },
+        {
+            "name":"powerConsumptionWillBeSaved",
+            "epc":"0xC4",
+            "description":{"ja":"節電可能消費電⼒","en":"Power Saving Power Consumption"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
+            }
+        },
+        {
+            "name":"powerConsumptionLimitSetting",
+            "epc":"0xC5",
+            "description":{"ja":"消費電⼒制限設定","en":"Power Consumption Limit Setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
             }
         }
     ]
