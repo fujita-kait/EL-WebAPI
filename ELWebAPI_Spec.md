@@ -12,6 +12,7 @@ Revision History
 | 2018.02.13 | version 1.0.5 | Arrayのmember名elementをdataに変更（recursive処理に対応するため） |
 | 2018.03.08 | version 1.0.6 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加<br>eoj, epc, edtを追加 |
 | 2018.03.13 | version 1.0.7 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
+| 2018.03.17 | version 1.0.8 | Property objectにnoteを追加<br>複数のqueryに対応できるようにDevice Descriptionのqueryの仕様を変更<br>Data typeにstringを追加 |
 
 ## 1. Abstract
 　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎の仕様は別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドキュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。  
@@ -124,20 +125,23 @@ Device Descriptionの全体構成を以下に示す。
 {
     "type":<device type>,
     "eoj":<eoj in Hex string>,
-    "description":<device type description>,
-    "properties":[ <property>, <property> ... ],
-    "actions":[ <action>, <action>... ],
-    "events":[ <event>, <event>... ]
+    "description":<description of device type>,
+    "properties":[ <property object>, <property object> ... ],
+    "actions":[ <action object>, <action object>... ],
+    "events":[ <event object>, <event object>... ]
 }
 ```
 
-| Member | Data Type<br>of JSON | Description | Example |
-|:-----------|:-----|:-----|:-----|
-| type | string | device の種類を示す。<br>ECHONET Liteで定義された機器オブジェクト名(EOJ)に対応する。<br>値に関しては "8. Device Types" を参照のこと。 | "generalLighting" |
-| description | object |ECHONET Liteで定義された機器オブジェクトの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<device object name of ECHONET Lite in Japanese>,<br>"en":\<device object name of ECHONET Lite in English> <br>} | {<br> "ja":"一般照明",<br> "en":"General Lighting"<br> } |
-| properties | [object] | property object の集合 |  |
-| actions | [object] | action object の集合 |  |
-| events | [object] | event object の集合 |  |
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| type | string |Yes| device の種類を示す。<br>ECHONET Liteの機器オブジェクト名(EOJ)に対応する。<br>値に関しては "8. Device Types" を参照のこと。 | "generalLighting" |
+| eoj | string |Yes| ECHONET LiteのEOJをstringでHex表記 | "0x0130" |
+| description | object |Yes|ECHONET Liteで定義された機器オブジェクトの名称|  |
+| description.ja | string |Yes|ECHONET Liteの機器オブジェクト|"一般照明"|
+| description.en | string |Yes|device object name of ECHONET Lite in English|"General Lighting"|
+| properties | array |Yes| property object のarray |  |
+| actions | array |No| action object のarray |  |
+| events | array |No| event object のarray |  |
 
 ### 4.2 Property object
 
@@ -147,24 +151,29 @@ Property objectは機器のPropertyを記述する。ECHONET LiteでGETをサポ
 {
     "name":<property name>,
     "epc":<epc in Hex string>,
-    "description":<property description>,
+    "description":<description of property>,
     "writable":<writable flag>,
     "observable":<observable flag>,
-    "query":<data type object>,
-    "data":<data type object>
+    "query":[<query object>, <query object>...],
+    "data":<data type object>,
+    "note":{"jp":<note in Japanese>, "en":<note in English>} 
 }
 ```
 
-| Field | Data Type<br>of JSON | Description | Example |
-|:-----------|:-----|:-----|:-----|
-| name | string | EL-WebAPIで定義するproperty name | "on", "operatingMode" |
-| description | object |ECHONET Liteで定義されたエコーネットプロパティの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<property name of ECHONET Lite in Japanese>,<br>"en":\<property name of ECHONET Lite in English> <br>} | {<br> "ja":"動作状態", <br>"en":"Operation Status" <br>} |
-| writable | boolean | 書き込みが可能か不可能かを示す<br>ECHONET LiteのSETに対応 | true, false |
-| observable | boolean | 状態変化のログを参照できるか否かを示す<br>ECHONET LiteのINFに対応| true, false |
-| query | object | GETでqueryが必要な場合、<br>query dataの情報をdata type object(\*1)で記述<br>詳細は5.5節を参照 |  |
-| data | object | property dataの情報をdata type object(\*1)で記述 |  |
-
-(\*1) 6. Data Type参照
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| name | string |Yes| EL-WebAPIで定義するproperty name | "on", "operatingMode" |
+| epc | string |Yes| ECHONET LiteのEPCをstringでHex表記 | "0x80" |
+| description | object |Yes|ECHONET Liteで定義されたエコーネットプロパティの名称|  |
+| description.ja | string |Yes|ECHONET Liteのプロパティ名|"動作状態"|
+| description.en | string |Yes|property name of ECHONET Lite in English|"Operation Status"|
+| writable | boolean |Yes| 書き込みが可能か不可能かを示す<br>ECHONET LiteのSETに対応 | true, false |
+| observable | boolean |Yes| 状態変化のログを参照できるか否かを示す<br>ECHONET LiteのINFに対応| true, false |
+| query | array |No| GETでparameterを渡す必要がある場合にqueryを利用する<br>複数のqueryに対応するためquery objectをarrayで記述する<br>query objectは以下のformat<br>{<br>"name":\<name in string>,<br>"description":\<description of query>,<br>"data":\<data type object><br>} |  |
+| data | object |Yes| property dataの情報をdata type object(\*1)で記述 |  |
+| note | object |no| Propertyに関する付加情報 |  |
+| note.ja | string |no| 付加情報を日本語で記述する |  |
+| note.en | string |no| 付加情報を英語で記述する |  |
 
 ### 4.3 Action object
 
@@ -177,10 +186,10 @@ Action object はpropertyのSETでは記述が難しい動作を記述する。�
 }
 ```
 
-| Field | Data Type<br>of JSON | Description | Example |
-|:-----------|:-----|:-----|:-----|
-| name | string | EL-WebAPIで定義するaction name | "cancelAll" |
-| description | object |ECHONET Liteで定義されたエコーネットプロパティの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<property name of ECHONET Lite in Japanese>,<br>"en":\<property name of ECHONET Lite in English> <br>} | {<br> "ja":"一括停止設定", <br>"en":"All Stop setting" <br>} |
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| name | string |Yes| EL-WebAPIで定義するaction name | "cancelAll" |
+| description | object |Yes|ECHONET Liteで定義されたエコーネットプロパティの名称。<br>日本語と英語の名称をobject型式で示す。<br>{<br>"ja":\<property name of ECHONET Lite in Japanese>,<br>"en":\<property name of ECHONET Lite in English> <br>} | {<br> "ja":"一括停止設定", <br>"en":"All Stop setting" <br>} |
 
 ### 4.4 Event object
 
@@ -203,7 +212,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
     "description":{"ja":"一般照明", "en":"General Lighting"},
     "properties":[
         {
-            "name":"on",
+            "name":"operationStatus",
             "epc":"0x80",
             "description":{ "ja":"動作状態", "en":"Operation Status" },
             "writable":true,
@@ -304,7 +313,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
     ],
     "actions":[],
     "events":[
-        { "name":"on" },
+        { "name":"operationStatus" },
         { "name":"isAtFault" }
     ]
 }
@@ -383,15 +392,17 @@ ECHONET Lite WebAPI を説明する。
     ]
     ```
 
-    | Field | Data Type of<br>JSON | Description | Example |
-    |:-----------|:-----|:-----|:-----|
-    | id | String |機器を指定するためのDevice Id<br>プロトコルブリッジが決めるユニークな値 | "generalLighting_01"(*1) |
-    | type | String |Device Type | "generalLighting" |
-    | ip | String | DeviceのIP Address |  "192.168.128.11" |
-    | protocol.type | String | 機器制御Protocolの種類 | "ECHONET\_Lite" |
-    | protocol.version | String | 機器制御ProtocolのVersion<br>ECHONET Liteの場合は規格Version<br>(EPC=0x82)の値をdecodeしたもの | "D" |
-    | manufacturer.code | String | メーカーコード<br>ECHONET Liteの場合はEPC=0x8Aの値| "0x000077" |
-    | manufacturer.description | String | メーカー名| {<br>"ja":"神奈川工科大学",<br>"en":"Kanagawa Institute of<br> Technology"<br>} |    
+    Format of body data
+
+    | Property | Type |Required |Description |  Example |
+    |:-----------|:-----|:-----|:-----|:-----|
+    | id | String |Yes|機器を指定するためのDevice Id<br>プロトコルブリッジが決めるユニークな値 | "generalLighting_01"(*1) |
+    | type | String |Yes|Device Type | "generalLighting" |
+    | ip | String |Yes| DeviceのIP Address |  "192.168.128.11" |
+    | protocol.type | String |Yes| 機器制御Protocolの種類 | "ECHONET\_Lite" |
+    | protocol.version | String |Yes| 機器制御ProtocolのVersion<br>ECHONET Liteの場合は規格Version<br>(EPC=0x82)の値をdecodeしたもの | "D" |
+    | manufacturer.code | String |Yes| メーカーコード<br>ECHONET Liteの場合はEPC=0x8Aの値| "0x000077" |
+    | manufacturer.description |Yes| String | メーカー名| {<br>"ja":"神奈川工科大学",<br>"en":"Kanagawa Institute of<br> Technology"<br>} |    
 
     (\*1) 以下の例では\<deviceName>_\<index>を利用しているが、UUIDなどユニークな値であれば構わない。
 
@@ -472,10 +483,12 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
     200 OK
 	{
 	    "type":"generalLighting",
+	    "eoj":"0x0290",
 	    "description":{"ja":"一般照明", "en":"General Lighting"},
 	    "properties":[
 	        {
-	            "name":"on",
+	            "name":"operationStatus",
+	            "epc":"0x80",
 	            "description":{ "ja":"動作状態", "en":"Operation Status" },
 	            "writable":true,
 	            "observable":true,
@@ -691,12 +704,12 @@ actionの実行をリクエストする
     [
         {
             "time":"2017-01-24T13:02:45+09:00"
-            "name":"on",
+            "name":"operationStatus",
             "value":true,
         },
         {
             "time":"2017-01-24T13:15:22+09:00"
-            "name":"on",
+            "name":"operationStatus",
             "value":false,
         },
         ...
@@ -716,8 +729,8 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 | boolean | boolean |true または false の２値をとるデータ型 | values | 
 | enum | string |状態を表すkeyword | values | 
 | number | number<br>string(\*) |数値 | unit<br>minimum<br>maximum<br>minimumDigit<br>alternatives(\*) | 
-| level | number<br>string(\*) | 強弱のレベルを表す整数値<br>1が弱、最大レベルは"maximum"で定義する | maximum<br>alternatives(\*) |
 | date-time | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" || 
+| string | string | ASCII data | "0AF53C" |
 | array |  [ ] |同一data typeの要素の配列 | data |
 | object |  { } |複数の要素から構成されるデータ | elements |
 
@@ -725,7 +738,7 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 
 ### 6.2 Description of Data Type Object
 #### 6.2.1 boolean, enum
-booleanはvalue objectのvalue propertyの値がtrue or false。  
+booleanはvalue objectのvalue propertyの値がtrue or false。trueは"ON"や"Yes"の意味。falseは"OFF"や"No"の意味。  
 enumはvalue objectのvalue propertyの値が状態を表すstring（例："cooling"）。  
 
 Format
@@ -859,7 +872,23 @@ Example of body data
 { "date-time" :"2017-01-24T13:15:22+09:00" }
 ```
 
-#### 6.2.4 array
+#### 6.2.4 string    
+ASCIIデータを扱うdata type  
+
+Format of Device Description
+
+```
+{
+    "type":"string"
+}
+```
+Example of body data  
+
+```
+{ "string" :"0A3FCD" }
+```
+
+#### 6.2.5 array
 Format of Device Description
 
 ```
@@ -894,7 +923,7 @@ Example of body data
 { "powerConsumption":[23, 12, 0,...] }
 ```
 
-#### 6.2.5 object
+#### 6.2.6 object
 Format of Device Description
 
 ```
@@ -1025,10 +1054,10 @@ ERROR時のRESPONSEは以下のとおり。
     "message":<ErrorMessage>
 }   
 ```
-| member | Data Type of JSON |Description | 
-|:-----------|:-----|:-----|
-| type | string | ErrorのTypeを示す。<br>プロトコルブリッジがErrorと判断する場合（rangeError, referenceError, typeError, timeout）と機器がエラーと判断する場合（deviceError）がある。 | 
-| message | string | ERRORの詳細を記述する任意のString data | 
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| type | string |Yes| ErrorのTypeを示す。<br>プロトコルブリッジがErrorと判断する場合（rangeError, referenceError, typeError, timeout）と機器がエラーと判断する場合（deviceError）がある。 |"rangeError"| 
+| message | string |Yes| ERRORの詳細を記述する任意のString data | |
 
 - ErrorType  
 
