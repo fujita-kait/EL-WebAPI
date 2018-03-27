@@ -14,6 +14,7 @@
 | 2018.03.13 | version 1.0.9 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
 | 2018.03.14 | version 1.0.10 | eventsを削除 |
 | 2018.03.15 | version 1.0.11 | 複数queryに対応するためqueryをarrayにする<br>低圧スマート電力量メータの内容を修正<br>高圧スマート電力量メータの内容を修正<br>燃料電池の内容を修正<br>蓄電池の内容を修正<br>電気自動車充放電器の内容を修正<br>拡張照明システムを追加<br>温度の"unit"を"℃"から"Celsius"に変更 |
+| 2018.03.27 | version 1.0.12 | 共通項目のINFに関する修正<br>住宅用太陽光発電のpropertiesにminimumとmaximumを追加 |
 
 ## 1. Abstract
 　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。なお、ECHONET Lite WebAPIで取得するDevice Descriptionには"events"があるが、この内容は"observable":trueのpropertyのリストであるのでProtocol Bridgeが生成できるので、このdocumentおよびJSON dataには記載しない。
@@ -195,9 +196,9 @@ __Example__
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
 | operationStatus | GET, PUT| boolean | 0x80 | 動作状態<br>Operation Status |INF|
 | installationLocation |GET| enumb|0x81| 設置場所<br>Installation location |INF|
-| productCode |GET| string|0x8C| 商品コード<br>Product code |INF|
+| productCode |GET| string|0x8C| 商品コード<br>Product code ||
 | isAtFault |GET| boolean|0x88| 異常発生状態<br>Fault status |INF|
-| currentDateAndTime |GET| boolean|0x98| 現在⽇時<br>Current date and time |INF|
+| currentDateAndTime |GET| boolean|0x98| 現在⽇時<br>Current date and time ||
 
 ### Device Description (Common Items)
 
@@ -1423,7 +1424,9 @@ __Example__
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W"
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
             }
         },
         {
@@ -1438,6 +1441,8 @@ __Example__
             "data":{
                 "type":"number",
                 "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
                 "minimumDigit":0.001
             }
         }

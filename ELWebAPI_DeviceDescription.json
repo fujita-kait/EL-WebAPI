@@ -1,6 +1,6 @@
 {
     "metaData": {
-        "date":"2018-03-15",
+        "date":"2018-03-27",
         "release":"J"
     },
     "common": 
@@ -956,7 +956,9 @@
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W"
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
             }
         },
         {
@@ -971,6 +973,8 @@
             "data":{
                 "type":"number",
                 "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
                 "minimumDigit":0.001
             }
         }
