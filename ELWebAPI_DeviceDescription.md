@@ -1,23 +1,23 @@
 # ECHONET Lite WebAPI (EL-WebAPI) Device Description
 
-| Date | Version  | Description |
+|Date|Version |Description|
 |:-----------|:-----|:-----|
-| 2017.12.11 | version 1.0.0 |  |
-| 2017.12.17 | version 1.0.1 | Device DescriptionのDataのvalueの表記をobjectからarrayに変更<br>Data Typeを修正(levelとpercentageを削除） |
-| 2017.12.18 | version 1.0.2 | Property nameに関する軽微な修正（共通項目の"Operating Status" -> "Operation Status" |
-| 2017.12.20 | version 1.0.3 | data type "level" の復活<br>電気温水器のnumberOfEnergyShiftsに"unit"を追加<br>電気錠のislocked 開錠->解錠<br>クッキングヒーターの過熱状態を修正 key->object<br>低圧スマート電力量メータの瞬時電流計測値のdata type修正 integer -> number<br>高圧スマート電力量メータの定時需要電力（30分平均電力）の"unit"修正 kWh->kW<br>電気自動車充電器のDescription修正 電気自動車充放電器 -> 電気自動車充電器 |
-| 2018.01.30 | version 1.0.4 | Data Type "key" の名前を "enum" に修正 |
-| 2018.01.30 | version 1.0.5 | Typo修正　instataneous -> instantaneous |
-| 2018.02.13 | version 1.0.6 | 湿度センサの data type: percentage -> integer<br>Arrayのmember名elementをdataに変更 |
-| 2018.03.08 | version 1.0.7 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加 |
-| 2018.03.09 | version 1.0.8 | eoj, epc, edtを追加 |
-| 2018.03.13 | version 1.0.9 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
-| 2018.03.14 | version 1.0.10 | eventsを削除 |
-| 2018.03.15 | version 1.0.11 | 複数queryに対応するためqueryをarrayにする<br>低圧スマート電力量メータの内容を修正<br>高圧スマート電力量メータの内容を修正<br>燃料電池の内容を修正<br>蓄電池の内容を修正<br>電気自動車充放電器の内容を修正<br>拡張照明システムを追加<br>温度の"unit"を"℃"から"Celsius"に変更 |
-| 2018.03.27 | version 1.0.12 | 共通項目のINFに関する修正<br>住宅用太陽光発電のpropertiesにminimumとmaximumを追加 |
+|2017.12.11|version 1.0.0||
+|2017.12.17|version 1.0.1|Device DescriptionのDataのvalueの表記をobjectからarrayに変更<br>Data Typeを修正(levelとpercentageを削除）|
+|2017.12.18|version 1.0.2|Property nameに関する軽微な修正（共通項目の"Operating Status" -> "Operation Status"|
+|2017.12.20|version 1.0.3|data type "level" の復活<br>電気温水器のnumberOfEnergyShiftsに"unit"を追加<br>電気錠のislocked 開錠->解錠<br>クッキングヒーターの過熱状態を修正 key->object<br>低圧スマート電力量メータの瞬時電流計測値のdata type修正 integer -> number<br>高圧スマート電力量メータの定時需要電力（30分平均電力）の"unit"修正 kWh->kW<br>電気自動車充電器のDescription修正 電気自動車充放電器 -> 電気自動車充電器|
+|2018.01.30|version 1.0.4|Data Type "key" の名前を "enum" に修正|
+|2018.01.30|version 1.0.5|Typo修正　instataneous -> instantaneous|
+|2018.02.13|version 1.0.6|湿度センサの data type: percentage -> integer<br>Arrayのmember名elementをdataに変更|
+|2018.03.08|version 1.0.7|Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加|
+|2018.03.09|version 1.0.8|eoj, epc, edtを追加|
+|2018.03.13|version 1.0.9|Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更|
+|2018.03.14|version 1.0.10|eventsを削除|
+|2018.03.15|version 1.0.11|複数queryに対応するためqueryをarrayにする<br>低圧スマート電力量メータの内容を修正<br>高圧スマート電力量メータの内容を修正<br>燃料電池の内容を修正<br>蓄電池の内容を修正<br>電気自動車充放電器の内容を修正<br>拡張照明システムを追加<br>温度の"unit"を"℃"から"Celsius"に変更|
+|2018.04.03|version 1.0.12|Common, 家庭用エアコン、電気温水器、瞬間式給湯器、燃料電池、蓄電池、電気自動車充放電器、低圧スマート電力量メータ、高圧スマート電力量メータ、一般照明、電気自動車充電器、拡張照明システムの一部修正|
 
 ## 1. Abstract
-　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。なお、ECHONET Lite WebAPIで取得するDevice Descriptionには"events"があるが、この内容は"observable":trueのpropertyのリストであるのでProtocol Bridgeが生成できるので、このdocumentおよびJSON dataには記載しない。
+　このドキュメントはECHONET Lite WebAPI(EL-WebAPI)のDevice Descriptionを記述する。Device Descriptionの定義は __ECHONET Lite WebAPI Specification__ を参照のこと。
 
 ### 1.1 JSON file
 　ECHONET Lite WebAPI Device DescriptionはJSON fileで提供される。JSON fileの構成は以下の通り。
@@ -41,13 +41,13 @@ Format
 }
 ```
 
-| Property | Type |Required |Description |  Example |
+|Property|Type|Required|Description| Example|
 |:-----------|:-----|:-----|:-----|:-----|
-| metaData | object |yes| ECHONET Lite WebAPI device description fileのmeta data |  |
-| metaData.date | string |yes| Fileの作成日 "yyyy-mm-dd" | "2017-10-12" |
-| metaData.release | string |yes| ECHONET機器オブジェクト詳細規定のRelease情報 | "J" |
-| common | object |yes|device description objectのformatでEPC=0x80から0x9Fの情報を記述する |  |
-| devices | array |yes|device description objectのformatで各機器の情報を記述する |  |
+|metaData|object|yes|ECHONET Lite WebAPI device description fileのmeta data||
+|metaData.date|string|yes|Fileの作成日 "yyyy-mm-dd"|"2017-10-12"|
+|metaData.release|string|yes|ECHONET機器オブジェクト詳細規定のRelease情報|"J"|
+|common|object|yes|device description objectのformatでEPC=0x80から0x9Fの情報を記述する||
+|devices|array|yes|device description objectのformatで各機器の情報を記述する||
 
 Example
 
@@ -126,7 +126,7 @@ __Example__
             }
         },
         {
-            "name":"operatingMode",
+            "name":"operationMode",
             "epc":"0xB6",
             "description":{ "ja":"動作モード", "en":"Operating Mode" },
             "writable":true,
@@ -192,13 +192,20 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| operationStatus | GET, PUT| boolean | 0x80 | 動作状態<br>Operation Status |INF|
-| installationLocation |GET| enumb|0x81| 設置場所<br>Installation location |INF|
-| productCode |GET| string|0x8C| 商品コード<br>Product code ||
-| isAtFault |GET| boolean|0x88| 異常発生状態<br>Fault status |INF|
-| currentDateAndTime |GET| boolean|0x98| 現在⽇時<br>Current date and time ||
+| operationStatus |GET, PUT|boolean|0x80|動作状態<br>Operation Status||
+|installationLocation|GET|string|0x81|設置場所<br>Installation location||
+|instantaneousPowerConsumption|GET|number|0x84|瞬時消費電力計測値<br>Measured instantaneous power consumption||
+|integralPowerConsumption|GET|number|0x85|積算消費電力計測値<br>Measured cumalative power consumption||
+|manufactureFaultCode|GET|string|0x86|メーカー異常コード<br>Manufacture fault code||
+|isAtFault|GET|boolean|0x88|異常発生状態<br>Fault status||
+|productCode|GET|string|0x8C|商品コード<br>Product code||
+|serialNumber|GET|string|0x8D|製造番号<br>Serial number||
+|powerSaving|GET|boolean|0x8F|節電動作設定<br>Power-saving operation setting||
+|currentDateAndTime|GET|time|0x98|現在⽇時<br>Current date and time||
+|powerLimit|GET|number|0x99|電力制限設定<br>Power limit setting||
+|integralOperationTime|GET|number|0x9A|積算運転時間<br>Integral operation time||
 
 ### Device Description (Common Items)
 
@@ -231,9 +238,36 @@ __Example__
             "data":{ "type":"string" }
         },
         {
-            "name":"productCode",
-            "epc":"0x8C",
-            "description":{"ja":"商品コード", "en":"Product code"},
+            "name":"instantaneousPowerConsumption",
+            "epc":"0x84",
+            "description":{"ja":"瞬時消費電力計測値", "en":"Measured instantaneous power consumption"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"string",
+                "unit":"W",    
+                "minimum":0,
+                "maximum":65533
+            }
+        },
+        {
+            "name":"integralPowerConsumption",
+            "epc":"0x85",
+            "description":{"ja":"積算消費電力計測値", "en":"Measured cumalative power consumption"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
+                "minimumDigit":0.001
+            }
+        },
+        {
+            "name":"manufactureFaultCode",
+            "epc":"0x86",
+            "description":{"ja":"メーカー異常コード", "en":"Manufacture fault code"},
             "writable":false,
             "observable":false,
             "data":{ "type":"string" }
@@ -253,6 +287,36 @@ __Example__
             }
         },
         {
+            "name":"productCode",
+            "epc":"0x8C",
+            "description":{"ja":"商品コード", "en":"Product code"},
+            "writable":false,
+            "observable":false,
+            "data":{ "type":"string" }
+        },
+        {
+            "name":"serialNumber",
+            "epc":"0x8D",
+            "description":{"ja":"製造番号", "en":"Serial Number"},
+            "writable":false,
+            "observable":false,
+            "data":{ "type":"string" }
+        },
+        {
+            "name":"powerSaving",
+            "epc":"0x8F",
+            "description":{ "ja":"節電動作設定", "en":"Power-saving operation setting" },
+            "writable":true,
+            "observable":true,
+            "data":{
+                "type":"boolean",
+                "values":[
+                    {"value":true, "ja":"節電動作", "en":"Power saving operation", "edt":"0x41"},
+                    {"value":false, "ja":"通常動作", "en":"Normal operation", "edt":"0x42"}
+                ]
+            }
+        },
+        {
             "name":"currentDateAndTime",
             "epc":"0x98",
             "description":{"ja":"現在⽇時", "en":"Current date and time"},
@@ -260,6 +324,32 @@ __Example__
             "observable":false,
             "data":{
                 "type":"date-time"
+            }
+        },
+        {
+            "name":"powerLimit",
+            "epc":"0x99",
+            "description":{"ja":"電力制限設定", "en":"Power limit setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":65533
+            }
+        },
+        {
+            "name":"integralOperationTime",
+            "epc":"0x9A",
+            "description":{"ja":"積算運転時間", "en":"Integral operation time"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"hour",
+                "minimum":0,
+                "maximum":4294967295
             }
         }
     ]
@@ -270,49 +360,51 @@ __Example__
 以下に機器毎のDevice Descriptionを記述する。実際のDevice Descriptionは前節の共通項目をマージしたものとなる。
 ### List
 
-| 機器名 | Device Type | EOJ |
-|:------|:------------|:----|
-| 照度センサ| illuminanceSensor| 0x000D |
-| 温度センサ| temperatureSensor| 0x0011 |
-| 湿度センサ| humiditySensor| 0x0012 |
-| 電力量センサ| electricPowerSensor| 0x0022 |
-| 気圧センサ| airPressureSensor| 0x002D |
-| 家庭用エアコン| homeAirConditioner| 0x0130 |
-| 換気扇| ventilationFan| 0x0133 |
-| 空気清浄器| airCleaner| 0x0135 |
-| 電動ブラインド・日よけ| electricBlind| 0x0260 |
-| 電動雨戸・シャッター| electricRainDoor | 0x0263 |
-| 電気温水器| electricWaterHeater| 0x026B  |
-| 電気錠| electricKey| 0x026F  |
-| 瞬間式給湯器| instantaneousWaterHeater| 0x0272  |
-| 浴室暖房乾燥機| bathroomHeaterDryer| 0x0273 |
-| 住宅用太陽光発電| pvPowerGeneration| 0x0279  |
-| 冷温水熱源機| hotWaterHeatSource| 0x027A |
-| 床暖房| floorHeater| 0x027B |
-| 燃料電池| fuelCell| 0x027C  |
-| 蓄電池| storageBattery| 0x027D  |
-| 電気自動車充放電器| evChargerDischarger| 0x027E  |
-| 分電盤メータリング| powerDistributionBoard| 0x0287 |
-| 低圧スマート電力量メータ| lvSmartElectricEnergyMeter| 0x0288  |
-| 高圧スマート電力量メータ| hvSmartElectricEnergyMeter| 0x028A  |
-| 一般照明| generalLighting| 0x0290  |
-| 単機能照明| monoFunctionalLighting| 0x0291  |
-| 電気自動車充電器| evCharger| 0x02A1 |
-| 拡張照明システム| Lighting| 0x02A4  |
-| 冷凍冷蔵庫| refrigerator| 0x03B7 |
-| オーブンレンジ| combinationMicrowaveOven| 0x03B8 |
-| クッキングヒータ| cookingHeater| 0x03B9 |
-| 洗濯乾燥機| washerDryer| 0x03D3 |
-| スイッチ| switch| 0x05FD |
-| コントローラ| controller| 0x05FF |
+|機器名|Device Type|EOJ|Note|
+|:------|:------------|:----|:----|
+|照度センサ|illuminanceSensor|0x000D|
+|温度センサ|temperatureSensor|0x0011|
+|湿度センサ|humiditySensor|0x0012|
+|電力量センサ|electricPowerSensor|0x0022|
+|気圧センサ|airPressureSensor|0x002D|
+|家庭用エアコン|homeAirConditioner|0x0130|\*1|
+|換気扇|ventilationFan|0x0133|
+|空気清浄器|airCleaner|0x0135|
+|電動ブラインド・日よけ|electricBlind|0x0260|
+|電動雨戸・シャッター|electricRainDoor|0x0263|
+|電気温水器|electricWaterHeater|0x026B |\*1|
+|電気錠|electricKey|0x026F |
+|瞬間式給湯器|instantaneousWaterHeater|0x0272 |\*1|
+|浴室暖房乾燥機|bathroomHeaterDryer|0x0273|
+|住宅用太陽光発電|pvPowerGeneration|0x0279 |
+|冷温水熱源機|hotWaterHeatSource|0x027A|
+|床暖房|floorHeater|0x027B|
+|燃料電池|fuelCell|0x027C |\*1|
+|蓄電池|storageBattery|0x027D |\*1|
+|電気自動車充放電器|evChargerDischarger|0x027E |\*1|
+|分電盤メータリング|powerDistributionBoard|0x0287|
+|低圧スマート電力量メータ|lvSmartElectricEnergyMeter|0x0288 |\*1|
+|高圧スマート電力量メータ|hvSmartElectricEnergyMeter|0x028A |\*1|
+|一般照明|generalLighting|0x0290 |\*1|
+|単機能照明|monoFunctionalLighting|0x0291|
+|電気自動車充電器|evCharger|0x02A1|\*1|
+|拡張照明システム|Lighting|0x02A4 |\*1|
+|冷凍冷蔵庫|refrigerator|0x03B7|
+|オーブンレンジ|combinationMicrowaveOven|0x03B8|
+|クッキングヒータ|cookingHeater|0x03B9|
+|洗濯乾燥機|washerDryer|0x03D3|
+|スイッチ|switch|0x05FD|
+|コントローラ|controller|0x05FF|
+
+\*1 ECHONETコンソーシアムのWebAPI対応機器
 
 ## 照度センサ:illuminanceSensor:0x000D
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| illuminance | GET | number | 0xE0 | 照度計測値1<br>Measured Illuminance value1 |
+|illuminance|GET|number|0xE0|照度計測値1<br>Measured Illuminance value1|
 
 ### Device Description
 
@@ -341,9 +433,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| temperature | GET | number | 0xE0 | 温度計測値<br>Measured temperature value |
+|temperature|GET|number|0xE0|温度計測値<br>Measured temperature value|
 
 ### Device Description
 
@@ -373,9 +465,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| humidity | GET | number | 0xE0 | 相対湿度計測値<br>Measured value of relative humidity |
+|humidity|GET|number|0xE0|相対湿度計測値<br>Measured value of relative humidity|
 
 ### Device Description
 
@@ -406,9 +498,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| electricEnergy | GET | number | 0xE0 | 積算電力量計測値<br>Integral electric energy |
+|electricEnergy|GET|number|0xE0|積算電力量計測値<br>Integral electric energy|
 
 ### Device Description
 
@@ -424,7 +516,7 @@ __Example__
             "description":{ "ja":"積算電力量計測値", "en":"Integral electric energy" },
             "writable":false,
             "observable":false,
-            "data":{ 
+            "data":{
                 "type":"number",
                 "unit":"kWh",    
                 "minimumDigit":0.001
@@ -438,9 +530,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| airPressure | GET | number | 0xE0 | 気圧計測値<br>Air pressure measurement |
+|airPressure|GET|number|0xE0|気圧計測値<br>Air pressure measurement|
 
 ### Device Description
 
@@ -470,18 +562,18 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| powerSaving | GET, PUT| boolean | 0x8F | 節電動作設定<br>Power-saving operation setting | INF |
-| airFlowLevel | GET, PUT | number | 0xA0 | 風量設定<br>Air flow rate setting | INF |
-| operatingMode | GET, PUT | enum | 0xB0 | 運転モード設定<br>Operation mode setting | INF |
-| targetTemperature | GET, PUT | number  | 0xB3 | 温度設定値<br>Set temperature value |
-| humidity| GET| number  | 0xBA | 室内相対湿度計測値<br>Measured value of room relative humidity |\*1|
-| roomTemperature | GET|number | 0xBB | 室内温度計測値<br>Measured value of room temperature |
-| airFlowTemperature | GET|number | 0xBD | 吹き出し温度計測値<br>Measured cooled air temperature |\*1|
-| outdoorTemperature | GET|number | 0xBE | 外気温度計測値<br>Measured outdoor air temperature |\*1|
+|powerSaving|GET, PUT|boolean|0x8F|節電動作設定<br>Power-saving operation setting|\*1|
+|airFlowLevel|GET, PUT|number|0xA0|風量設定<br>Air flow rate setting|\*1|
+|operationMode|GET, PUT|enum|0xB0|運転モード設定<br>Operation mode setting|\*1|
+|targetTemperature|GET, PUT|number |0xB3|温度設定値<br>Set temperature value|\*1|
+|humidity|GET|number |0xBA|室内相対湿度計測値<br>Measured value of room relative humidity|\*1|
+|roomTemperature|GET|number|0xBB|室内温度計測値<br>Measured value of room temperature|\*1|
+|airFlowTemperature|GET|number|0xBD|吹き出し温度計測値<br>Measured cooled air temperature|\*1|
+|outdoorTemperature|GET|number|0xBE|外気温度計測値<br>Measured outdoor air temperature|\*1|
 
-\*1) 必須項目ではない
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -500,8 +592,8 @@ __Example__
             "data":{
                 "type":"boolean",
                 "values":[
-                    {"value":true, "ja":"節電動作設定", "en":"Power Saving", "edt":"0x41"},
-                    {"value":false, "ja":"節電動作解除", "en":"No Power Saving", "edt":"0x42"}
+                    {"value":true, "ja":"節電動作", "en":"Power saving operation", "edt":"0x41"},
+                    {"value":false, "ja":"通常動作", "en":"Normal operation", "edt":"0x42"}
                 ]
             }
         },
@@ -521,7 +613,7 @@ __Example__
             }
         },
         {
-            "name":"operatingMode",
+            "name":"operationMode",
             "epc":"0xB0",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true,
@@ -614,10 +706,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| airFlowLevel | GET, PUT | number | 0xA0 | 風量設定<br>Air flow rate setting |
-| autoVentilation | GET, PUT | boolean | 0xBF | 換気自動設定<br>Ventilation auto setting |
+|airFlowLevel|GET, PUT|number|0xA0|風量設定<br>Air flow rate setting|
+|autoVentilation|GET, PUT|boolean|0xBF|換気自動設定<br>Ventilation auto setting|
 
 ### Device Description
 
@@ -664,9 +756,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| airFlowLevel | GET, PUT | number | 0xA0 | 風量設定<br>Air flow rate setting |
+|airFlowLevel|GET, PUT|number|0xA0|風量設定<br>Air flow rate setting|
 
 ### Device Description
 
@@ -699,10 +791,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| blindMotion<br>開閉動作設定 | GET, PUT | enum | 0xE0 | 開閉（張出し／収納）動作設定<br>Open/close(extension/retraction) setting | INF |
-| openingDegree<br>開度レベル | GET, PUT | number | 0xE1 | 開度レベル設定<br>Degree-of-opening level |
+|blindMotion<br>開閉動作設定|GET, PUT|enum|0xE0|開閉（張出し／収納）動作設定<br>Open/close(extension/retraction) setting|INF|
+|openingDegree<br>開度レベル|GET, PUT|number|0xE1|開度レベル設定<br>Degree-of-opening level|
 
 ### Device Description
 
@@ -751,10 +843,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| blindMotion | GET, PUT | enum | 0xE0 | 開閉動作設定<br>Open/Close setting | INF |
-| openingDegree | GET, PUT | number | 0xE1 | 開度レベル設定<br>Degree-of-opening level |\*1|
+|blindMotion|GET, PUT|enum|0xE0|開閉動作設定<br>Open/Close setting|INF|
+|openingDegree|GET, PUT|number|0xE1|開度レベル設定<br>Degree-of-opening level|\*1|
 
 \*1) 必須項目ではない
 
@@ -802,25 +894,27 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| automaticWaterHeating | GET, PUT | enum | 0xB0 | 沸き上げ自動設定<br>Automatic water heating setting | INF |
-| heatingWater | GET | boolean | 0xB2 | 沸き上げ中状態<br>Water heater status | INF |
-| daytimeReheatingIsPermitted | GET, PUT | boolean | 0xC0 | 昼間沸き増し許可設定<br>Daytime reheating permission setting |
-| alarmStatus | GET | object | 0xC2 | 警報発生状態<br>Alarm status | INF |
-| supplyingHotWater | GET | boolean | 0xC3 | 給湯中状態<br>Hot water supply status | INF |
-| energyShiftParticipation | GET, PUT | boolean | 0xC7 | エネルギーシフト参加状態 |
-| waterHeatingStartTime | GET | number | 0xC8 | 沸き上げ開始基準時刻 |
-| numberOfEnergyShifts | GET | number | 0xC9 | エネルギーシフト回数 |
-| waterHeatingTime1 | GET, PUT | number  | 0xCA | 昼間沸き上げシフト時刻１ |
-| estimatedEnergyConsumption1 | GET | object | 0xCB | 昼間沸き上げシフト時刻１での沸き上げ予測電力量 | 
-| energyConsumptionRate1 |GET| object | 0xCC | 時間あたり消費電力量１ |
-| waterHeatingTime2 | GET, PUT | number  | 0xCD | 昼間沸き上げシフト時刻２ |
-| estimatedEnergyConsumption2 | GET | object | 0xCE | 昼間沸き上げシフト時刻２での沸き上げ予測電力量 |
-| energyConsumptionRate2 |GET | object | 0xCF | 時間あたり消費電力量２ | 
-| automaticBathWaterHeating | GET, PUT | boolean | 0xE3 | 風呂自動モード設定<br>Automatic bath water heating mode setting |
-| bathOperatingStatus | GET | enum | 0xEA | 風呂動作状態監視<br>Bath operation status monitor | \*1<br>INF |
-\*1) 必須項目ではない
+|automaticWaterHeating|GET, PUT|enum|0xB0|沸き上げ自動設定<br>Automatic water heating setting|\*1|
+|waterHeatingStatus|GET|boolean|0xB2|沸き上げ中状態<br>Water heater status|\*1|
+|daytimeReheatingPermission|GET, PUT|boolean|0xC0|昼間沸き増し許可設定<br>Daytime reheating permission setting|\*1|
+|alarmStatus|GET|object|0xC2|警報発生状態<br>Alarm status|\*1|
+|hotWaterSupplyStatus|GET|boolean|0xC3|給湯中状態<br>Hot water supply status|\*1|
+|energyShiftParticipation|GET, PUT|boolean|0xC7|エネルギーシフト参加状態|\*1|
+|waterHeatingStartTime|GET|number|0xC8|沸き上げ開始基準時刻|\*1|
+|numberOfEnergyShifts|GET|number|0xC9|エネルギーシフト回数|\*1|
+|waterHeatingTime1|GET, PUT|number |0xCA|昼間沸き上げシフト時刻１|\*1|
+|estimatedEnergyConsumption1|GET|object|0xCB|昼間沸き上げシフト時刻１での沸き上げ予測電力量|\*1|
+|energyConsumptionRate1|GET|object|0xCC|時間あたり消費電力量１|\*1|
+|waterHeatingTime2|GET, PUT|number |0xCD|昼間沸き上げシフト時刻２|\*1|
+|estimatedEnergyConsumption2|GET|object|0xCE|昼間沸き上げシフト時刻２での沸き上げ予測電力量|\*1|
+|energyConsumptionRate2|GET|object|0xCF|時間あたり消費電力量２| \*1|
+|automaticBathWaterHeating|GET, PUT|boolean|0xE3|風呂自動モード設定<br>Automatic bath water heating mode setting|\*1|
+|bathOperationStatus|GET|enum|0xEA|風呂動作状態監視<br>Bath operation status monitor|\*1|
+
+\*1 AIF対応プロパティ
+
 ### Device Description
 
 ```
@@ -845,7 +939,7 @@ __Example__
             }
         },
         {
-            "name":"heatingWater",
+            "name":"waterHeatingStatus",
             "epc":"0xB2",
             "description":{ "ja":"沸き上げ中状態", "en":"Water heater status" },
             "writable":false,
@@ -859,7 +953,7 @@ __Example__
             }
         },
         {
-            "name":"daytimeReheatingIsPermitted",
+            "name":"daytimeReheatingPermission",
             "epc":"0xC0",
             "description":{
                 "ja":"昼間沸き増し許可設定",
@@ -921,7 +1015,7 @@ __Example__
             }
         },
         {
-            "name":"supplyingHotWater",
+            "name":"hotWaterSupplyStatus",
             "epc":"0xC3",
             "description":{ "ja":"給湯中状態", "en":"Hot water supply status" },
             "writable":false,
@@ -937,10 +1031,7 @@ __Example__
         {
             "name":"energyShiftParticipation",
             "epc":"0xC7",
-            "description":{
-                "ja":"エネルギーシフト参加状態",
-                "en":"Participation in Energy Shift"
-            },
+            "description":{"ja":"エネルギーシフト参加状態", "en":"Participation in energy shift"},
             "writable":true,
             "observable":false,
             "data":{ 
@@ -957,16 +1048,14 @@ __Example__
             "description":{ "ja":"沸き上げ開始基準時刻", "en":"Water Heating Start Time" },
             "writable":false,
             "observable":false,
-            "data":{ 
-                "type":"enum",
-                "values":[
-                    {"value":"20:00", "edt":"0x14", "ja":"20:00", "en":"20:00"},
-                    {"value":"21:00", "edt":"0x15", "ja":"21:00", "en":"21:00"},
-                    {"value":"22:00", "edt":"0x16", "ja":"22:00", "en":"22:00"},
-                    {"value":"23:00", "edt":"0x17", "ja":"23:00", "en":"23:00"},
-                    {"value":"24:00", "edt":"0x18", "ja":"24:00", "en":"24:00"},
-                    {"value":"1:00", "edt":"0x01", "ja":"1:00",  "en":"1:00"}
-                ]
+            "data":{
+                "type":"time",
+                "from":"20:00:00",
+                "to":"1:00:00"
+            },
+            "note":{
+                "ja":"分と秒の指定は無視される",
+                "en":"number of minutes and seconds are ignored"
             }
         },
         {
@@ -988,19 +1077,13 @@ __Example__
             "writable":true,
             "observable":false,
             "data":{
-                "type":"enum",
-                "values":[
-                    {"value":"9:00", "edt":"0x09", "ja":"9:00",  "en":"9:00"},
-                    {"value":"10:00", "edt":"0x0A", "ja":"10:00", "en":"10:00"},
-                    {"value":"11:00", "edt":"0x0B", "ja":"11:00", "en":"11:00"},
-                    {"value":"12:00", "edt":"0x0C", "ja":"12:00", "en":"12:00"},
-                    {"value":"13:00", "edt":"0x0D", "ja":"13:00", "en":"13:00"},
-                    {"value":"14:00", "edt":"0x0E", "ja":"14:00", "en":"14:00"},
-                    {"value":"15:00", "edt":"0x0F", "ja":"15:00", "en":"15:00"},
-                    {"value":"16:00", "edt":"0x10", "ja":"16:00", "en":"16:00"},
-                    {"value":"17:00", "edt":"0x11", "ja":"17:00", "en":"17:00"},
-                    {"value":"undefined", "edt":"0x00", "ja":"クリア状態", "en":"Undefined"}
-                ]
+                "type":"time",
+                "from":"9:00:00",
+                "to":"17:00:00"
+            },
+            "note":{
+                "ja":"分と秒の指定は無視される",
+                "en":"number of minutes and seconds are ignored"
             }
         },
         {
@@ -1101,18 +1184,13 @@ __Example__
             "writable":true,
             "observable":false,
             "data":{
-                "type":"enum",
-                "values":[
-                    {"value":"10:00", "edt":"0x0A", "ja":"10:00", "en":"10:00"},
-                    {"value":"11:00", "edt":"0x0B", "ja":"11:00", "en":"11:00"},
-                    {"value":"12:00", "edt":"0x0C", "ja":"12:00", "en":"12:00"},
-                    {"value":"13:00", "edt":"0x0D", "ja":"13:00", "en":"13:00"},
-                    {"value":"14:00", "edt":"0x0E", "ja":"14:00", "en":"14:00"},
-                    {"value":"15:00", "edt":"0x0F", "ja":"15:00", "en":"15:00"},
-                    {"value":"16:00", "edt":"0x10", "ja":"16:00", "en":"16:00"},
-                    {"value":"17:00", "edt":"0x11", "ja":"17:00", "en":"17:00"},
-                    {"value":"undefined", "edt":"0x00", "ja":"クリア状態", "en":"Undefined"}
-                ]
+                "type":"time",
+                "from":"10:00:00",
+                "to":"17:00:00"
+            },
+            "note":{
+                "ja":"分と秒の指定は無視される",
+                "en":"number of minutes and seconds are ignored"
             }
         },
         {
@@ -1208,7 +1286,7 @@ __Example__
             }
         },
         {
-            "name":"bathOperatingStatus",
+            "name":"bathOperationStatus",
             "epc":"0xEA",
             "description":{ "ja":"風呂動作状態監視", "en":"Bath Operation Status Monitor" },
             "writable":false,
@@ -1230,9 +1308,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| islocked | GET, PUT | boolean | 0xE0 | 施錠設定1<br>Lock setting 1 | INF |
+|islocked|GET, PUT|boolean|0xE0|施錠設定1<br>Lock setting 1|INF|
 
 ### Device Description
 
@@ -1264,13 +1342,15 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| heatingWater | GET | boolean | 0xD0 | 給湯器燃焼状態<br>Hot water heating status |
-| heatingBathWater | GET | boolean | 0xE2 | 風呂給湯器燃焼状態<br>Bath water heater status |
-| automaticBathWaterHeating | GET, PUT | boolean | 0xE3 | 風呂自動モード設定<br>Bath auto mode setting |
-| bathOperatingStatus | GET | enum | 0xEF | 風呂動作状態監視<br>Bath operation status monitor | \*1<br>INF |
-\*1) 必須項目ではない
+|tapWaterHeatingStatus|GET|boolean|0xD0|給湯器燃焼状態<br>Hot water heating status|\*1|
+|bathWaterHeatingStatus|GET|boolean|0xE2|風呂給湯器燃焼状態<br>Bath water heater status|\*1|
+|bathAutomaticMode|GET, PUT|boolean|0xE3|風呂自動モード設定<br>Bath auto mode setting|\*1|
+|bathOperatingStatus|GET|enum|0xEF|風呂動作状態監視<br>Bath operation status monitor||
+
+\*1 AIF対応プロパティ
+
 
 ### Device Description
 
@@ -1281,7 +1361,7 @@ __Example__
     "description":{"ja":"瞬間式給湯器", "en":"Instantaneous Water Heater"},
     "properties":[
         {
-            "name":"heatingWater",
+            "name":"tapWaterHeatingStatus",
             "epc":"0xD0",
             "description":{ "ja":"給湯器燃焼状態", "en":"Hot water heating status" },
             "writable":false,
@@ -1295,7 +1375,7 @@ __Example__
             }
         },
         {
-            "name":"heatingBathWater",
+            "name":"bathWaterHeatingStatus",
             "epc":"0xE2",
             "description":{ "ja":"風呂給湯器燃焼状態", "en":"Bath water heater status" },
             "writable":false,
@@ -1309,7 +1389,7 @@ __Example__
             }
         },
         {
-            "name":"automaticBathWaterHeating",
+            "name":"bathAutomaticMode",
             "epc":"0xE3",
             "description":{ "ja":"風呂自動モード設定", "en":"Bath auto mode setting" },
             "writable":true,
@@ -1345,10 +1425,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| operatingMode | GET, PUT | enum | 0xB0 | 運転設定<br>Operation setting |
-| dryLevel | GET, PUT | number | 0xB4 | 乾燥運転設定<br>Bathroom dryer operation setting |
+|operationMode|GET, PUT|enum|0xB0|運転設定<br>Operation setting|
+|dryLevel|GET, PUT|number|0xB4|乾燥運転設定<br>Bathroom dryer operation setting|
 
 ### Device Description
 
@@ -1359,7 +1439,7 @@ __Example__
     "description":{"ja":"浴室暖房乾燥機", "en":"Bathroom Heater Dryer"},
     "properties":[
         {
-            "name":"operatingMode",
+            "name":"operationMode",
             "epc":"0xB0",
             "description":{ "ja":"運転設定", "en":"Operation setting" },
             "writable":true,
@@ -1398,12 +1478,12 @@ __Example__
 
 ## 住宅用太陽光発電:pvPowerGeneration:0x0279 
 
-|PropertyName<br>Description|Method|Data|EL:<br>EPC|EL:プロパティ名称<br>Property name| Note |
+|PropertyName<br>Description|Method|Data|EL:<br>EPC|EL:プロパティ名称<br>Property name|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| instantaneousPowerGeneration | GET | number | 0xE0 | 瞬時発電電力計測値<br>Measured instantaneous amount of electricity generated |
-| integralEnergyGeneration | GET | number | 0xE1 | 積算発電電力量計測値<br>Measured cumulative amount of electric energy generated |\*1|
+|instantaneousPowerGeneration|GET|number|0xE0|瞬時発電電力計測値<br>Measured instantaneous amount of electricity generated|\*1|
+|integralEnergyGeneration|GET|number|0xE1|積算発電電力量計測値<br>Measured cumulative amount of electric energy generated|\*1|
 
-\*1) 積算発電電力量計測値は、ECHONET LiteでGETした値に0.001を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -1424,9 +1504,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"W",
-                "minimum":0,
-                "maximum":65533
+                "unit":"W"
             }
         },
         {
@@ -1441,8 +1519,6 @@ __Example__
             "data":{
                 "type":"number",
                 "unit":"kWh",
-                "minimum":0,
-                "maximum":999999.999,
                 "minimumDigit":0.001
             }
         }
@@ -1452,10 +1528,10 @@ __Example__
 
 ## 冷温水熱源機:hotWaterHeatSource:0x027A
 
-|PropertyName<br>Description|Method|Data|EL:<br>EPC|EL:プロパティ名称<br>Property name| Note |
+|PropertyName<br>Description|Method|Data|EL:<br>EPC|EL:プロパティ名称<br>Property name|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| waterTemperature1 | GET, PUT | number | 0xE1 | 水温設定1<br>Water temperature setting 1 | \*1 |
-| waterTemperature2 | GET, PUT | number | 0xE2 | 水温設定2<br>Water temperature setting 2 | \*1 |
+|waterTemperature1|GET, PUT|number|0xE1|水温設定1<br>Water temperature setting 1|\*1|
+|waterTemperature2|GET, PUT|number|0xE2|水温設定2<br>Water temperature setting 2|\*1|
 
 \*1) どちらかの実装が必須
 
@@ -1506,10 +1582,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| waterTemperature1 | GET, PUT | number | 0xE0 | 温度設定1<br>Temperature setting 1 | \*1 |
-| waterTemperature2 | GET, PUT | number | 0xE1 | 温度設定2<br>Temperature setting 2 | \*1 |
+|waterTemperature1|GET, PUT|number|0xE0|温度設定1<br>Temperature setting 1|\*1|
+|waterTemperature2|GET, PUT|number|0xE1|温度設定2<br>Temperature setting 2|\*1|
 
 \*1) どちらかの実装が必須
 
@@ -1560,17 +1636,17 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| ratedPowerGeneration | GET | number | 0xC2 | 定格発電出力<br>Rated power generation output |
-| instantaneousPowerGeneration | GET | number | 0xC4 | 瞬時発電電力計測値<br>Measured instantaneous power generation output |
-| integralEnergyGeneration | GET | number | 0xC5 | 積算発電電力量計測値<br>Measured cumulative power generation output |\*1|
-| powerGenerationStatus | GET | enum | 0xCB | 発電動作状態<br>Power generation status |
-| powerSystemInterconnectionStatus | GET | enum | 0xD0 | 系統連系状態<br>System interconnected type |
-| requestedTimeForGeneration | GET, PUT | object | 0xD1 | 発電要請時刻設定<br>Power generation request time setting |
-| assignedPowerGenerationStatus | GET, PUT | enum | 0xD2 | 指定発電状態<br>Assigned power generation status |
+|ratedPowerGeneration|GET|number|0xC2|定格発電出力<br>Rated power generation output|\*1|
+|instantaneousPowerGeneration|GET|number|0xC4|瞬時発電電力計測値<br>Measured instantaneous power generation output|\*1|
+|integralEnergyGeneration|GET|number|0xC5|積算発電電力量計測値<br>Measured cumulative power generation output|\*1|
+|powerGenerationStatus|GET|enum|0xCB|発電動作状態<br>Power generation status|\*1|
+|powerSystemInterconnectionStatus|GET|enum|0xD0|系統連系状態<br>System interconnected type|\*1|
+|requestedTimeForGeneration|GET, PUT|object|0xD1|発電要請時刻設定<br>Power generation request time setting|\*1|
+|powerGenerationMode|GET, PUT|enum|0xD2|指定発電状態<br>Assigned power generation status|\*1|
 
-\*1) 積算発電電力量計測値は、ECHONET LiteでGETした値に0.001を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -1582,9 +1658,9 @@ __Example__
     "properties":[
         {
             "name":"ratedPowerGeneration",
-            "epc":"0x",
+            "epc":"0xC2",
             "description":{
-                "ja":"定格発電出⼒",
+                "ja":"定格発電出力",
                 "en":"Rated power generation output"
             },
             "writable":false,
@@ -1659,7 +1735,7 @@ __Example__
                     },
                     {
                         "value":"independent",
-                        "ja":"独⽴",
+                        "ja":"独立",
                         "en":"Independent Type",
                         "edt":"0x01"
                     },
@@ -1681,48 +1757,30 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"startHour",
-                        "description":{ "ja":"開始時刻：時", "en":"Start time:hour" },
+                        "name":"startTime",
+                        "description":{ "ja":"開始時刻：時", "en":"Start time" },
                         "data":{
-                            "type":"number",
-                            "minimum":0,
-                            "maximum":23
+                            "type":"time"
                         }
                     },
                     {
-                        "name":"startMinute",
-                        "description":{ "ja":"開始時刻：分", "en":"Start time:minute" },
+                        "name":"endTime",
+                        "description":{ "ja":"終了時刻：時", "en":"End time" },
                         "data":{
-                            "type":"number",
-                            "minimum":0,
-                            "maximum":59
-                        }
-                    },
-                    {
-                        "name":"endHour",
-                        "description":{ "ja":"終了時刻：時", "en":"End time:hour" },
-                        "data":{
-                            "type":"number",
-                            "minimum":0,
-                            "maximum":23
-                        }
-                    },
-                    {
-                        "name":"endMinute",
-                        "description":{ "ja":"終了時刻：分", "en":"End time:minute" },
-                        "data":{
-                            "type":"number",
-                            "minimum":0,
-                            "maximum":59
+                            "type":"time"
                         }
                     }
                 ]
+            },
+            "note":{
+                "ja":"秒の指定は無視される",
+                "en":"number of seconds is ignored"
             }
         },
         {
-            "name":"assignedPowerGenerationStatus",
+            "name":"powerGenerationMode",
             "epc":"0xD2",
-            "description":{ "ja":"指定発電状態", "en":"XX" },
+            "description":{ "ja":"指定発電状態", "en":"Assigned power generation status" },
             "writable":true,
             "observable":false,
             "data":{ 
@@ -1739,33 +1797,32 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| effectiveChargingCapacity | GET | number | 0xA0 | AC実効容量（充電）<br>AC effective capacity(charging) |
-| effectiveDischargingCapacity | GET | number | 0xA1 | AC実効容量（放電）<br>AC effective capacity(discharging) |
-| chargeableCapacity | GET | number |0xA2| 充電可能容量<br>AC chargeable capacity |
-| dischargeableCapacity | GET | number | 0xA3 | 放電可能容量<br>AC dischargeable capacity |
-| chargeableEnergy | GET | number | 0xA4 | 充電可能量<br>AC chargeable electric energy |
-| dischargeableEnergy | GET | number | 0xA5 | 放電可能量<br>AC dischargeable electric energy |
-| integralChargingEnergy | GET | number | 0xA8 | AC積算充電電力量計測値<br>AC measured cumulative charging electric energy |\*1|
-| integralDischargingEnergy | GET | number | 0xA9 | AC積算放電電力量計測値<br>AC measured cumulative discharging electric energy |\*1|
-| targetChargingEnergy | GET, PUT | number | 0xAA | AC充電量設定値<br>AC charge amount setting value |INF|
-| targetDischargingEnergy | GET, PUT | number | 0xAB | AC放電量設定値<br>AC discharge amount setting value |INF|
-| minMaxChargingPower | GET | object | 0xC8 | 最⼩最⼤充電電⼒値<br>Minimum/maximum charging electric energy |
-| minMaxDischargingPower | GET | object | 0xC9 | 最⼩最⼤放電電⼒値<br>Minimum/maximum discharging electric energy |
-| OperatingStatus | GET | enum | 0xCF | 運転動作状態<br>Working operation status |INF|
-| ratedElectricEnergy | GET | number | 0xD0 | 定格電⼒量<br>Rated electric energy |
-| ratedCapacity | GET | number | 0xD1 | 定格容量<br>Rated capacity |
-| ratedVoltage | GET | number | 0xD2 | 定格電圧<br>Rated voltage |
-| operatingMode | GET, PUT | enum | 0xDA | 運転モード設定<br>Operation mode setting |INF|
-| ratedElectricEnergy", | GET | enum | 0xDB | 系統連系状態<br>System interconnected type |
-| remainingStoredEnergy1 | GET | number | 0xE2 | 蓄電残量1<br>Remaining stored electricity 1 | |
-| remainingStoredEnergy2 | GET | number | 0xE3 | 蓄電残量2<br>Remaining stored electricity 2 |\*2|
-| remainingStoredEnergy3 | GET | number | 0xE4 | 蓄電残量3<br>Remaining stored electricity 3 | |
-| batteryType | GET | enum | 0xE6 | 蓄電池タイプ<br>Battery type |
+|effectiveChargingCapacity|GET|number|0xA0|AC実効容量（充電）<br>AC effective capacity(charging)|\*1|
+|effectiveDischargingCapacity|GET|number|0xA1|AC実効容量（放電）<br>AC effective capacity(discharging)|\*1|
+|chargeableCapacity|GET|number|0xA2|充電可能容量<br>AC chargeable capacity|\*1|
+|dischargeableCapacity|GET|number|0xA3|放電可能容量<br>AC dischargeable capacity|\*1|
+|chargeableEnergy|GET|number|0xA4|充電可能量<br>AC chargeable electric energy|\*1|
+|dischargeableEnergy|GET|number|0xA5|放電可能量<br>AC dischargeable electric energy|\*1|
+|integralChargingEnergy|GET|number|0xA8|AC積算充電電力量計測値<br>AC measured cumulative charging electric energy|\*1|
+|integralDischargingEnergy|GET|number|0xA9|AC積算放電電力量計測値<br>AC measured cumulative discharging electric energy|\*1|
+|targetChargingEnergy|GET, PUT|number|0xAA|AC充電量設定値<br>AC charge amount setting value|\*1|
+|targetDischargingEnergy|GET, PUT|number|0xAB|AC放電量設定値<br>AC discharge amount setting value|\*1|
+|minimumAndMaximumChargingPower|GET|object|0xC8|最⼩最⼤充電電力値<br>Minimum/maximum charging electric energy|\*1|
+|minimumAndMaximumDischargingPower|GET|object|0xC9|最⼩最⼤放電電力値<br>Minimum/maximum discharging electric energy|\*1|
+|actualOperationMode|GET|enum|0xCF|運転動作状態<br>Working operation status|\*1|
+|ratedElectricEnergy|GET|number|0xD0|定格電力量<br>Rated electric energy|\*1|
+|ratedCapacity|GET|number|0xD1|定格容量<br>Rated capacity|\*1|
+|ratedVoltage|GET|number|0xD2|定格電圧<br>Rated voltage|\*1|
+|operationMode|GET, PUT|enum|0xDA|運転モード設定<br>Operation mode setting|\*1|
+|ratedElectricEnergy",|GET|enum|0xDB|系統連系状態<br>System interconnected type|\*1|
+|remainingStoredEnergy1|GET|number|0xE2|蓄電残量1<br>Remaining stored electricity 1|\*1|
+|remainingStoredEnergy2|GET|number|0xE3|蓄電残量2<br>Remaining stored electricity 2|\*1|
+|remainingStoredEnergy3|GET|number|0xE4|蓄電残量3<br>Remaining stored electricity 3|\*1|
+|batteryType|GET|enum|0xE6|蓄電池タイプ<br>Battery type|\*1|
 
-\*1) AC積算充電電力量計測値・AC積算放電電力量計測値は、ECHONET LiteでGETした値に0.001を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。  
-\*2) 蓄電残量2は、ECHONET LiteでGETした値に0.1を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -1907,7 +1964,7 @@ __Example__
             }
         },
         {
-            "name":"minMaxChargingPower",
+            "name":"minimumAndMaximumChargingPower",
             "epc":"0xC8",
             "description":{
                 "ja":"最小最大充電電力値",
@@ -1919,7 +1976,7 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"minimum",
+                        "name":"minimumPower",
                         "description":{ "ja":"最小値", "en":"minimum value" },
                         "data":{
                             "type":"number",
@@ -1929,7 +1986,7 @@ __Example__
                         }
                     },
                     {
-                        "name":"maximum",
+                        "name":"maximumPower",
                         "description":{ "ja":"最大値", "en":"maximum value" },
                         "data":{
                             "type":"number",
@@ -1942,7 +1999,7 @@ __Example__
             }
         },
         {
-            "name":"minMaxDischargingPower",
+            "name":"minimumAndMaximumDischargingPower",
             "epc":"0xC9",
             "description":{
                 "ja":"最小最大放電電力値",
@@ -1954,7 +2011,7 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"minimum",
+                        "name":"minimumPower",
                         "description":{ "ja":"最小値", "en":"minimum value" },
                         "data":{
                             "type":"number",
@@ -1964,7 +2021,7 @@ __Example__
                         }
                     },
                     {
-                        "name":"maximum",
+                        "name":"maximumPower",
                         "description":{ "ja":"最大値", "en":"maximum value" },
                         "data":{
                             "type":"number",
@@ -1977,7 +2034,7 @@ __Example__
             }
         },
         {
-            "name":"operatingStatus",
+            "name":"actualOperationMode",
             "epc":"0xCF",
             "description":{ "ja":"運転動作状態", "en":"Working operation status" },
             "writable":false,
@@ -2000,7 +2057,7 @@ __Example__
         {
             "name":"ratedElectricEnergy",
             "epc":"0xD0",
-            "description":{ "ja":"定格電⼒量", "en":"Rated electric energy" },
+            "description":{ "ja":"定格電力量", "en":"Rated electric energy" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2035,7 +2092,7 @@ __Example__
             }
         },
         {
-            "name":"operatingMode",
+            "name":"operationMode",
             "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true,
@@ -2053,6 +2110,10 @@ __Example__
                     {"value":"capacityRecalculation","ja":"実行容量再計算処理","en":"capacityRecalculation", "edt":"0x49"},
                     {"value":"other", "ja":"その他", "en":"other", "edt":"0x40"}
                 ]
+            },
+            "note":{
+                "ja":"このプロパティをGetして取得できる値は設定値である。実際の運転状態はactualOperationModeをGETすること",
+                "en":"The value you get with this property is the value you set. Get actualOperationMode for the current status."
             }
         },
         {
@@ -2072,7 +2133,7 @@ __Example__
                     },
                     {
                         "value":"independent",
-                        "ja":"独⽴",
+                        "ja":"独立",
                         "en":"Independent Type",
                         "edt":"0x01"
                     },
@@ -2092,7 +2153,9 @@ __Example__
             "observable":false,
             "data":{ 
                 "type":"number",
-                "unit":"Wh"
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
             }
         },
         {
@@ -2104,6 +2167,8 @@ __Example__
             "data":{ 
                 "type":"number",
                 "unit":"Ah",
+                "minimum":0,
+                "maximum":3276.6,
                 "minimumDigit":0.1
             }
         },
@@ -2149,49 +2214,47 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| dischargeableCapacity1 | GET | number | 0xC0 | 車載電池の放電可能容量値２<br>Dischargeable capacity of vehicle mounted battery 1 |
-| dischargeableCapacity2 | GET | number | 0xC1 | 車載電池の放電可能容量値２<br>Dischargeable capacity of vehicle mounted battery 2 |\*1|
-| remainingDischargeableCapacity1 | GET | number | 0xC2 | 車載電池の放電可能残容量１<br>Remaining dischargeable capacity of vehicle mounted battery 1 |
-| remainingDischargeableCapacity2 | GET | number | 0xC3 | 車載電池の放電可能残容量２<br>Remaining dischargeable capacity of vehicle mounted battery 2 |\*1|
-| remainingDischargeableCapacity3 | GET | number | 0xC4 | 車載電池の放電可能残容量３<br>Remaining dischargeable capacity of vehicle mounted battery 3 |
-| ratedChargePower | GET | number | 0xC5 | 定格充電能力<br>Rated charge capacity |
-| ratedDischargePower | GET | number | 0xC6 | 定格放電能力<br>Rated discharge capacity |
-| chargeDischargeStatus | GET | enum | 0xC7 | 車両接続・充放電可否状態<br>Vehicle connection and chargeable/dischargeable status |INF|
-| minMaxChargingPower | GET | object | 0xC8 | 最小大充電電力値<br>Minimum/maximum charging electric energy |
-| minMaxDischargingPower | GET | object | 0xC9 | 最小最大放電電力値<br>Minimum/maximum discharging electric energy |
-| minMaxChargeCurrent | GET | object | 0xCA | 最小最大充電電流値<br>Minimum/maximum charging current |\*1|
-| minMaxDischargeCurrent | GET | object | 0xCB | 最小最大放電電流値<br>Minimum/maximum discharging current |\*1|
-| equipmentType | GET | enum | 0xCC | 充放電器タイプ<br>Charger/Discharger type |
-| chargeableCapacity | GET | number | 0xCE | ⾞載電池の充電可能容量値<br>Chargeable capacity of vehicle mounted battery |
-| remainingChargeableCapacity | GET | number | 0xCF | ⾞載電池の充電可能残容量値<br>Remaining Chargeable capacity of vehicle mounted battery |
-| usedCapacity1 | GET | number | 0xD0 | ⾞載電池の使⽤容量値１<br>Used capacity of vehicle mounted battery 1 |
-| usedCapacity2 | GET | number | 0xD1 | ⾞載電池の使⽤容量値２<br>Used capacity of vehicle mounted battery 2 |\*1|
-| ratedVoltage | GET | number | 0xD2 | 定格電圧<br>Rated voltage |
-| measuredInstantaneousPower | GET | number | 0xD3 | 瞬時充放電電⼒計測値<br>Measured instantaneous charging/discharging electric energy |
-| measuredInstantaneousCurrent | GET | number | 0xD4 | 瞬時充放電電流計測値<br>Measured instantaneous charging/discharging electric current |\*1|
-| measuredInstantaneousVoltage | GET | number | 0xD5 | 瞬時充放電電圧計測値<br>Measured instantaneous charging/discharging electric voltage |
-| measuredCumulativeDischargeEnergy | GET | number | 0xD6 | 積算放電電⼒量計測<br>Measured cumulative amount of discharging electric energy |\*2|
-| measuredCumulativeChargeEnergy | GET | number | 0xD8 | 積算充電電⼒量計測値<br>Measured cumulative amount of charging electric energy |\*2|
-| operatingMode | GET, PUT | enum | 0xDA | 運転モード設定<br>Operation mode setting |
-| powerSystemInterconnectionStatus | GET | enum | 0xDB | 系統連系状態<br>System interconnected type|
-| remainingStoredEnergy1 | GET | number | 0xE2 | 車載電池の電池残容量１<br>Remaining stored electricity of vehicle mounted battery1 |
-| remainingStoredEnergy2 | GET | number | 0xE3 | 車載電池の電池残容量２<br>Remaining stored electricity of vehicle mounted battery2 |\*1|
-| remainingStoredEnergy3 | GET | number | 0xE4 | 車載電池の電池残容量３<br>Remaining stored electricity of vehicle mounted battery3 | 
-| vehicleID | GET | string | 0xE6 | ⾞両ID<br>Identification of electric vehicle |
-| chargeAmount1 | GET, PUT | number | 0xE7 | 充電量設定値１<br>Charging amount 1 |
-| chargeAmount2 | GET, PUT | number | 0xE9 | 充電量設定値２<br>Charging amount 2 |\*1|
-| dischargeAmount | GET, PUT | number | 0xEA | 放電量設定値<br>Discharging amount setting |
-| chargeEnergey | GET, PUT | number | 0xEB | 充電電⼒設定値<br>Charging electrig energy setting |
-| dischargeEnergey | GET, PUT | number | 0xEC | 放電電⼒設定値<br>Disharging electrig energy setting |
-| chargeCurrent | GET, PUT | number | 0xED | 充電電流設定値<br>Charging current setting |\*1|
-| dischargeCurrent | GET, PUT | number | 0xEE | 放電電流設定値<br>Discharging current setting |\*1|
-| independentRatedVoltage | GET | number | 0xEF | 定格電圧（独⽴時）<br>Rated voltage(independent operation) |
+|dischargeableCapacity1|GET|number|0xC0|車載電池の放電可能容量値１<br>Dischargeable capacity of vehicle mounted battery 1|\*1|
+|dischargeableCapacity2|GET|number|0xC1|車載電池の放電可能容量値２<br>Dischargeable capacity of vehicle mounted battery 2|\*1|
+|remainingDischargeableCapacity1|GET|number|0xC2|車載電池の放電可能残容量１<br>Remaining dischargeable capacity of vehicle mounted battery 1|\*1|
+|remainingDischargeableCapacity2|GET|number|0xC3|車載電池の放電可能残容量２<br>Remaining dischargeable capacity of vehicle mounted battery 2|\*1|
+|remainingDischargeableCapacity3|GET|number|0xC4|車載電池の放電可能残容量３<br>Remaining dischargeable capacity of vehicle mounted battery 3|\*1|
+|ratedChargePower|GET|number|0xC5|定格充電能力<br>Rated charge capacity|\*1|
+|ratedDischargePower|GET|number|0xC6|定格放電能力<br>Rated discharge capacity|\*1|
+|chargeDischargeStatus|GET|enum|0xC7|車両接続・充放電可否状態<br>Vehicle connection and chargeable/dischargeable status|\*1|
+|minimumAndMaximumChargingPower|GET|object|0xC8|最小大充電電力値<br>Minimum/maximum charging electric energy|\*1|
+|minimumAndMaximumDischargingPower|GET|object|0xC9|最小最大放電電力値<br>Minimum/maximum discharging electric energy|\*1|
+|minimumAndMaximumChargeCurrent|GET|object|0xCA|最小最大充電電流値<br>Minimum/maximum charging current|\*1|\*1|
+|minimumAndMaximumDischargeCurrent|GET|object|0xCB|最小最大放電電流値<br>Minimum/maximum discharging current|\*1|
+|equipmentType|GET|enum|0xCC|充放電器タイプ<br>Charger/Discharger type|\*1|
+|chargeableCapacity|GET|number|0xCE|車載電池の充電可能容量値<br>Chargeable capacity of vehicle mounted battery|\*1|
+|remainingChargeableCapacity|GET|number|0xCF|車載電池の充電可能残容量値<br>Remaining Chargeable capacity of vehicle mounted battery|\*1|
+|usedCapacity1|GET|number|0xD0|車載電池の使⽤容量値１<br>Used capacity of vehicle mounted battery 1|\*1|
+|usedCapacity2|GET|number|0xD1|車載電池の使⽤容量値２<br>Used capacity of vehicle mounted battery 2|\*1|
+|ratedVoltage|GET|number|0xD2|定格電圧<br>Rated voltage|\*1|
+|measuredInstantaneousPower|GET|number|0xD3|瞬時充放電電力計測値<br>Measured instantaneous charging/discharging electric energy|\*1|
+|measuredInstantaneousCurrent|GET|number|0xD4|瞬時充放電電流計測値<br>Measured instantaneous charging/discharging electric current|\*1|
+|measuredInstantaneousVoltage|GET|number|0xD5|瞬時充放電電圧計測値<br>Measured instantaneous charging/discharging electric voltage|\*1|
+|measuredCumulativeDischargeEnergy|GET|number|0xD6|積算放電電力量計測<br>Measured cumulative amount of discharging electric energy|\*1|
+|measuredCumulativeChargeEnergy|GET|number|0xD8|積算充電電力量計測値<br>Measured cumulative amount of charging electric energy|\*1|
+|operationMode|GET, PUT|enum|0xDA|運転モード設定<br>Operation mode setting|\*1|
+|powerSystemInterconnectionStatus|GET|enum|0xDB|系統連系状態<br>System interconnected type|\*1|
+|remainingStoredEnergy1|GET|number|0xE2|車載電池の電池残容量１<br>Remaining stored electricity of vehicle mounted battery1|\*1|
+|remainingStoredEnergy2|GET|number|0xE3|車載電池の電池残容量２<br>Remaining stored electricity of vehicle mounted battery2|\*1|
+|remainingStoredEnergy3|GET|number|0xE4|車載電池の電池残容量３<br>Remaining stored electricity of vehicle mounted battery3|\*1|
+|vehicleID|GET|string|0xE6|車両ID<br>Identification of electric vehicle|\*1|
+|targetChargingEnergy1|GET, PUT|number|0xE7|充電量設定値１<br>Charging amount 1|\*1|
+|targetChargingEnergy2|GET, PUT|number|0xE9|充電量設定値２<br>Charging amount 2|\*1|
+|targetDischargingEnergy|GET, PUT|number|0xEA|放電量設定値<br>Discharging amaout setting|\*1|
+|chargingPower|GET, PUT| number |0xEB|充電電力設定値<br>Charging electrnic energy setting|\*1|
+|dischargingPower|GET, PUT| number |0xEC|放電電力設定値<br>Discharging electrnic energy setting|\*1|
+|chargingCurrent|GET, PUT| number |0xED|充電電流設定値<br>Charging current setting|\*1|
+|dischargingCurrent|GET, PUT| number |0xEE|放電電流設定値<br>Discharging current setting|\*1|
+|ratedVoltageOfIndependentOperation|GET| number |0xEF|定格電圧（独立時）<br>Rated voltage(Independent)|\*1|
 
-
-\*1) ECHONET LiteでGETした値に0.1を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
-\*2) ECHONET LiteでGETした値に0.001を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -2251,7 +2314,7 @@ __Example__
             }
         },
         {
-            "name":"remainingDischargeableCapacity1",
+            "name":"remainingDischargeableCapacity2",
             "epc":"0xC3",
             "description":{
                 "ja":"車載電池の放電可能残容量２",
@@ -2334,7 +2397,7 @@ __Example__
             }
         },
         {
-            "name":"minMaxDischargingPower",
+            "name":"minimumAndMaximumChargingPower",
             "epc":"0xC8",
             "description":{
                 "ja":"最小最大充電電力値",
@@ -2346,7 +2409,7 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"minimum",
+                        "name":"minimumPower",
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"number",
@@ -2356,7 +2419,7 @@ __Example__
                         }
                     },
                     {
-                        "name":"maximum",
+                        "name":"maximumPower",
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"number",
@@ -2369,7 +2432,7 @@ __Example__
             }
         },
         {
-            "name":"minMaxDischargingPower",
+            "name":"minimumAndMaximumDischargingPower",
             "epc":"0xC9",
             "description":{
                 "ja":"最小最大放電電力値",
@@ -2381,7 +2444,7 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"minimum",
+                        "name":"minimumPower",
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"number",
@@ -2391,7 +2454,7 @@ __Example__
                         }
                     },
                     {
-                        "name":"maximum",
+                        "name":"maximumPower",
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"number",
@@ -2404,7 +2467,7 @@ __Example__
             }
         },
         {
-            "name":"minMaxChargeCurrent",
+            "name":"minimumAndMaximumChargeCurrent",
             "epc":"0xCA",
             "description":{
                 "ja":"最小最大充電電流値",
@@ -2416,7 +2479,7 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"minimum",
+                        "name":"minimumCurrent",
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"number",
@@ -2427,7 +2490,7 @@ __Example__
                         }
                     },
                     {
-                        "name":"maximum",
+                        "name":"maximumCurrent",
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"number",
@@ -2441,7 +2504,7 @@ __Example__
             }
         },
         {
-            "name":"minMaxDischargeCurrent",
+            "name":"minimumAndMaximumDischargeCurrent",
             "epc":"0xCB",
             "description":{
                 "ja":"最小最大放電電流値",
@@ -2453,7 +2516,7 @@ __Example__
                 "type":"object",
                 "elements":[
                     {
-                        "name":"minimum",
+                        "name":"minimumCurrent",
                         "description":{ "ja":"最小値", "en":"minimum" },
                         "data":{
                             "type":"number",
@@ -2464,7 +2527,7 @@ __Example__
                         }
                     },
                     {
-                        "name":"maximum",
+                        "name":"maximumCurrent",
                         "description":{ "ja":"最大値", "en":"maximum" },
                         "data":{
                             "type":"number",
@@ -2516,7 +2579,7 @@ __Example__
         {
             "name":"chargeableCapacity",
             "epc":"0xCE",
-            "description":{ "ja":"⾞載電池の充電可能容量値", "en":"Chargeable capacity of vehicle mounted battery" },
+            "description":{ "ja":"車載電池の充電可能容量値", "en":"Chargeable capacity of vehicle mounted battery" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2529,7 +2592,7 @@ __Example__
         {
             "name":"remainingChargeableCapacity",
             "epc":"0xCF",
-            "description":{ "ja":"⾞載電池の充電可能残容量値", "en":"Remaining Chargeable capacity of vehicle mounted battery" },
+            "description":{ "ja":"車載電池の充電可能残容量値", "en":"Remaining Chargeable capacity of vehicle mounted battery" },
             "writable":false,
             "observable":false,
             "data":{
@@ -2592,7 +2655,7 @@ __Example__
             "name":"measuredInstantaneousPower",
             "epc":"0xD3",
             "description":{
-                "ja":"瞬時充放電電⼒計測値",
+                "ja":"瞬時充放電電力計測値",
                 "en":"Measured instantaneous charging/discharging electric energy"
             },
             "writable":false,
@@ -2615,7 +2678,7 @@ __Example__
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Ah",
+                "unit":"A",
                 "minimum":-3276.7,
                 "maximum":3276.6,
                 "minimumDigit":0.1
@@ -2638,10 +2701,10 @@ __Example__
             }
         },
         {
-            "name":"measuredCumulativeDischargeEnergy",
+            "name":"measuredintegralDischargeEnergy",
             "epc":"0xD6",
             "description":{
-                "ja":"積算放電電⼒量計測値",
+                "ja":"積算放電電力量計測値",
                 "en":"Measured cumulative amount of discharging electric energy"
             },
             "writable":false,
@@ -2655,10 +2718,10 @@ __Example__
             }
         },
         {
-            "name":"measuredCumulativeChargeEnergy",
+            "name":"measuredintegralChargeEnergy",
             "epc":"0xD8",
             "description":{
-                "ja":"積算充電電⼒量計測値",
+                "ja":"積算充電電力量計測値",
                 "en":"Measured cumulative amount of charging electric energy"
             },
             "writable":false,
@@ -2672,7 +2735,7 @@ __Example__
             }
         },
         {
-            "name":"operatingMode",
+            "name":"operationModeSetting",
             "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true,
@@ -2686,6 +2749,10 @@ __Example__
                     {"value":"idle", "ja":"停止", "en":"Idle", "edt":"0x47"},
                     {"value":"other", "ja":"その他", "en":"Other", "edt":"0x40"}
                 ]
+            },
+            "note":{
+                "ja":"このプロパティをGetして取得できる値は設定値である。実際の運転状態はoperationStatusをGETすること",
+                "en":"The value you get with this property is the value you set. You need to get operationStatus to get the current operation status."
             }
         },
         {
@@ -2705,7 +2772,7 @@ __Example__
                     },
                     {
                         "value":"independent",
-                        "ja":"独⽴",
+                        "ja":"独立",
                         "en":"Independent Type",
                         "edt":"0x01"
                     },
@@ -2780,9 +2847,9 @@ __Example__
             }
         },
         {
-            "name":"chargeAmount1",
+            "name":"targetChargingEnergy1",
             "epc":"0xE7",
-            "description":{"ja":"充電量設定値１", "en":"Charging amount 1"},
+            "description":{"ja":"充電量設定値１", "en":"Charging amount setting 1"},
             "writable":true,
             "observable":false,
             "data":{
@@ -2793,9 +2860,9 @@ __Example__
             }
         },
         {
-            "name":"chargeAmount2",
+            "name":"targetChargingEnergy2",
             "epc":"0xE9",
-            "description":{"ja":"充電量設定値２", "en":"Charging amount 2"},
+            "description":{"ja":"充電量設定値２", "en":"Charging amount setting 2"},
             "writable":true,
             "observable":false,
             "data":{
@@ -2807,7 +2874,7 @@ __Example__
             }
         },
         {
-            "name":"dischargeAmount",
+            "name":"targetDischargingEnergy",
             "epc":"0xEA",
             "description":{"ja":"放電量設定値", "en":"Discharging amount setting"},
             "writable":true,
@@ -2820,9 +2887,9 @@ __Example__
             }
         },
         {
-            "name":"chargeEnergey",
+            "name":"chargingPower",
             "epc":"0xEB",
-            "description":{"ja":"充電電⼒設定値", "en":"Charging electrig energy setting"},
+            "description":{"ja":"充電電力設定値", "en":"Charging electric energy setting"},
             "writable":true,
             "observable":false,
             "data":{
@@ -2833,9 +2900,9 @@ __Example__
             }
         },
         {
-            "name":"dischargeEnergey",
+            "name":"dischargingPower",
             "epc":"0xEC",
-            "description":{"ja":"放電電⼒設定値", "en":"Disharging electrig energy setting"},
+            "description":{"ja":"放電電力設定値", "en":"Discharging electric energy setting"},
             "writable":true,
             "observable":false,
             "data":{
@@ -2846,61 +2913,59 @@ __Example__
             }
         },
         {
-            "name":"chargeCurrent",
+            "name":"chargingCurrent",
             "epc":"0xED",
             "description":{"ja":"充電電流設定値", "en":"Charging current setting"},
             "writable":true,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Ah",
+                "unit":"A",
                 "minimum":0,
                 "maximum":6553.3,
                 "minimumDigit":0.1
             }
         },
         {
-            "name":"dischargeCurrent",
+            "name":"dischargingCurrent",
             "epc":"0xEE",
             "description":{"ja":"放電電流設定値", "en":"Discharging current setting"},
             "writable":true,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Ah",
+                "unit":"A",
                 "minimum":0,
                 "maximum":6553.3,
                 "minimumDigit":0.1
             }
         },
         {
-            "name":"independentRatedVoltage",
+            "name":"ratedVoltageOfIndependentOperation",
             "epc":"0xEF",
-            "description":{"ja":"定格電圧（独⽴時）", "en":"Rated voltage(independent operation)"},
+            "description":{"ja":"定格電圧（独立時）", "en":"Rated voltage(Independent)"},
             "writable":false,
             "observable":false,
             "data":{
                 "type":"number",
-                "unit":"Ah",
+                "unit":"V",
                 "minimum":0,
                 "maximum":32766
             }
         }
     ],
-	"actions":[
-	    {
-	        "name":"vcConfirmation",
-	        "description":{ "ja":"⾞両接続確認", "en":"Vehicle connection confirmation" }
-	    },
-	    {
-	        "name":"resetCumulativeDischargeEnergy",
-	        "description":{ "ja":"積算放電電⼒量リセット設定", "en":"Cumulative amount of discharging electric energy reset setting" }
-	    },
-	    {
-	        "name":"resetCumulativeChargeEnergy",
-	        "description":{ "ja":"積算充電電⼒量リセット設定", "en":"Cumulative amount of charging electric energy reset setting" }
-	    }
-	]
+    "actions":[
+        {
+            "name":"resetIntegralDischargeEnergy",
+            "epc":"0xD7",
+            "description":{ "ja":"積算放電電力量リセット設定", "en":"Cumulative amount of discharging electric energy reset setting" }
+        },
+        {
+            "name":"resetCumulativeChargeEnergy",
+            "epc":"0xD9",
+            "description":{ "ja":"積算充電電力量リセット設定", "en":"Cumulative amount of charging electric energy reset setting" }
+        }
+    ]
 }
 ```
 
@@ -2913,10 +2978,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| normDirIntegralEnergy | GET | number | 0xC0 | 積算電力量計測値（正方向）<br>Measured cumulative amount of electric energy (normal direction) |
-| revDirIntegralEnergy | GET | number | 0xC1 | 積算電力量計測値（逆方向）<br>Measured cumulative amount of electric energy (reverse direction) |
+|normDirIntegralEnergy|GET|number|0xC0|積算電力量計測値（正方向）<br>Measured cumulative amount of electric energy (normal direction)|
+|revDirIntegralEnergy|GET|number|0xC1|積算電力量計測値（逆方向）<br>Measured cumulative amount of electric energy (reverse direction)|
 
 ### Device Description
 
@@ -2981,22 +3046,20 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| effectiveDigits | GET | number | 0xD7 | 積算電力量有効桁数<br>Number of effective digits for cumulative amounts of electric energy |
-| normDirIntegralEnergy | GET | number | 0xE0 | 積算電力量計測値（正方向計測値）<br>Measured cumulative amount of electric energy (normal direction) |
-| normDirIntegralEnergyLog1 | GET | object | 0xE2 | 積算電力量計測値履歴1（正方向計測値）<br>Historical data of measured cumulative amounts of electric energy 1(normal direction) | query<br>\*1|
-| revDirIntegralEnergy | GET | number | 0xE3 | 積算電力量計測値（逆方向計測値）<br>Measured cumulative amounts of electric energy (reverse direction) |
-| revDirIntegralEnergyLog1 | GET | object | 0xE4 | 積算電力量計測値履歴1（逆方向計測値）<br>Historical data of measured cumulative amounts of electric energy 1(reverse direction) |query<br>\*1|
-| instantaneousPower | GET | number | 0xE7 | 瞬時電力計測値<br>Measured instantaneous electric energy |
-| instantaneousCurrent | GET |  object | 0xE8 | 瞬時電流計測値<br>Measured instantaneous currents |\*2|
-| normDirIntegralEnergyEvery30Min | GET | object | 0xEA | 定時積算電力量計測値（正方向計測値）<br>Cumulative amounts of electric energy measured at fixed time (normal direction) |
-| revDirIntegralEnergyEvery30Min | GET | object | 0xEB | 定時積算電力量計測値（逆方向計測値）<br>Cumulative amounts of electric energy measured at fixed time (reverse direction) |
-| IntegralEnergyLog2 | GET | object | 0xEC | 積算電力量計測値履歴2（正方向、逆方向計測値）<br>Historical data of measured cumulative amounts of electric energy 2(normal and reverse direction) | query<br>\*3|
+|normDirIntegralEnergy|GET|number|0xE0|積算電力量計測値（正方向計測値）<br>Measured cumulative amount of electric energy (normal direction)|\*1|
+|normDirIntegralEnergyLog1|GET|object|0xE2|積算電力量計測値履歴1（正方向計測値）<br>Historical data of measured cumulative amounts of electric energy 1(normal direction)|\*1, \*2|
+|revDirIntegralEnergy|GET|number|0xE3|積算電力量計測値（逆方向計測値）<br>Measured cumulative amounts of electric energy (reverse direction)|\*1|
+|revDirIntegralEnergyLog1|GET|object|0xE4|積算電力量計測値履歴1（逆方向計測値）<br>Historical data of measured cumulative amounts of electric energy 1(reverse direction)|\*1,\*2|
+|instantaneousPower|GET|number|0xE7|瞬時電力計測値<br>Measured instantaneous electric energy|\*1|
+|instantaneousCurrent|GET| object|0xE8|瞬時電流計測値<br>Measured instantaneous currents|\*1|
+|normDirIntegralEnergyEvery30Min|GET|object|0xEA|定時積算電力量計測値（正方向計測値）<br>Cumulative amounts of electric energy measured at fixed time (normal direction)|\*1|
+|revDirIntegralEnergyEvery30Min|GET|object|0xEB|定時積算電力量計測値（逆方向計測値）<br>Cumulative amounts of electric energy measured at fixed time (reverse direction)|\*1|
+|IntegralEnergyLog2|GET|object|0xEC|積算電力量計測値履歴2（正方向、逆方向計測値）<br>Historical data of measured cumulative amounts of electric energy 2(normal and reverse direction)|\*1,\*2|
 
-\*1) 積算履歴収集日１を指定するqueryあり。  
-\*2) 瞬時電流計測値は、ECHONET LiteでGETした値に0.1を乗算することで実際の値となる。ブリッジ側でこれらの計算を行うこととする。したがってEL-WebAPIでは取得した値をそのまま利用できる。
-\*3) 積算履歴収集日２を指定するqueryあり。  
+\*1 AIF対応プロパティ
+\*2 queryあり  
 
 ### Device Description
 
@@ -3006,17 +3069,6 @@ __Example__
     "eoj":"0x0288",
     "description":{"ja":"低圧スマート電力量メータ", "en":"Low Voltage Smart Electric Energy Meter"},
     "properties":[
-        {
-            "name":"effectiveDigits",
-            "epc":"0xD7",
-            "description":{
-                "ja":"積算電力量有効桁数",
-                "en":"Number of effective digits for cumulative amounts of electric energy"
-            },
-            "writable":false,
-            "observable":false,
-            "data":{ "type":"number" }
-        },
         {
             "name":"normDirIntegralEnergy",
             "epc":"0xE0",
@@ -3176,7 +3228,7 @@ __Example__
                 "elements":[
                     {
                         "name":"r",
-                        "description":{ "ja":"r相", "en":"r phase" },
+                        "description":{ "ja":"R相", "en":"R phase" },
                         "data":{
                             "type":"number",
                             "unit":"A",
@@ -3187,7 +3239,7 @@ __Example__
                     },
                     {
                         "name":"t",
-                        "description":{ "ja":"t相", "en":"t phase" },
+                        "description":{ "ja":"T相", "en":"T phase" },
                         "data":{
                             "type":"number",
                             "unit":"A",
@@ -3213,7 +3265,7 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
@@ -3244,7 +3296,7 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
@@ -3262,7 +3314,7 @@ __Example__
             }
         },
         {
-            "name":"IntegralEnergyLog2",
+            "name":"integralEnergyLog2",
             "epc":"0xEC",
             "description":{
                 "ja":"積算電力量計測値履歴2（正方向、逆方向計測値）",
@@ -3272,9 +3324,9 @@ __Example__
             "observable":false,
             "query":[
                 {
-                    "name":"dayAndTime",
-                    "description":{ "ja":"日時", "en":"Day and Time" },
-                    "data":{"type":"day-time"}
+                    "name":"dateAndTime",
+                    "description":{ "ja":"日時", "en":"Date and time" },
+                    "data":{"type":"date-time"}
                 },
                 {
                     "name":"numberOfCollectionSegments",
@@ -3312,7 +3364,7 @@ __Example__
                                 "type":"object",
                                 "elements":[
                                     {
-                                        "name":"dayAndTime",
+                                        "name":"normDirEnergy",
                                         "description":{ "ja":"正方向", "en":"Normal direction" },
                                         "data":{
                                             "type":"number",
@@ -3323,8 +3375,8 @@ __Example__
                                         }
                                     },
                                     {
-                                        "name":"dayAndTime",
-                                        "description":{ "ja":"逆方向", "en":"Reversal direction" },
+                                        "name":"revDirEnergy",
+                                        "description":{ "ja":"逆方向", "en":"Reverse direction" },
                                         "data":{
                                             "type":"number",
                                             "unit":"kWh",
@@ -3369,24 +3421,23 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| monthlyMaxPowerDemand | GET | number | 0xC1 | 月間最大需要電力<br>Monthly maximum electric power demand |
-| integralMaxPowerDemand | GET | number | 0xC2 | 累積最大需要電力<br>Cumulative maximum electric power demand |
-| averagePowerDemand | GET | object | 0xC3 | 定時需要電力（30分平均電力）<br>Electric power demand at fixed time(30-minute average electric power) |
-| effectiveDigits | GET | number | 0xC4 | 需要電力有効桁数<br>Number of effective digits of electric power demand |
-| PowerDemandLog| GET | object |0xC6|需要電力計測値履歴<br>Historical data of measured electric power demand|query<br>\*1|
-| integralReactivePowerConsumption | GET | object | 0xCA | 力測積算無効電力量(遅れ)計測値<br>Measurement data of reactive electric power consumption (lag) for power factor measurement |
-| integralReactivePowerConsumptionEvery30Min | GET | object | 0xCB | 定時力測積算無効電力量(遅れ)計測値<br>Measurement data of cumulative amount of reactive electric power consumption (lag) at fixed time for power factor measurement |
-| integralReactivePowerConsumptionLog | GET | object | 0xCE | 力測積算無効電力量(遅れ)計測値履歴<br>Historical data of measurement data of cumulative amount of reactive electric power consumption (lag) for power factor measurement |
-| fixedDate | GET | number | 0xE0 | 確定日<br>Fixed date |
-| integralActiveEnergy | GET | object | 0xE2 | 積算有効電力量計測値<br>Measured cumulative amounts of active electric energy |
-| integralActiveEnergyEvery30Min | GET | object | 0xE3 | 定時積算有効電力量計測値<br>Cumulative amounts of active electric energy at fixed time |
-| integralActiveEnergyForPowerFactor | GET | object | 0xE4 | 力測積算有効電力量計測値<br>Measurement data of cumulative amounts of active electric energy for power factor measurement |
-| integralActiveEnergyEffectiveDigits | GET | number | 0xE5 | 積算有効電力量有効桁数<br>Number of effective digits for cumulative amount of active electric energy |
-| activeEnergyLog | GET | object | 0xE7 | 積算有効電力量計測値履歴<br>Historical data of measured cumulative amount of active electric energy |query<br>\*1|
+|monthlyMaxPowerDemand|GET|number|0xC1|月間最大需要電力<br>Monthly maximum electric power demand|\*1|
+|integralMaxPowerDemand|GET|number|0xC2|累積最大需要電力<br>Cumulative maximum electric power demand|\*1|
+|averagePowerDemand|GET|object|0xC3|定時需要電力（30分平均電力）<br>Electric power demand at fixed time(30-minute average electric power)|\*1|
+|PowerDemandLog|GET|object|0xC6|需要電力計測値履歴<br>Historical data of measured electric power demand|\*1, \*2|
+|integralReactivePowerConsumption|GET|object|0xCA|力測積算無効電力量(遅れ)計測値<br>Measurement data of reactive electric power consumption (lag) for power factor measurement|\*1|
+|integralReactivePowerConsumptionEvery30Min|GET|object|0xCB|定時力測積算無効電力量(遅れ)計測値<br>Measurement data of cumulative amount of reactive electric power consumption (lag) at fixed time for power factor measurement|\*1|
+|integralReactivePowerConsumptionLog|GET|object|0xCE|力測積算無効電力量(遅れ)計測値履歴<br>Historical data of measurement data of cumulative amount of reactive electric power consumption (lag) for power factor measurement|\*1|
+|fixedDate|GET|number|0xE0|確定日<br>Fixed date|\*1|
+|integralActiveEnergy|GET|object|0xE2|積算有効電力量計測値<br>Measured cumulative amounts of active electric energy|\*1|
+|integralActiveEnergyEvery30Min|GET|object|0xE3|定時積算有効電力量計測値<br>Cumulative amounts of active electric energy at fixed time|\*1|
+|integralActiveEnergyForPowerFactor|GET|object|0xE4|力測積算有効電力量計測値<br>Measurement data of cumulative amounts of active electric energy for power factor measurement|\*1|
+|activeEnergyLog|GET|object|0xE7|積算有効電力量計測値履歴<br>Historical data of measured cumulative amount of active electric energy|\*1, \*2|
 
-*1) 積算履歴収集日を指定するqueryあり。
+\*1 AIF対応プロパティ
+\*2 queryあり  
 
 ### Device Description
 
@@ -3438,7 +3489,7 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
@@ -3453,19 +3504,6 @@ __Example__
                         }
                     }
                 ]
-            }
-        },
-        {
-            "name":"effectiveDigits",
-            "epc":"0xC4",
-            "description":{
-                "ja":"需要電力有効桁数",
-                "en":"Number of effective digits of electric power demand"
-            },
-            "writable":false,
-            "observable":false,
-            "data":{
-                "type":"number"
             }
         },
         {
@@ -3503,7 +3541,7 @@ __Example__
                     },
                     {
                         "name":"power",
-                        "description":{ "ja":"需要電力", "en":"Power Demand" },
+                        "description":{ "ja":"需要電力", "en":"Power demand" },
                         "data":{
                             "type":"array",
                             "data":{
@@ -3522,7 +3560,7 @@ __Example__
             "name":"integralReactivePowerConsumption",
             "epc":"0xCA",
             "description":{
-                "ja":"⼒測積算無効電⼒量(遅れ)計測値",
+                "ja":"力測積算無効電力量(遅れ)計測値",
                 "en":"Measurement data of reactive electric power consumption (lag) for power factor measurement"
             },
             "writable":false,
@@ -3532,12 +3570,12 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
-                        "description":{ "ja":"無効電⼒量", "en":"Reactive Electric Power Consumption" },
+                        "description":{ "ja":"無効電力量", "en":"Reactive electric power consumption" },
                         "data":{
                             "type":"number",
                             "unit":"kvarh",
@@ -3553,7 +3591,7 @@ __Example__
             "name":"integralReactivePowerConsumptionEvery30Min",
             "epc":"0xCB",
             "description":{
-                "ja":"定時⼒測積算無効電⼒量(遅れ)計測値",
+                "ja":"定時力測積算無効電力量(遅れ)計測値",
                 "en":"Measurement data of cumulative amount of reactive electric power consumption (lag) at fixed time for power factor measurement"
             },
             "writable":false,
@@ -3563,12 +3601,12 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
                         "name":"energy",
-                        "description":{ "ja":"無効電⼒量", "en":"Reactive Electric Power Consumption" },
+                        "description":{ "ja":"無効電力量", "en":"Reactive Electric Power Consumption" },
                         "data":{
                             "type":"number",
                             "unit":"kvarh",
@@ -3584,7 +3622,7 @@ __Example__
             "name":"integralReactivePowerConsumptionLog",
             "epc":"0xCE",
             "description":{
-                "ja":"⼒測積算無効電⼒量(遅れ)計測値履歴",
+                "ja":"力測積算無効電力量(遅れ)計測値履歴",
                 "en":"Historical data of measurement data of cumulative amount of reactive electric power consumption (lag) for power factor measurement"
             },
             "writable":false,
@@ -3615,7 +3653,7 @@ __Example__
                     },
                     {
                         "name":"power",
-                        "description":{ "ja":"無効電⼒量", "en":"Reactive Electric Power Consumption" },
+                        "description":{ "ja":"無効電力量", "en":"Reactive Electric Power Consumption" },
                         "data":{
                             "type":"array",
                             "data":{
@@ -3656,7 +3694,7 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
@@ -3687,7 +3725,7 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
@@ -3718,7 +3756,7 @@ __Example__
                 "elements":[
                     {
                         "name":"dateAndTime",
-                        "description":{ "ja":"日時", "en":"Date and Time" },
+                        "description":{ "ja":"日時", "en":"Date and time" },
                         "data":{ "type":"date-time" }
                     },
                     {
@@ -3734,17 +3772,6 @@ __Example__
                     }
                 ]
             }
-        },
-        {
-            "name":"integralActiveEnergyEffectiveDigits",
-            "epc":"0xE5",
-            "description":{
-                "ja":"積算有効電力量有効桁数",
-                "en":"Number of effective digits for cumulative amount of active electric energy"
-            },
-            "writable":false,
-            "observable":false,
-            "data":{ "type":"number" }
         },
         {
             "name":"activeEnergyLog",
@@ -3801,13 +3828,13 @@ __Example__
 ## 一般照明:generalLighting:0x0290
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| brightness | GET, PUT | number | 0xB0 | 照度レベル設定<br>Illuminance level |\*1|
-| operatingMode | GET, PUT | enum | 0xB6 | 点灯モード設定<br>Lighting mode setting |
-| rgb | GET, PUT | object | 0xC0 | カラー灯モード時RGB設定<br>RGB setting for color lighting |\*1|
+|brightness|GET, PUT|number|0xB0|照度レベル設定<br>Illuminance level|\*1|
+|operationMode|GET, PUT|enum|0xB6|点灯モード設定<br>Lighting mode setting|\*1|
+| rgb |GET, PUT|object|0xC0|カラー灯モード時RGB設定<br>RGB setting for color lighting|
 
-\*1) 必須項目ではない
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -3831,11 +3858,11 @@ __Example__
             }
         },
         {
-            "name":"operatingMode",
+            "name":"operationMode",
             "epc":"0xB6",
             "description":{ "ja":"点灯モード設定", "en":"Lighting mode setting" },
             "writable":true,
-            "observable":false,
+            "observable":true,
             "data":{
                 "type":"enum",
                 "values":[
@@ -3892,9 +3919,9 @@ __Example__
 ## 単機能照明:monoFunctionalLighting:0x0291 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| brightness | GET, PUT | number | 0xB0 | 照度レベル設定<br>Illuminance level |\*1|
+|brightness|GET, PUT|number|0xB0|照度レベル設定<br>Illuminance level|\*1|
 
 \*1) 必須項目ではない
 
@@ -3929,14 +3956,28 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| chargeStatus | GET | enum | 0xC7 | 車両接続・充電可否状態<br>Vehicle connection and chargeable status |INF|
-| equipmentType | GET | enum | 0xCC | 充電器タイプ<br>Charger type |
-| usedCapacity1 | GET | number | 0xD0 | 車載電池の使用容量値1<br>Used capacity of vehicle mounted battery 1 |
-| operatingMode | GET, PUT | enum | 0xDA | 運転モード設定<br>Operation mode setting |INF|
-| remainingStoredEnergy1 | GET | number | 0xE2 | 車載電池の電池残容量1<br>Remaining stored electricity of vehicle mounted battery1 |
-| remainingStoredEnergy3 | GET | number | 0xE4 | 車載電池の電池残容量3<br>Remaining stored electricity of vehicle mounted battery3 |
+|ratedChargePower|GET|number|0xC5|定格充電能力<br>Rated charge capacity|\*1|
+|chargeStatus|GET|enum|0xC7|車両接続・充電可否状態<br>Vehicle connection and chargeable status|\*1|
+|minimumAndMaximumChargingPower|GET|object|0xC8|最小大充電電力値<br>Minimum/maximum charging electric energy|\*1|
+|minimumAndMaximumChargeCurrent|GET|object|0xCA|最小最大充電電流値<br>Minimum/maximum charging current|\*1|\*1|
+|equipmentType|GET|enum|0xCC|充電器タイプ<br>Charger type|\*1|
+|chargeableCapacity|GET|number|0xCE|車載電池の充電可能容量値<br>Chargeable capacity of vehicle mounted battery|\*1|
+|remainingChargeableCapacity|GET|number|0xCF|車載電池の充電可能残容量値<br>Remaining Chargeable capacity of vehicle mounted battery|\*1|
+|usedCapacity1|GET|number|0xD0|車載電池の使用容量値1<br>Used capacity of vehicle mounted battery 1|\*1|
+|ratedVoltage|GET|number|0xD2|定格電圧<br>Rated voltage|\*1|
+|measuredInstantaneousPower|GET|number|0xD3|瞬時充電電力計測値<br>Measured instantaneous chargingelectric energy|\*1|
+|measuredCumulativeChargeEnergy|GET|number|0xD8|積算充電電力量計測値<br>Measured cumulative amount of charging electric energy|\*1|
+|operationMode|GET, PUT|enum|0xDA|運転モード設定<br>Operation mode setting|\*1|
+|remainingStoredEnergy1|GET|number|0xE2|車載電池の電池残容量1<br>Remaining stored electricity of vehicle mounted battery1|\*1|
+|remainingStoredEnergy3|GET|number|0xE4|車載電池の電池残容量3<br>Remaining stored electricity of vehicle mounted battery3|\*1|
+|vehicleID|GET|string|0xE6|車両ID<br>Identification of electric vehicle|\*1|
+|targetChargingEnergy1|GET, PUT|number|0xE7|充電量設定値１<br>Charging amount 1|\*1|
+|chargingPower|GET, PUT| number |0xEB|充電電力設定値<br>Charging electrnic energy setting|\*1|
+|chargingCurrent|GET, PUT| number |0xED|充電電流設定値<br>Charging current setting|\*1|
+
+\*1 AIF対応プロパティ
 
 ### Device Description
 
@@ -3944,8 +3985,21 @@ __Example__
 {
     "type":"evChargerDischarger",
     "eoj":"0x02A1",
-    "description":{"ja":"電気自動車充電器", "en":"EV Charger Discharger"},
+    "description":{"ja":"電気自動車充電器", "en":"EV Charger"},
     "properties":[
+        {
+            "name":"ratedChargePower",
+            "epc":"0xC5",
+            "description":{ "ja":"定格充電能力", "en":"Rated charge capacity" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
         {
             "name":"chargeStatus",
             "epc":"0xC7",
@@ -3963,6 +4017,78 @@ __Example__
                     {"value":"notChargeable", "ja":"車両接続・ 充電不可", "en":"Not Chargeable", "edt":"0x40"},
                     {"value":"chargeable", "ja":"車両接続・ 充電可", "en":"Chargeable", "edt":"0x41"},
                     {"value":"unknown", "ja":"車両接続・ 充電可否不明", "en":"Unknown", "edt":"0x44"}
+                ]
+            }
+        },
+        {
+            "name":"minimumAndMaximumChargingPower",
+            "epc":"0xC8",
+            "description":{
+                "ja":"最小最大充電電力値",
+                "en":"Minimum/maximum charging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"minimumPower",
+                        "description":{ "ja":"最小値", "en":"minimum" },
+                        "data":{
+                            "type":"number",
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
+                        }
+                    },
+                    {
+                        "name":"maximumPower",
+                        "description":{ "ja":"最大値", "en":"maximum" },
+                        "data":{
+                            "type":"number",
+                            "unit":"W",
+                            "minimum":0,
+                            "maximum":999999999
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name":"minimumAndMaximumChargeCurrent",
+            "epc":"0xCA",
+            "description":{
+                "ja":"最小最大充電電流値",
+                "en":"Minimum/maximum charging electric current"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"minimumCurrent",
+                        "description":{ "ja":"最小値", "en":"minimum" },
+                        "data":{
+                            "type":"number",
+                            "unit":"A",
+                            "minimum":0,
+                            "maximum":3276.6,
+                            "minimumDigit":0.1
+                        }
+                    },
+                    {
+                        "name":"maximumCurrent",
+                        "description":{ "ja":"最大値", "en":"maximum" },
+                        "data":{
+                            "type":"number",
+                            "unit":"A",
+                            "minimum":0,
+                            "maximum":3276.6,
+                            "minimumDigit":0.1
+                        }
+                    }
                 ]
             }
         },
@@ -3985,6 +4111,32 @@ __Example__
             }
         },
         {
+            "name":"chargeableCapacity",
+            "epc":"0xCE",
+            "description":{ "ja":"車載電池の充電可能容量値", "en":"Chargeable capacity of vehicle mounted battery" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"remainingChargeableCapacity",
+            "epc":"0xCF",
+            "description":{ "ja":"車載電池の充電可能残容量値", "en":"Remaining Chargeable capacity of vehicle mounted battery" },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
             "name":"usedCapacity1",
             "epc":"0xD0",
             "description":{
@@ -3999,7 +4151,56 @@ __Example__
             }
         },
         {
-            "name":"operatingMode",
+            "name":"ratedVoltage",
+            "epc":"0xD2",
+            "description":{
+                "ja":"定格電圧",
+                "en":"Rated voltage"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"V",
+                "minimum":0,
+                "maximum":32766
+            }
+        },
+        {
+            "name":"measuredInstantaneousPower",
+            "epc":"0xD3",
+            "description":{
+                "ja":"瞬時充電電力計測値",
+                "en":"Measured instantaneous charging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":-999999999,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"measuredintegralChargeEnergy",
+            "epc":"0xD8",
+            "description":{
+                "ja":"積算充電電力量計測値",
+                "en":"Measured cumulative amount of charging electric energy"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"kWh",
+                "minimum":0,
+                "maximum":999999.999,
+                "minimumDigit":0.001
+            }
+        },
+        {
+            "name":"operationMode",
             "epc":"0xDA",
             "description":{ "ja":"運転モード設定", "en":"Operation mode setting" },
             "writable":true,
@@ -4043,6 +4244,59 @@ __Example__
                 "minimum":0,
                 "maximum":100
             }
+        },
+        {
+            "name":"vehicleID",
+            "epc":"0xE6",
+            "description":{
+                "ja":"車両ID",
+                "en":"Identification of electric vehicle"
+            },
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"string"
+            }
+        },
+        {
+            "name":"targetChargingEnergy1",
+            "epc":"0xE7",
+            "description":{"ja":"充電量設定値１", "en":"Charging amount setting 1"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"Wh",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"chargingPower",
+            "epc":"0xEB",
+            "description":{"ja":"充電電力設定値", "en":"Charging electric energy setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"W",
+                "minimum":0,
+                "maximum":999999999
+            }
+        },
+        {
+            "name":"chargingCurrent",
+            "epc":"0xED",
+            "description":{"ja":"充電電流設定値", "en":"Charging current setting"},
+            "writable":true,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "unit":"A",
+                "minimum":0,
+                "maximum":6553.3,
+                "minimumDigit":0.1
+            }
         }
     ]
 }
@@ -4051,15 +4305,17 @@ __Example__
 ## 拡張照明システム:monoFunctionalLighting:0x02A4 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| brightness | GET, PUT | number | 0xB0 | 照度レベル設定<br>Illuminance level | |
-| sceneId | GET, PUT | number | 0xC0 | シーン制御設定<br>Scene Control Setting | |
-| maxNumberOfsceneId | GET | number | 0xC1 | シーン制御設定可能数<br>XX | |
-| powerConsumptionRateList | GET | number | 0xC2 | 電⼒消費率リスト<br>Power Consumption Rate List | |
-| powerConsumptionAtFullLighting | GET | number | 0xC3 | 全灯時消費電⼒<br>Power Consumption at Full Lighting | |
-| powerConsumptionWillBeSaved | GET | number | 0xC4 | 節電可能消費電⼒<br>Power Consumption that will be saved | |
-| powerConsumptionLimitSetting | GET, PUT | number | 0xC5 | 消費電⼒制限設定<br>Power Consumption Limit Setting | |
+|brightness|GET, PUT|number|0xB0|照度レベル設定<br>Illuminance level|\*1|
+|sceneId|GET, PUT|number|0xC0|シーン制御設定<br>Scene Control Setting|\*1|
+|maxNumberOfsceneId|GET|number|0xC1|シーン制御設定可能数<br>XX||
+|powerConsumptionRateList|GET|number|0xC2|電力消費率リスト<br>Power Consumption Rate List|\*1|
+|powerConsumptionAtFullLighting|GET|number|0xC3|全灯時消費電力<br>Power Consumption at Full Lighting|\*1|
+|powerConsumptionWillBeSaved|GET|number|0xC4|節電可能消費電力<br>Power Consumption that will be saved|\*1|
+|powerConsumptionLimitSetting|GET, PUT|number|0xC5|消費電力制限設定<br>Power Consumption Limit Setting|\*1|
+
+\*1 AIF対応プロパティ
 
 ```
 {
@@ -4108,7 +4364,7 @@ __Example__
         {
             "name":"powerConsumptionRateList",
             "epc":"0xC2",
-            "description":{ "ja":"電⼒消費率リスト","en":"Power Consumption Rate List"},
+            "description":{ "ja":"電力消費率リスト","en":"Power Consumption Rate List"},
             "writable":false,
             "observable":false,
             "data":{
@@ -4124,7 +4380,7 @@ __Example__
         {
             "name":"powerConsumptionAtFullLighting",
             "epc":"0xC3",
-            "description":{"ja":"全灯時消費電⼒","en":"Power Consumption at Full Lighting"},
+            "description":{"ja":"全灯時消費電力","en":"Power Consumption at Full Lighting"},
             "writable":false,
             "observable":false,
             "data":{
@@ -4137,7 +4393,7 @@ __Example__
         {
             "name":"powerConsumptionWillBeSaved",
             "epc":"0xC4",
-            "description":{"ja":"節電可能消費電⼒","en":"Power Saving Power Consumption"},
+            "description":{"ja":"節電可能消費電力","en":"Power Saving Power Consumption"},
             "writable":false,
             "observable":false,
             "data":{
@@ -4150,7 +4406,7 @@ __Example__
         {
             "name":"powerConsumptionLimitSetting",
             "epc":"0xC5",
-            "description":{"ja":"消費電⼒制限設定","en":"Power Consumption Limit Setting"},
+            "description":{"ja":"消費電力制限設定","en":"Power Consumption Limit Setting"},
             "writable":true,
             "observable":false,
             "data":{
@@ -4168,9 +4424,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| doorIsOpen<br>ドア開閉状態 | GET | boolean | 0xB0 | ドア開閉状態<br>Door open/close status |
+|doorIsOpen<br>ドア開閉状態|GET|boolean|0xB0|ドア開閉状態<br>Door open/close status|
 
 ### Device Description
 
@@ -4202,9 +4458,9 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| doorIsOpen <br>ドア開閉状態 | GET | boolean| 0xB0 | ドア開閉状態<br>Door open/close status |\*1|
+|doorIsOpen <br>ドア開閉状態|GET|boolean|0xB0|ドア開閉状態<br>Door open/close status|\*1|
 
 \*1) 必須項目ではない
 
@@ -4238,15 +4494,15 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| heatingStatus | GET | object | 0xB1 | 加熱状態<br>Heating Status |
+|heatingStatus|GET|object|0xB1|加熱状態<br>Heating Status|
 
 ### Actions
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| cancelAll | POST |  | 0xB3 | 一括停止設定<br>"All Stop" setting |
+|cancelAll|POST||0xB3|一括停止設定<br>"All Stop" setting|
 
 ### Device Description
 
@@ -4333,10 +4589,10 @@ __Example__
 
 ### Properties
 
-| Property Name | Access Method | Data Type | EPC(EL) | プロパティ名称(EL)| Note |
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
 |:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
-| doorIsOpen <br>ドア開閉状態 | GET | boolean| 0xB0 | ドア開閉状態<br>Door open/close status |\*1|
-| timeToFinish | GET | object | 0xED | 洗濯乾燥残り時間<br>Time remaining to complete washer and dryer cycle |\*1|
+|doorIsOpen <br>ドア開閉状態|GET|boolean|0xB0|ドア開閉状態<br>Door open/close status|\*1|
+|timeToFinish|GET|time|0xED|洗濯乾燥残り時間<br>Time remaining to complete washer and dryer cycle|\*1|
 
 \*1) 必須項目ではない
 
@@ -4372,25 +4628,7 @@ __Example__
             "writable":false,
             "observable":false,
             "data":{
-                "type":"object",
-                "elements":[
-                    {
-                        "name":"Hour",
-                        "description":{ "ja":"時間", "en":"Hour" },
-                        "data":{
-                            "type":"number",
-                            "unit":"hour"
-                        }
-                    },
-                    {
-                        "name":"Minute",
-                        "description":{ "ja":"分", "en":"Minute" },
-                        "data":{
-                            "type":"number",
-                            "unit":"minute"
-                        }
-                    }
-                ]
+                "type":"time"
             }
         }
     ]
@@ -4409,13 +4647,104 @@ __Example__
 ```
 
 ## コントローラ:controller:0x05FF
-個別Propertyは存在しない
+### Properties
+
+|Property Name|Access Method|Data Type|EPC(EL)|プロパティ名称(EL)|Note|
+|:--------------------------|:-----|:---|:---------|:-------------------------------|:---|
+|controllerId|GET|string|0xC0|コントローラID<br>Controller ID|\*1|
+|numberOfDevices|GET|number|0xC2|管理台数<br>Number of devices controlled|\*1|
+|deviceInfo|GET|object|-|機器情報<br>Device Information|\*1 \*2 \*3|
+
+\*1 AIF対応プロパティ
+\*2 queryあり
+\*3 EPC=0xC4...0xCFに対応した値をobjectで表現する
+
+### Device Description
 
 ```
 {
     "type":"controller",
     "eoj":"0x05FF",
     "description":{"ja":"コントローラ", "en":"Controller"},
-    "properties":[]
+    "properties":[
+        {
+            "name":"controllerId",
+            "epc":"0xC0",
+            "description":{"ja":"コントローラID","en":"Controller ID"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"string"
+            }
+        },
+        {
+            "name":"numberOfDevices",
+            "epc":"0xC2",
+            "description":{"ja":"管理台数","en":"Number of devices controlled"},
+            "writable":false,
+            "observable":false,
+            "data":{
+                "type":"number",
+                "minimum":0,
+                "maximum":65533
+            }
+        },
+        {
+            "name":"deviceInfo",
+            "description":{"ja":"機器情報", "en":"Device Information"},
+            "writable":false,
+            "observable":false,
+            "query":[
+                {
+                    "name":"index",
+                    "description":{ "ja":"インデックス", "en":"index" },
+                    "data":{
+                        "type":"number",
+                        "minimum":1,
+                        "maximum":65533
+                    }
+                }
+            ],
+            "data":{
+                "type":"object",
+                "elements":[
+                    {
+                        "name":"deviceId",
+                        "description":{ "ja":"機器ID", "en":"Device ID" },
+                        "data":{
+                            "type":"string"
+                        }
+                    },
+                    {
+                        "name":"deviceType",
+                        "description":{ "ja":"機種", "en":"Device Type" },
+                        "data":{
+                            "type":"string"
+                        }
+                    },
+                    {
+                        "name":"connection",
+                        "description":{ "ja":"接続状態", "en":"Connection status" },
+                        "data":{
+                            "type":"enum",
+                            "values":[
+                                {"value":"connected", "ja":"接続中", "en":"Connected", "edt":"0x41"},
+                                {"value":"disconnected", "ja":"離脱中", "en":"Disconnected", "edt":"0x42"},
+                                {"value":"notRegistered", "ja":"未登録", "en":"Not registered", "edt":"0x43"},
+                                {"value":"deleted", "ja":"削除", "en":"Deleted", "edt":"0x44"}
+                            ]
+                        }
+                    },
+                    {
+                        "name":"manufactureCode",
+                        "description":{ "ja":"管理対象機器事業者コード", "en":"manufactureCode" },
+                        "data":{
+                            "type":"string"
+                        }
+                    }
+                ]
+            }
+        }    
+    ]
 }
 ```
