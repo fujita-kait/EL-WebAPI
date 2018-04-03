@@ -13,6 +13,7 @@ Revision History
 | 2018.03.08 | version 1.0.6 | Data type levelを廃止<br>Data type integerをnumberに統合<br>Data type numberにproperty "minimumDigit"を追加<br>eoj, epc, edtを追加 |
 | 2018.03.13 | version 1.0.7 | Data type objectのmember名fieldをelementsに変更<br>Data type名dateをdate-timeに変更 |
 | 2018.03.17 | version 1.0.8 | Property objectにnoteを追加<br>複数のqueryに対応できるようにDevice Descriptionのqueryの仕様を変更<br>Data typeにstringを追加 |
+| 2018.03.30 | version 1.0.9 | Data typeにtimeを追加 |
 
 ## 1. Abstract
 　ECHONET Lite機器をプロトコルブリッジを介してHTTP(REST)で制御するためのWebAPI（以下EL-WebAPIと呼ぶ）を提案する。このドキュメントはAPIの定義を記述する。機器毎の仕様は別ドキュメントの「ECHONET Lite WebAPI Device Description」に記述する。なおこのドキュメントはECHONET Liteの仕様を理解していることを前提としている。ECHONET Liteの仕様は、エコーネットコンソーシアムの[Web Site](https://echonet.jp/spec_g/#standard-01)から入手できる。  
@@ -212,7 +213,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
     "description":{"ja":"一般照明", "en":"General Lighting"},
     "properties":[
         {
-            "name":"operationStatus",
+            "name":"on",
             "epc":"0x80",
             "description":{ "ja":"動作状態", "en":"Operation Status" },
             "writable":true,
@@ -313,7 +314,7 @@ Event object は状態変化やエラー通知などの機器からの通知を�
     ],
     "actions":[],
     "events":[
-        { "name":"operationStatus" },
+        { "name":"on" },
         { "name":"isAtFault" }
     ]
 }
@@ -487,7 +488,7 @@ DeviceIdで指定した機器の Device Description を取得する。Properties
 	    "description":{"ja":"一般照明", "en":"General Lighting"},
 	    "properties":[
 	        {
-	            "name":"operationStatus",
+	            "name":"on",
 	            "epc":"0x80",
 	            "description":{ "ja":"動作状態", "en":"Operation Status" },
 	            "writable":true,
@@ -704,12 +705,12 @@ actionの実行をリクエストする
     [
         {
             "time":"2017-01-24T13:02:45+09:00"
-            "name":"operationStatus",
+            "name":"on",
             "value":true,
         },
         {
             "time":"2017-01-24T13:15:22+09:00"
-            "name":"operationStatus",
+            "name":"on",
             "value":false,
         },
         ...
@@ -727,32 +728,32 @@ EL-WebAPIで取得または設定するProperty値の data type を以下のよ�
 | Data Type<br>of WebAPI | Data Type<br>of JSON |Description | Member of<br>Device Description | 
 |:-----------|:-----|:-----|:-----|
 | boolean | boolean |true または false の２値をとるデータ型 | values | 
-| enum | string |状態を表すkeyword | values | 
+| enum | string |列挙型のデータ型 | values | 
 | number | number<br>string(\*) |数値 | unit<br>minimum<br>maximum<br>minimumDigit<br>alternatives(\*) | 
-| date-time | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" || 
-| string | string | ASCII data | "0AF53C" |
+| date-time | string|日時を表すdata type。ISO8601準拠。<br>"yyyy-MM-ddThh:mm:ss+\<time zone>"のformat<br>例："2017-01-24T13:15:22+09:00" ||
+| time | string | 時刻を表すdata type。<br>"hh:mm:ss"のformat<br>例："10:30:00"<br>時刻は"00:00:00"から"23:59:59"の値。<br>指定できる値の範囲がある場合は"from"と"to"のmemberで指定する。"from"と"to"で指定した時刻は範囲に含む。"00:00:00"をまたいでの範囲指定も可能。例えば"from":"22:00:00", "to":"02:00:00" |from<br>to  |
+| string | string | ASCII data<br>例："0AF53C" |  |
 | array |  [ ] |同一data typeの要素の配列 | data |
 | object |  { } |複数の要素から構成されるデータ | elements |
 
 (\*)定義されたdata type以外にkeyのdata typeも扱う場合に利用するmember。例えばlevelのdata typeで1...maximumの整数値の他に"auto"という値も扱う場合など
 
 ### 6.2 Description of Data Type Object
-#### 6.2.1 boolean, enum
-booleanはvalue objectのvalue propertyの値がtrue or false。trueは"ON"や"Yes"の意味。falseは"OFF"や"No"の意味。  
-enumはvalue objectのvalue propertyの値が状態を表すstring（例："cooling"）。  
+#### 6.2.1 boolean
+true or falseの値をとるdata type  
 
 Format
 
 ```
 {
-	"type":<"boolean" or "enum">,
+	"type":"boolean",
     "values":[ <value object>, <value object>, ... ]
 }
 ```
 
 | Property | Type |Required |Description |  Example |
 |:-----------|:-----|:-----|:-----|:-----|
-| type   | string |Yes| "boolean" or "enum"||
+| type   | string |Yes| "boolean"||
 | values | array |Yes|value objectの配列||
 
 Format of value object
@@ -768,10 +769,10 @@ Format of value object
 
 | Property | Type |Required |Description |  Example |
 |:-----------|:-----|:-----|:-----|:-----|
-| value | boolean:boolean<br>enum:string or number |Yes|WebAPIのbody data<br>boolean:true or false<br>enum:状態 |<br>true<br>"cooling"|
+| value | boolean:boolean |Yes|WebAPIのbody data<br>boolean:true or false |true|
 | ja | string |no| description in Japaneese | "有" |
 | en | string |no| description in English | "Yes" |
-| edt | string<br>number |Yes| 1byte dataのHex表記<br>bitmapの場合の数値 |  "0x30"<br>1 |
+| edt | string<br>number |Yes| ECHONET Liteの対応する値<br>1byte dataのHex表記<br>bitmapの場合の数値 |  "0x30"<br>1 |
 
 Example of Device Description:boolean  
     
@@ -791,6 +792,41 @@ Example of body data  :boolean
 { "on":true }, { "on":false }
 ```
 
+#### 6.2.2 enum
+列挙型のdata type
+
+Format
+
+```
+{
+	"type":"enum",
+    "values":[ <value object>, <value object>, ... ]
+}
+```
+
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| type   | string |Yes|"enum"||
+| values | array |Yes|value objectの配列||
+
+Format of value object
+
+```
+{
+    "value":<name of setting or status>,
+    "ja":<description in Japanese>,
+    "en":<description in English>},
+    "edt":<edt value>
+}
+```
+
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| value | enum:string or number |Yes|WebAPIのbody data<br>状態や設定の名前 |"cooling"|
+| ja | string |no| description in Japaneese | "有" |
+| en | string |no| description in English | "Yes" |
+| edt | string<br>number |Yes| ECHONET Liteの対応する値<br>1byte dataのHex表記<br>bitmapの場合の数値 |  "0x30"<br>1 |
+
 Example of Device Description:enum  
     
 ```
@@ -809,7 +845,9 @@ Example of body data:enum
 { "operatingMode":"normal" }, { "operatingMode":"color" }  
 ```
 
-#### 6.2.2 number
+#### 6.2.3 number
+数値（整数、実数）を扱うdata type  
+
 Format of Device Description
 
 ```
@@ -849,7 +887,9 @@ Example of body data
 { "humidity":45 }, { "integralEnergy":15.5 }, { "airFlowLevel":"auto" }
 ```
 
-#### 6.2.3 date-time  
+#### 6.2.4 date-time  
+日時を扱うdata type  
+
 Format of Device Description
 
 ```
@@ -872,7 +912,44 @@ Example of body data
 { "date-time" :"2017-01-24T13:15:22+09:00" }
 ```
 
-#### 6.2.4 string    
+#### 6.2.5 time  
+時刻を扱うdata type  
+時刻は"00:00:00"から"23:59:59"の値。  
+指定できる値の範囲がある場合は"from"と"to"のmemberで指定する。"from"と"to"で指定した時刻は範囲に含む。"00:00:00"をまたいでの範囲指定も可能。例："from":"22:00:00", "to":"02:00:00"
+
+Format of Device Description
+
+```
+{
+    "type":"time",
+    "from":"<time>,
+    "to":<time>
+}
+```
+
+| Property | Type |Required |Description |  Example |
+|:-----------|:-----|:-----|:-----|:-----|
+| type | string |Yes| "time" | |
+| from | string |No|値の範囲の開始時刻 |"10:00:00" |
+| to | string |No|値の範囲の終了時刻 |"15:00:00" |
+
+Example of Device Description  
+
+```
+{
+    "type":"time",
+    "from":"10:00:00",
+    "to":"15:00:00"
+}
+```
+
+Example of body data  
+
+```
+{ "time" :"10:30:00" }
+```
+
+#### 6.2.6 string    
 ASCIIデータを扱うdata type  
 
 Format of Device Description
@@ -888,7 +965,7 @@ Example of body data
 { "string" :"0A3FCD" }
 ```
 
-#### 6.2.5 array
+#### 6.2.7 array
 Format of Device Description
 
 ```
@@ -923,7 +1000,7 @@ Example of body data
 { "powerConsumption":[23, 12, 0,...] }
 ```
 
-#### 6.2.6 object
+#### 6.2.8 object
 Format of Device Description
 
 ```
